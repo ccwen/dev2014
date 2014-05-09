@@ -1,0 +1,28 @@
+{
+  "name": "dev2014",
+  "description": "dev platform 2014",
+  "version": "0.0.1",
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-react": "*",
+    "gulp-jshint": "*",
+    "gulp-concat": "~2.1.7",
+    "gulp-uglify": "~0.2.1",
+    "gulp-rename": "~1.1.0",
+    "unzip": "~0.1.9",
+    "fstream": "~0.1.25",
+    "gulp-clean": "~0.2.4",
+    "minimist": "0.0.7",
+    "gulp-filelog": "~0.2.0",
+    "gulp-tap": "*",
+    "gulp-component": "~0.1.5",
+    "tar":"*"
+  },
+  "dependencies": {
+    "socket.io": "*"
+  },
+  "scripts": {
+    "preinstall": "npm install -g component gulp react-tools jshint",
+    "postinstall": "gulp setup"
+  }
+}

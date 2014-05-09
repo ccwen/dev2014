@@ -1,0 +1,20 @@
+module.exports={
+    'win32':{
+      url:'http://dl.node-webkit.org/v0.9.2/node-webkit-v0.9.2-win-ia32.zip',
+      path:'node_webkit/win-ia32',
+      bin:'..\\node_webkit\\win-ia32\\nw.exe'
+    },
+    'darwin':{
+      url:'http://dl.node-webkit.org/v0.9.2/node-webkit-v0.9.2-osx-ia32.zip',
+      path:'node_webkit/osx-ia32',
+      bin:'../node_webkit/osx-ia32/node-webkit.app/Contents/MacOS/node-webkit'
+    }, 
+    'linux':{
+      url:'http://dl.node-webkit.org/v0.9.2/node-webkit-v0.9.2-linux-ia32.tar.gz',
+      path:'node_webkit',
+      bin:'../node_webkit/linux-ia32/nw',
+      rename:['node_webkit/node-webkit-v0.9.2-linux-ia32',
+            'node_webkit/linux-ia32']
+    }
+  }
+  [process.platform];

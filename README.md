@@ -1,11 +1,11 @@
-dhammagear-dev
+dev2014
 ==============
 
-dhammagear front end development toolchain
+Ksanaforge front end development toolchain
 
     npm install
 
 extra steps for linux and mac
 
-    sudo install -g component gulp react-tools jshint",
-    sudo gulp setup"
+    sudo install -g component gulp react-tools jshint
+    sudo gulp setup

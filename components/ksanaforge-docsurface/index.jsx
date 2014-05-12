@@ -16,6 +16,10 @@ var surface = React.createClass({
       //nextState.markup=null;
       //this.inlinemenuopened=null;
     } 
+    if (nextProps.page!=this.props.page) {
+      nextState.markup=null;
+      this.inlinemenuopened=null;
+    }
   },
   moveInputBox:function(rect) {
     var inputbox=this.refs.inputbox.getDOMNode();
@@ -29,8 +33,13 @@ var surface = React.createClass({
     if (!domnode) return;
 
     var menu=this.refs.inlinemenu.getDOMNode();
+    var menuheight=menu.firstChild.offsetHeight;
+
     menu.style.left=domnode.offsetLeft - this.getDOMNode().offsetLeft ;
     menu.style.top=domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight +5 ;
+    if (menuheight<parseInt(menu.style.top)) {
+      menu.style.top=parseInt(menu.style.top)-menuheight-domnode.offsetHeight;
+    }
     menu.style.display='inline';
     this.inlinemenuopened=menu;
   },
@@ -122,11 +131,19 @@ var surface = React.createClass({
     //if (this.inInlineMenu(e.target))return;
     var sel=this.getSelection();
     if (!sel) return;
+
+
     if (sel.len==0 && e.button==0 ) { //use e.target
       var n=e.target.attributes['data-n'];
       if (n) {
-        //this.setState({selstart:parseInt(n.value),sellength:0});
-        this.props.onSelection(parseInt(n.value),0,e.pageX,e.pageY,e);
+        if (e.shiftKey && sel.start>this.props.selstart) { //shift key pressed, extend mouse selection
+          sel.len=parseInt(n.value)-this.props.selstart;
+          sel.start=this.props.selstart;
+        } else {
+          //this.setState({selstart:parseInt(n.value),sellength:0});
+          sel.start=parseInt(n.value);
+        }
+        this.props.onSelection(sel.start,sel.len,e.pageX,e.pageY,e);
         return;
       }
     }
@@ -140,11 +157,7 @@ var surface = React.createClass({
       } else if (sel.start>0) {
         sel.len=1; //it will expand to whole token
       }   
-      //reuse , don't change
-    } else {
-      //this.setState({selstart:sel.start,sellength:sel.len});
-    }
-
+    } 
     if (e.target.getAttribute("class")=="link") {
       var M=this.props.page.markupAt(sel.start);
       if (this.props.onLink) this.props.onLink(M[0].payload);

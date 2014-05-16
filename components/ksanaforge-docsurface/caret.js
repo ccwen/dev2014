@@ -109,33 +109,33 @@ var Create=function(_surface) {
     return caretpos;
   };
 
-  var inserttext=function(text,start,len) {
+  var addSuggestion=function(start,len) {
     var prev=caretPos();
     if (prev===0) return 0;  
     
     var len=prev-start;
-    surface.props.action("inserttext",start,len,text);
+    surface.props.action("addsuggestion",start,len);
   };
 
   var spacebar=function() {
     var sel={};
-    if (surface.props.sellength==0) {
+    //if (surface.props.sellength==0) {
       var here=selstartFromCaret();
       moveCaret(caretnode.previousSibling);
       var sel=selstartFromCaret();
       moveCaret(caretnode.nextSibling);
       sel.len=here.start-sel.start;
-    } else {
-      sel.start=surface.props.selstart;
-      sel.len=surface.props.sellength;
-    }
+    //} else {
+    //  return;
+    //  sel.start=surface.props.selstart;
+    //  sel.len=surface.props.sellength;
+    //}
 
     if (surface.hasMarkupAt(sel.start)) {
       surface.openinlinemenu(sel.start);
     } else {
-      inserttext("",sel.start,sel.len);
+      addSuggestion(sel.start,sel.len);
     }
-
   }
 
   var enter=function() {

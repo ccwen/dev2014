@@ -6,6 +6,10 @@ var SetIntervalMixin = {
   setInterval: function() {
     this.intervals.push(setInterval.apply(null, arguments));
   },
+  clearInterval:function(handle) {
+    var timers=this.intervals.filter(function(I){return I==handle});
+    timers.map(clearInterval);
+  },
   componentWillUnmount: function() {
     this.intervals.map(clearInterval);
   }

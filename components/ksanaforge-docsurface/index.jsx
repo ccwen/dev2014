@@ -36,8 +36,8 @@ var surface = React.createClass({
     var menuheight=menu.firstChild.offsetHeight;
 
     menu.style.left=domnode.offsetLeft - this.getDOMNode().offsetLeft ;
-    menu.style.top=domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight +5 ;
-    if (menuheight<parseInt(menu.style.top)) {
+    menu.style.top=domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight ;
+    if (menuheight>0 && menuheight<parseInt(menu.style.top)) {
       menu.style.top=parseInt(menu.style.top)-menuheight-domnode.offsetHeight;
     }
     menu.style.display='inline';
@@ -86,10 +86,10 @@ var surface = React.createClass({
     return {start:start,len:length};
   },
   openinlinemenu:function(n) {
-    var n=parseInt(n);
+    var n=parseInt(n); 
     var m=this.getMarkupsAt(n);
     if (!m.length || !this.props.template.inlinemenu) return;
-    var mm=m[0];
+    var mm=m[0];//find markup at position
     for (var i=1;i<m.length;i++) {
       if (m[i].start==n) mm=m[i];
     }
@@ -124,6 +124,13 @@ var surface = React.createClass({
     this.laststart=sel[0];
     this.lastend=sel[1];
   },
+  nextTokenStart:function(pos) {
+    if (!this.offsets)return 0;
+    for (var i=0;i<this.offsets.length;i++) {
+      if (this.offsets[i]>pos) return this.offsets[i];
+    }
+    return 0;
+  },
   mouseUp:function(e) {
     this.leftMButtonDown=false;
     if (this.inlinemenuopened) return;
@@ -155,7 +162,10 @@ var surface = React.createClass({
           sel.len=this.props.sellength;
         } 
       } else if (sel.start>0) {
-        sel.len=1; //it will expand to whole token
+        var next=this.nextTokenStart(sel.start);
+        if (next) {
+          sel.len=next-sel.start;
+        }
       }   
     } 
     if (e.target.getAttribute("class")=="link") {
@@ -223,6 +233,7 @@ var surface = React.createClass({
     var res=this.props.template.tokenize(inscription);
     var TK=res.tokens;
     var offsets=res.offsets;
+    this.offsets=offsets;
     if (!TK || !TK.length) return [] ;
     var xml=[];
     var tagset={};//tags used in the page, comma to seperate overlap tag 

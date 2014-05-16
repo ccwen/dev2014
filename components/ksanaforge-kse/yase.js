@@ -9,10 +9,14 @@ var yase=function(){
       if (!service) throw 'api not found '+name;
 
       return function(opts,callback) {
-              var data=service[name](opts);
-              //this line is not really needed.
-              setTimeout( function() { callback(0,data) }, 0);        
-             //callback(0,data);
+              var handler=service[name];
+              if (handler.async) {
+                handler(opts,callback);
+              } else {
+                var data=handler(opts);
+                //this line is not really needed.
+                setTimeout( function() { callback(0,data) }, 0);        
+              }
       }
   }  
   var makeprepare=function(opts) {
@@ -67,11 +71,15 @@ var yase=function(){
         enumProject:makeinf('enumProject'),
         getProjectFolders:makeinf('getProjectFolders'),
         getProjectFiles:makeinf('getProjectFiles'),
-        openDocument:makeinf('openDocument'),
+        loadDocumentJSON:makeinf('loadDocumentJSON'),
         saveMarkup:makeinf('saveMarkup'),
         saveDocument:makeinf('saveDocument'),
         getUserSettings:makeinf('getUserSettings'),
         login:makeinf('login'),
+        buildIndex:makeinf('buildIndex'),
+        buildStatus:makeinf('buildStatus'),
+        stopIndex:makeinf('stopIndex'),
+        get:makeinf("get")
     };  
 
   } else {

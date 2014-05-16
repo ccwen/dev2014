@@ -10,11 +10,15 @@ var api={};
 api.enumProject=makeinf("enumProject");
 api.getProjectFolders=makeinf("getProjectFolders");
 api.getProjectFiles=makeinf("getProjectFiles");
-api.openDocument=makeinf("openDocument");
+api.loadDocumentJSON=makeinf("loadDocumentJSON");
 api.saveMarkup=makeinf("saveMarkup");
 api.saveDocument=makeinf("saveDocument");
 api.getUserSettings=makeinf("getUserSettings");
 api.login=makeinf("login");
+api.buildIndex=makeinf("buildIndex");
+api.buildStatus=makeinf("buildStatus");
+api.stopIndex=makeinf("stopIndex");
+api.get=makeinf("get");
 
 rpc.exec(function(err,data){
 	api.version=data;

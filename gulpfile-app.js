@@ -119,6 +119,21 @@ gulp.task('mkzip',['min'],function(){
   mkzip(appname,platform,argv['product']);
 });
 
+gulp.task('qunit',function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['js'];
+  var filename=process.cwd()+require('path').sep+name;
+  while (!fs.existsSync('qunit.cmd')) {
+    process.chdir('..');
+  }
+  if (fs.existsSync(filename)) {
+    spawn('qunit.cmd',[filename]);  
+  } else {
+    console.log('cannot find debuggee, syntax: ');
+    console.log('gulp qunit --js=debuggee.js');
+  }
+  
+});
 gulp.task('default',['run','watch'])
 
 module.exports=gulp;

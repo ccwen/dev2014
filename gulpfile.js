@@ -133,4 +133,4 @@ gulp.task('qunit',function(){
 		console.log('gulp qunit --js=debuggee.js');
 	}
 	
-})
+});

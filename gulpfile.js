@@ -132,5 +132,11 @@ gulp.task('qunit',function(){
 		console.log('cannot find debuggee, syntax: ');
 		console.log('gulp qunit --js=debuggee.js');
 	}
-	
+});
+
+gulp.task('mkdb',function() {
+  if (!fs.existsSync("ksana.json")) {
+    throw " must be a ksana_database"
+  }
+  require("./node_scripts/buildindex")(".");
 });

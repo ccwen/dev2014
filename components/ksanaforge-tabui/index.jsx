@@ -61,7 +61,8 @@ var Tabui = React.createClass({
     var goTab=this.goTab;
     var t=this.props.tabs.some(function(T){ 
       return T.active?goTab(T.id):false;
-    })
+    });
+    this.props.tabs.map(function(T){T.active=false});
   },
   closeTab:function(e) {
     var anchor=e.target.parentElement;
@@ -75,7 +76,6 @@ var Tabui = React.createClass({
         break;
       }
     }
-
   }, 
   newTab:function(T,idx) {
     tabs=this.props.tabs;
@@ -83,7 +83,6 @@ var Tabui = React.createClass({
     var tabexists=false;
     for (var i in tabs) {
       if (tabs[i].id==T.id) {
-        T.active=true;
         tabs[i]=T;
         tabexists=true;
       } else {

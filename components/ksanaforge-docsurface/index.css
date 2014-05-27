@@ -32,7 +32,8 @@
 .br { white-space: pre;}
 .br::after { content:"\A"}
 
-
+.hl0 {color:red;}
+.hl1 {color:pink;}
 
 .vertical { -webkit-writing-mode: vertical-rl; font-size:120%; font-family: "DFKai-SB";}
 .wh {

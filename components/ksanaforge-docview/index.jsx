@@ -239,6 +239,8 @@ var docview = React.createClass({
                 onSelection={this.onSelection}
                 onTagSet={this.onTagSet}
                 preview={this.props.preview}
+                customfunc={this.props.customfunc}
+                hits={this.props.hits}
                 >
        </surface>
       </div>

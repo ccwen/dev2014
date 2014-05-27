@@ -231,11 +231,12 @@ var surface = React.createClass({
     var inscription=page.inscription;
 
     var res=this.props.template.tokenize(inscription);
+    var isSkip=this.props.customfunc.isSkip;
     var TK=res.tokens;
     var offsets=res.offsets;
     this.offsets=offsets;
     if (!TK || !TK.length) return [] ;
-    var xml=[];
+    var xml=[], hits=this.props.hits, nhit=0, voff=0;
     var tagset={};//tags used in the page, comma to seperate overlap tag 
     var selstart=opts.selstart||0,sellength=opts.sellength||0;
     
@@ -244,7 +245,13 @@ var surface = React.createClass({
       var classes="",extraclass="";
       var markupclasses=[],appendtext="";
       var M=this.getMarkupsAt(offsets[i]);
+
       if (offsets[i]>=selstart && offsets[i]<selstart+sellength) extraclass+=' selected';
+      if (nhit<hits.length&& hits[nhit][0]==voff) {
+        extraclass+=' hl'+hits[nhit][1];
+        nhit++;
+      }
+      if (!isSkip(tk)) voff++;
       //var R=page.revisionAt(i),
       //if (R.length) extraclass+=this.renderRevision(R[0],xml);
 

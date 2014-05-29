@@ -16,7 +16,8 @@ var docview = React.createClass({
     var s=this.state,ns=nextState;
     return (p.page!=np.page || p.pageid!=np.pageid ||
      s.selstart!=ns.selstart || s.sellength!=ns.sellength
-     ||s.newMarkupAt!=ns.newMarkupAt);
+     ||s.newMarkupAt!=ns.newMarkupAt
+     ||this.hits!=this.props.hits);
 
   },
   componentWillUpdate:function(nextProps,nextState) {
@@ -227,10 +228,12 @@ var docview = React.createClass({
   },
   render: function() {
     //console.log("docview render");
+    this.hits=this.props.hits;
     return (
       <div className="docview"> 
       {this.contextMenu()}
-       <surface ref="surface" page={this.props.page}
+       <surface ref="surface" 
+                page={this.props.page}
                 user={this.props.user}
                 action={this.onAction}
                 template={this.props.template}

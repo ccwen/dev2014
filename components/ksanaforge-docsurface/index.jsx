@@ -245,12 +245,15 @@ var surface = React.createClass({
       var classes="",extraclass="";
       var markupclasses=[],appendtext="";
       var M=this.getMarkupsAt(offsets[i]);
-
       if (offsets[i]>=selstart && offsets[i]<selstart+sellength) extraclass+=' selected';
-      if (nhit<hits.length&& hits[nhit][0]==voff) {
-        extraclass+=' hl'+hits[nhit][1];
-        nhit++;
+      if (nhit<hits.length){ 
+        if (voff>=hits[nhit][0]&& voff<hits[nhit][0]+hits[nhit][2] ) {
+          extraclass+=' hl'+hits[nhit][1];
+        } else if (voff>=hits[nhit][0]+hits[nhit][2]) {
+          nhit++;
+        }
       }
+
       if (!isSkip(tk)) voff++;
       //var R=page.revisionAt(i),
       //if (R.length) extraclass+=this.renderRevision(R[0],xml);

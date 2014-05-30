@@ -30,7 +30,7 @@ var docview = React.createClass({
   },
   componentDidUpdate:function() {
     if (this.state.newMarkupAt) {
-      this.refs.surface.openinlinemenu(this.state.newMarkupAt);
+      this.refs.surface.openinlinedialog(this.state.newMarkupAt);
     }
   },
   getInitialState: function() { 
@@ -190,10 +190,34 @@ var docview = React.createClass({
       this.setState({selstart:newstart,sellength:0});
     } else if (action=="getmarkupsat") {
       return this.getMarkupsAt(args[0]);
+    } else if (action=="caretmoved") {
+      this.showLinkButtons(args[0],args[1],args[2]);
     } else {
       return this.props.action.apply(this,arguments);
     }
   },
+  showLinkButtons:function(left,top,height) {
+    if (this.linktimer) clearTimeout(this.linktimer);
+    var that=this;
+    setTimeout(function(){
+      var linkto=that.refs.linkto.getDOMNode();
+      var linkby=that.refs.linkby.getDOMNode();
+      that.props.action("linkto",that.state.selstart,that.state.sellength,function(arr){
+        if (arr.length){
+          linkto.style.top=top - Math.floor(linkto.offsetHeight/3); 
+          linkto.style.left=left ;  
+          linkto.style.visibility="visible";
+        } else linkto.style.visibility="none";
+      });
+      that.props.action("linkby",that.state.selstart,that.state.sellength,function(arr){
+        if (arr.length) {
+          linkby.style.top=top-height-linkto.offsetHeight-Math.floor(linkby.offsetHeight/3);
+          linkby.style.left=left-linkby.offsetWidth;
+          linkby.style.visibility="visible";
+        } else linkby.style.visibility="none";
+      });
+    },500);
+  },  
   closemenu:function() {
     this.refs.menu.getDOMNode().classList.remove("open");
   },
@@ -246,6 +270,12 @@ var docview = React.createClass({
                 hits={this.props.hits}
                 >
        </surface>
+      <div ref="linkto" className="btnlinkto-container">
+        <span className="btnlinkto">{"\u21dd"}</span>
+      </div>
+      <div ref="linkby" className="btnlinkby-container">
+        <span className="btnlinkby">{"\u21c9"}</span>
+      </div>
       </div>
     );
   }

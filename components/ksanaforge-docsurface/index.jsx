@@ -14,11 +14,11 @@ var surface = React.createClass({
     if (nextProps.selstart!=this.props.selstart
       && nextProps.selstart!=this.props.selstart+this.props.sellength) {
       //nextState.markup=null;
-      //this.inlinemenuopened=null;
+      //this.inlinedialogopened=null;
     } 
     if (nextProps.page!=this.props.page) {
       nextState.markup=null;
-      this.inlinemenuopened=null;
+      this.inlinedialogopened=null;
     }
   },
   moveInputBox:function(rect) {
@@ -26,13 +26,13 @@ var surface = React.createClass({
     var surfacerect=this.refs.surface.getDOMNode().getBoundingClientRect();
     inputbox.focus();
   },        
-  showinlinemenu:function() {
-    if (!this.refs.inlinemenu) return;
+  showinlinedialog:function() {
+    if (!this.refs.inlinedialog) return;
     var mm=this.state.markup;
     var domnode=this.getDOMNode().querySelector('span[data-n="'+mm.start+'"]');
     if (!domnode) return;
 
-    var menu=this.refs.inlinemenu.getDOMNode();
+    var menu=this.refs.inlinedialog.getDOMNode();
     var menuheight=menu.firstChild.offsetHeight;
 
     menu.style.left=domnode.offsetLeft - this.getDOMNode().offsetLeft ;
@@ -41,7 +41,7 @@ var surface = React.createClass({
       menu.style.top=parseInt(menu.style.top)-menuheight-domnode.offsetHeight;
     }
     menu.style.display='inline';
-    this.inlinemenuopened=menu;
+    this.inlinedialogopened=menu;
   },
   getRange:function() {
     var sel = getSelection();
@@ -85,16 +85,16 @@ var surface = React.createClass({
     this.refs.surface.getDOMNode().focus();
     return {start:start,len:length};
   },
-  openinlinemenu:function(n) {
+  openinlinedialog:function(n) {
     var n=parseInt(n); 
     var m=this.getMarkupsAt(n);
-    if (!m.length || !this.props.template.inlinemenu) return;
+    if (!m.length || !this.props.template.inlinedialog) return;
     var mm=m[0];//find markup at position
     for (var i=1;i<m.length;i++) {
       if (m[i].start==n) mm=m[i];
     }
     this.props.onSelection(mm.start,mm.len);
-    var menu=this.props.template.inlinemenu[mm.payload.type];
+    var menu=this.props.template.inlinedialog[mm.payload.type];
     if (menu) {
       this.setState({markup:mm});
     }
@@ -107,7 +107,7 @@ var surface = React.createClass({
     var n=e.target.attributes['data-n'].value;
     if (n) {
 
-      this.openinlinemenu(n);
+      this.openinlinedialog(n);
       return true;
     } else return false;
   },
@@ -133,9 +133,9 @@ var surface = React.createClass({
   },
   mouseUp:function(e) {
     this.leftMButtonDown=false;
-    if (this.inlinemenuopened) return;
+    if (this.inlinedialogopened) return;
 
-    //if (this.inInlineMenu(e.target))return;
+    //if (this.inInlineDialog(e.target))return;
     var sel=this.getSelection();
     if (!sel) return;
 
@@ -175,28 +175,28 @@ var surface = React.createClass({
       this.props.onSelection(sel.start,sel.len,e.pageX,e.pageY,e);
     }
   },
-  closeinlinemenu:function() {
-    if (this.inlinemenuopened) {
-      this.inlinemenuopened.style.display='none';
+  closeinlinedialog:function() {
+    if (this.inlinedialogopened) {
+      this.inlinedialogopened.style.display='none';
     }
-    this.inlinemenuopened=false;
+    this.inlinedialogopened=false;
     this.refs.surface.getDOMNode().focus();
     this.setState({markup:false})
   },
-  inlinemenuaction:function() {
+  inlinedialogaction:function() {
     this.props.action.apply(this.props,arguments);
-    this.closeinlinemenu();
+    this.closeinlinedialog();
   },
-  addInlinemenu:function() {
-    if (!this.props.template.inlinemenu) return null;
+  addInlinedialog:function() {
+    if (!this.props.template.inlinedialog) return null;
     if (!this.state.markup) return null;
 
     var m=this.state.markup;
     var text=this.props.page.inscription.substr(m.start,m.len);
-    var menu=this.props.template.inlinemenu[m.payload.type];
+    var menu=this.props.template.inlinedialog[m.payload.type];
     if (menu) return (
-      <span ref="inlinemenu" className="inlinemenu">
-        {menu({action:this.inlinemenuaction,text:text,markup:m,
+      <span ref="inlinedialog" className="inlinedialog">
+        {menu({action:this.inlinedialogaction,text:text,markup:m,
           user:this.props.user})}
       </span>
     );
@@ -260,7 +260,7 @@ var surface = React.createClass({
 
       //naive solution, need to create many combination class
       //create dynamic stylesheet,concat multiple background image with ,
-      var inlinemenu=null;      
+      var inlinedialog=null;      
       for (var j in M) {
         markupclasses.push(M[j].payload.type);
         if (M[j].start==offsets[i]) {
@@ -272,7 +272,7 @@ var surface = React.createClass({
         /*
         if (M[j].start+M[j].len==i+1) { //last token
           var text=page.inscription.substr(M[j].start,M[j].len);
-          inlinemenu=this.addInlinemenu(M[j],text);
+          inlinedialog=this.addInlinedialog(M[j],text);
         }
         */
 
@@ -299,7 +299,7 @@ var surface = React.createClass({
       if (ch==="\n") {ch="\u21a9";extraclass+=' br';}
       classes=(markupclasses.join("__")).trim()+" "+extraclass;
       xml.push(token({ key:i , cls:classes ,n:offsets[i],ch:ch, appendtext:appendtext}));
-      if (inlinemenu) xml.push(inlinemenu);
+      if (inlinedialog) xml.push(inlinedialog);
     }     
     xml.push(<token key={i} n={offsets[i]}/>);
 
@@ -317,7 +317,7 @@ var surface = React.createClass({
  
     return (
       <div  data-id={this.state.uuid} className="surface">
-          {this.addInlinemenu()}
+          {this.addInlinedialog()}
           <div ref="surface" tabIndex="0" 
             onKeyDown={this.caret.keydown} 
             onClick={this.tokenclicked} 
@@ -329,6 +329,7 @@ var surface = React.createClass({
           <div ref="caretdiv" className="surface-caret-container">
              <div ref="caret" className="surface-caret"></div>
           </div>
+
       </div>
     );
   },
@@ -342,7 +343,7 @@ var surface = React.createClass({
   componentDidUpdate:function() {
     if (this.props.scrollto) this.scrollToSelection();
     this.caret.show();
-    this.showinlinemenu();
+    this.showinlinedialog();
   }
 });
 

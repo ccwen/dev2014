@@ -6,6 +6,8 @@
 var surface=require("docsurface"); 
 var bootstrap=require("bootstrap");
 var cssgen=require("./cssgen");
+var linkbymenu=Require("linkbymenu");
+
 var docview = React.createClass({
   componentWillMount:function() {
     if (this.props.page) this.offsets=this.props.template.tokenize(this.props.page.inscription).offsets;
@@ -17,7 +19,8 @@ var docview = React.createClass({
     return (p.page!=np.page || p.pageid!=np.pageid ||
      s.selstart!=ns.selstart || s.sellength!=ns.sellength
      ||s.newMarkupAt!=ns.newMarkupAt
-     ||this.hits!=this.props.hits);
+     ||this.hits!=this.props.hits
+     ||this.state.linkby!=nextState.linkby);
 
   },
   componentWillUpdate:function(nextProps,nextState) {
@@ -85,6 +88,26 @@ var docview = React.createClass({
     var s=this.offsets.indexOf(this.state.selstart);
     var e=this.offsets.indexOf(this.state.selstart+this.state.sellength);
     return {start:s,len:e-s};
+  },
+  openlinkbymenu:function(x,y) {
+    if (this.refs.linkbymenu) {
+      var linkbymenu=this.refs.linkbymenu.getDOMNode();
+      linkbymenu.classList.add("open");
+      linkbymenu.style.left=x+'px';
+      linkbymenu.style.top=(y-this.getDOMNode().offsetTop)+'px'; 
+    }
+  },
+  showlinkbymenu:function(e) {
+    var x=e.pageX, y=e.pageY;
+    this.setState({linkby:this.linkby});
+    setTimeout( this.openlinkbymenu.bind(this,x,y),200);
+  },
+  linkByMenu:function() {
+    if (this.state.linkby && this.state.  linkby.length) {
+      return linkbymenu({ref:"linkbymenu",linkby:this.linkby,action:this.action});
+    } else {
+      return <span></span>
+    }
   },
   contextMenu:function() {
     var sel=this.selectedToken();
@@ -199,7 +222,7 @@ var docview = React.createClass({
   showLinkButtons:function(left,top,height) {
     if (this.linktimer) clearTimeout(this.linktimer);
     var that=this;
-    setTimeout(function(){
+    this.linktimer=setTimeout(function(){
       var linkto=that.refs.linkto.getDOMNode();
       var linkby=that.refs.linkby.getDOMNode();
       that.props.action("linkto",that.state.selstart,that.state.sellength,function(arr){
@@ -207,14 +230,15 @@ var docview = React.createClass({
           linkto.style.top=top - Math.floor(linkto.offsetHeight/3); 
           linkto.style.left=left ;  
           linkto.style.visibility="visible";
-        } else linkto.style.visibility="none";
+        } else linkto.style.visibility="hidden";
       });
       that.props.action("linkby",that.state.selstart,that.state.sellength,function(arr){
         if (arr.length) {
-          linkby.style.top=top-height-linkto.offsetHeight-Math.floor(linkby.offsetHeight/3);
+          that.linkby=arr;
+          linkby.style.top=top-height-linkto.offsetHeight-Math.floor(linkby.offsetHeight/1.5);
           linkby.style.left=left-linkby.offsetWidth;
           linkby.style.visibility="visible";
-        } else linkby.style.visibility="none";
+        } else linkby.style.visibility="hidden";
       });
     },500);
   },  
@@ -256,6 +280,7 @@ var docview = React.createClass({
     return (
       <div className="docview"> 
       {this.contextMenu()}
+      {this.linkByMenu()}
        <surface ref="surface" 
                 page={this.props.page}
                 user={this.props.user}
@@ -268,13 +293,13 @@ var docview = React.createClass({
                 preview={this.props.preview}
                 customfunc={this.props.customfunc}
                 hits={this.props.hits}
-                >
-       </surface>
+                > 
+       </surface>   
       <div ref="linkto" className="btnlinkto-container">
-        <span className="btnlinkto">{"\u21dd"}</span>
-      </div>
+        <span  className="btnlinkto">{"\u21dd"}</span>
+      </div> 
       <div ref="linkby" className="btnlinkby-container">
-        <span className="btnlinkby">{"\u21c9"}</span>
+        <span onClick={this.showlinkbymenu} className="btnlinkby">{"\u21c9"}</span>
       </div>
       </div>
     );

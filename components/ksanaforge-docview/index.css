@@ -1,8 +1,8 @@
 .docview {}
 
 .btnlinkto-container  {position:relative;background-color:transparent;width:2em;}
-.btnlinkto-container:hover {opacity:1;background:silver;}
+.btnlinkto-container:hover {background:silver;}
 .btnlinkby-container {position:relative;background-color:transparent;width:2em;}
-.btnlinkby-container:hover {opacity:1;background:silver;}
+.btnlinkby-container:hover {background:silver;}
 .btnlinkto {visibility:hidden;color:red;font-weight:bold;position:relative;font-size:200%;cursor:pointer;}
-.btnlinkby {visibility:hidden;color:red;font-weight:bold;position:relative;font-size:200%;cursor:pointer;}
+.btnlinkby {color:red;font-weight:bold;font-size:200%;cursor:pointer;}

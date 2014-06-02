@@ -6,7 +6,10 @@ var Tabui = React.createClass({
   getInitialState:function(){
     return { }
   },
- 
+  shouldComponentUpdate:function(nextProps,nextState) {
+    if (!this.props.tabs || !nextProps.tabs) return true;
+    return (nextProps.tabs.length!=this.props.tabs.length);
+  },
   tabnav:function(T) {
     var closebutton=(T.notclosable)?"":
        <button className="close" type="button" onClick={this.closeTab}>
@@ -72,7 +75,8 @@ var Tabui = React.createClass({
       if (tabs[i].id==id) {
         tabs.splice(i,1);
         if (i) tabs[i-1].active=true;
-        this.setState({"tabs":tabs});
+        this.forceUpdate();
+        //this.setState({"tabs":tabs});
         break;
       }
     }
@@ -90,7 +94,8 @@ var Tabui = React.createClass({
       }
     }
     if (!tabexists) tabs.splice(idx,0,T);
-    this.setState({"tabs":tabs});
+    //this.setState({"tabs":tabs});
+    this.forceUpdate();
   },
   makeScrollable:function() {
     var h=this.getDOMNode().offsetHeight;

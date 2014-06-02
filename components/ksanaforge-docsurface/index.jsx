@@ -150,9 +150,15 @@ var surface = React.createClass({
           //this.setState({selstart:parseInt(n.value),sellength:0});
           sel.start=parseInt(n.value);
         }
-        this.props.onSelection(sel.start,sel.len,e.pageX,e.pageY,e);
-        return;
+        var attributes=e.target.getAttribute("class");
+        if (attributes && attributes.indexOf("linkto")>-1) {
+          var M=this.props.page.markupAt(sel.start);
+          this.props.action("openlink",M[0].payload);
+        } else{
+          this.props.onSelection(sel.start,sel.len,e.pageX,e.pageY,e);
+        } 
       }
+      return;
     }
     if (!sel) return;
     if (e.button==2) {
@@ -168,12 +174,8 @@ var surface = React.createClass({
         }
       }   
     } 
-    if (e.target.getAttribute("class")=="link") {
-      var M=this.props.page.markupAt(sel.start);
-      if (this.props.onLink) this.props.onLink(M[0].payload);
-    } else {  
-      this.props.onSelection(sel.start,sel.len,e.pageX,e.pageY,e);
-    }
+
+    this.props.onSelection(sel.start,sel.len,e.pageX,e.pageY,e);
   },
   closeinlinedialog:function() {
     if (this.inlinedialogopened) {
@@ -236,7 +238,7 @@ var surface = React.createClass({
     var offsets=res.offsets;
     this.offsets=offsets;
     if (!TK || !TK.length) return [] ;
-    var xml=[], hits=this.props.hits, nhit=0, voff=0;
+    var xml=[], hits=this.props.hits ||[], nhit=0, voff=0;
     var tagset={};//tags used in the page, comma to seperate overlap tag 
     var selstart=opts.selstart||0,sellength=opts.sellength||0;
     

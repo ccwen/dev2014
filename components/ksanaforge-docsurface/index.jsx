@@ -26,10 +26,12 @@ var surface = React.createClass({
     var surfacerect=this.refs.surface.getDOMNode().getBoundingClientRect();
     inputbox.focus();
   },        
-  showinlinedialog:function() {
+  showinlinedialog:function(start) {
     if (!this.refs.inlinedialog) return;
-    var mm=this.state.markup;
-    var domnode=this.getDOMNode().querySelector('span[data-n="'+mm.start+'"]');
+    if (!start && this.state.markup) start=this.state.markup.start;
+    if (!start) return;
+
+    var domnode=this.getDOMNode().querySelector('span[data-n="'+start+'"]');
     if (!domnode) return;
 
     var menu=this.refs.inlinedialog.getDOMNode();
@@ -112,6 +114,10 @@ var surface = React.createClass({
     } else return false;
   },
   mouseDown:function(e) {
+     if (this.inlinedialogopened) {
+        e.preventDefault();
+        return;
+    }
     if(e.button === 0) this.leftMButtonDown = true;
   },
   mouseMove:function(e) {
@@ -174,7 +180,7 @@ var surface = React.createClass({
         }
       }   
     } 
-
+    this.showMakelinkDialog(sel.start);
     this.props.onSelection(sel.start,sel.len,e.pageX,e.pageY,e);
   },
   closeinlinedialog:function() {
@@ -189,8 +195,21 @@ var surface = React.createClass({
     this.props.action.apply(this.props,arguments);
     this.closeinlinedialog();
   },
+  addMakelinkDialog:function() {
+    return <span ref="inlinedialog" className="inlinedialog">
+        {this.props.template.makelinkdialog({action:this.inlinedialogaction,
+          linktarget:this.state.linktarget,
+          linksource:this.state.linksource,
+          page:this.props.page,
+          user:this.props.user})}
+      </span>
+
+  },
   addInlinedialog:function() {
     if (!this.props.template.inlinedialog) return null;
+    if (this.state.linktarget) {
+      return this.addMakelinkDialog();
+    }
     if (!this.state.markup) return null;
 
     var m=this.state.markup;
@@ -336,11 +355,19 @@ var surface = React.createClass({
     );
   },
   getInitialState:function() {
-    return {uuid:'u'+Math.random().toString().substring(2), markup:null};
+    return {uuid:'u'+Math.random().toString().substring(2), 
+    markup:null,linktarget:this.props.linktarget,linksource:this.props.linksource};
   },
   componentWillMount:function() {
     this.caret=new caret.Create(this);
 
+  }, 
+  showMakelinkDialog:function(menupos) {
+    if (!this.state.linktarget || this.hasMarkupAt(menupos) ) return;
+    this.showinlinedialog(menupos);
+  },
+  componentDidMount:function() {
+    this.showMakelinkDialog(this.props.selstart);
   },
   componentDidUpdate:function() {
     if (this.props.scrollto) this.scrollToSelection();

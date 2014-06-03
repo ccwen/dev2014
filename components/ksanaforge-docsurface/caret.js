@@ -177,7 +177,7 @@ var Create=function(_surface) {
     else if (kc==35) moveCaret(endOfLine());
     else if (kc==32) spacebar();
     else if (kc==13) enter();
-    else if (kc==27) surface.closeinlinemenu();
+    else if (kc==27) surface.closeinlinedialog();
 
     if (kc>=27&&kc<50)  updateSelStart();
 	}	

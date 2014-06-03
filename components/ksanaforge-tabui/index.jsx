@@ -8,7 +8,7 @@ var Tabui = React.createClass({
   },
   shouldComponentUpdate:function(nextProps,nextState) {
     if (!this.props.tabs || !nextProps.tabs) return true;
-    return (nextProps.tabs.length!=this.props.tabs.length);
+    return (nextProps.tabs.length!=this.props.tabs.length || this.props.tabs.updated);
   },
   tabnav:function(T) {
     var closebutton=(T.notclosable)?"":
@@ -112,6 +112,7 @@ var Tabui = React.createClass({
     this.goActiveTab();
   },
   componentDidUpdate:function() {
+    this.props.tabs.updated=false;
     this.makeScrollable();
     this.goActiveTab();
   }

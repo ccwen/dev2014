@@ -7,7 +7,7 @@ var surface=require("docsurface");
 var bootstrap=require("bootstrap");
 var cssgen=require("./cssgen");
 var linkbymenu=Require("linkbymenu");
-
+var linktomenu=Require("linktomenu");//possible link to
 var docview = React.createClass({
   componentWillMount:function() {
     if (this.props.page) this.offsets=this.props.template.tokenize(this.props.page.inscription).offsets;
@@ -20,7 +20,8 @@ var docview = React.createClass({
      s.selstart!=ns.selstart || s.sellength!=ns.sellength
      ||s.newMarkupAt!=ns.newMarkupAt
      ||this.hits!=this.props.hits
-     ||this.state.linkby!=nextState.linkby);
+     ||this.state.linkby!=nextState.linkby
+     ||this.state.linkto!=nextState.linkto);
 
   },
   componentWillUpdate:function(nextProps,nextState) {
@@ -37,7 +38,14 @@ var docview = React.createClass({
     }
   },
   getInitialState: function() { 
-    return {selstart:0, sellength:0,newMarkupAt:null};
+    var s=0,l=0,linktarget=null,linksource=null; 
+    if (this.props.linktarget) {
+      s=this.props.linktarget.start;
+      l=this.props.linktarget.len;
+      linktarget=this.props.linktarget;
+      linksource=this.props.linksource;
+    }
+    return {selstart:s, sellength:l,newMarkupAt:null, linktarget:linktarget,linksource:linksource};
   },
   orMarkups:function(m1,m2) { // m1 has higher priority
     var out=[],positions={};
@@ -89,22 +97,43 @@ var docview = React.createClass({
     var e=this.offsets.indexOf(this.state.selstart+this.state.sellength);
     return {start:s,len:e-s};
   },
-  openlinkbymenu:function(x,y) {
-    if (this.refs.linkbymenu) {
-      var linkbymenu=this.refs.linkbymenu.getDOMNode();
-      linkbymenu.classList.add("open");
-      linkbymenu.style.left=x+'px';
-      linkbymenu.style.top=(y-this.getDOMNode().offsetTop)+'px'; 
+  openlinkmenu:function(x,y,name) {
+    var obj=this.refs[name];
+    if (obj) {
+      x=x-obj.getDOMNode().parentElement.offsetLeft;
+      var menu=obj.getDOMNode();
+      menu.classList.add("open");
+      menu.style.left=x+'px';
+      menu.style.top=(y-this.getDOMNode().offsetTop)+'px'; 
+      
     }
-  },
+  }, 
   showlinkbymenu:function(e) {
     var x=e.pageX, y=e.pageY;
     this.setState({linkby:this.linkby});
-    setTimeout( this.openlinkbymenu.bind(this,x,y),200);
+    setTimeout( this.openlinkmenu.bind(this,x,y,"linkbymenu"),200);
+  },
+  showlinktomenu:function(e) {
+    var x=e.pageX, y=e.pageY;
+    this.setState({linkto:this.linkto});
+    setTimeout( this.openlinkmenu.bind(this,x,y,"linktomenu"),200);
   },
   linkByMenu:function() {
-    if (this.state.linkby && this.state.  linkby.length) {
+    if (this.state.linkby && this.state.linkby.length) {
       return linkbymenu({ref:"linkbymenu",linkby:this.linkby,action:this.action});
+    } else {
+      return <span></span>
+    }
+  },
+  linkToMenu:function() {
+    if (this.state.linkto && this.state.linkto.length) {
+      var linksource={page:this.props.page
+        ,pageid:this.props.pageid
+        ,start:this.quote.start
+        ,len:this.quote.len
+        ,kde:this.props.kde
+      };
+      return linktomenu({ref:"linktomenu",linkto:this.linkto,  linksource:linksource,action:this.action});
     } else {
       return <span></span>
     }
@@ -114,7 +143,7 @@ var docview = React.createClass({
     if (this.props.template.contextmenu) {
       var text=this.getSelectedText();
       return this.props.template.contextmenu(
-        {ref:"menu",user:this.props.user, action:this.onAction, 
+        {ref:"menu",user:this.props.user, action:this.action, 
         start:sel.start,len:sel.len,
         selstart:this.state.selstart,sellength:this.state.sellength,
         text:this.getSelectedText()}
@@ -123,6 +152,7 @@ var docview = React.createClass({
       return <span></span>
     }    
   },
+
   onTagSet:function(tagset,uuid) {
     if (!tagset || !tagset.length)return;
     if (JSON.stringify(this.tagset)!=JSON.stringify(tagset)) {
@@ -175,7 +205,7 @@ var docview = React.createClass({
       this.setState({selstart:sel.start,sellength:sel.len,newMarkupAt:sel.start});
     }
   },
-  onAction:function() {
+  action:function() {
     var maxlen=100;
     var args = [],r,username=this.props.user.name;
     var ss=this.state.selstart, sl=this.state.sellength;
@@ -215,6 +245,9 @@ var docview = React.createClass({
       return this.getMarkupsAt(args[0]);
     } else if (action=="caretmoved") {
       this.showLinkButtons(args[0],args[1],args[2]);
+    } else if (action=="openlink") { 
+      if (this.quote) this.setState({selstart:this.quote.start,sellength:this.quote.len}); //select the quote
+      return this.props.action.apply(this,arguments); //pass to parent
     } else {
       return this.props.action.apply(this,arguments);
     }
@@ -225,8 +258,10 @@ var docview = React.createClass({
     this.linktimer=setTimeout(function(){
       var linkto=that.refs.linkto.getDOMNode();
       var linkby=that.refs.linkby.getDOMNode();
-      that.props.action("linkto",that.state.selstart,that.state.sellength,function(arr){
+      that.props.action("linkto",that.state.selstart,that.state.sellength,function(arr,quote){
         if (arr.length){
+          that.quote=quote;
+          that.linkto=arr;
           linkto.style.top=top - Math.floor(linkto.offsetHeight/3); 
           linkto.style.left=left ;  
           linkto.style.visibility="visible";
@@ -239,7 +274,7 @@ var docview = React.createClass({
           linkby.style.left=left-linkby.offsetWidth;
           linkby.style.visibility="visible";
         } else linkby.style.visibility="hidden";
-      });
+      }); 
     },500);
   },  
   closemenu:function() {
@@ -281,25 +316,28 @@ var docview = React.createClass({
       <div className="docview"> 
       {this.contextMenu()}
       {this.linkByMenu()}
+      {this.linkToMenu()}
        <surface ref="surface" 
                 page={this.props.page}
                 user={this.props.user}
-                action={this.onAction}
+                action={this.action}
                 template={this.props.template}
                 selstart={this.state.selstart} 
                 sellength={this.state.sellength}
                 onSelection={this.onSelection}
                 onTagSet={this.onTagSet}
+                linktarget={this.state.linktarget}
+                linksource={this.state.linksource}
                 preview={this.props.preview}
                 customfunc={this.props.customfunc}
                 hits={this.props.hits}
                 > 
        </surface>   
       <div ref="linkto" className="btnlinkto-container">
-        <span  className="btnlinkto">{"\u21dd"}</span>
+        <span onClick={this.showlinktomenu} className="btnlinkto">{"\u21dd"}</span>
       </div> 
       <div ref="linkby" className="btnlinkby-container">
-        <span onClick={this.showlinkbymenu} className="btnlinkby">{"\u21c9"}</span>
+        <span onClick={this.showlinkbymenu} className="btnlinkby">{"\u21c7"}</span>
       </div>
       </div>
     );

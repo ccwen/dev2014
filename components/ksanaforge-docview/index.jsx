@@ -127,7 +127,11 @@ var docview = React.createClass({
   },
   linkToMenu:function() {
     if (this.state.linkto && this.state.linkto.length) {
-      var linksource={page:this.props.page
+      var linksource={
+        page:this.props.page
+        ,pagename:this.props.page.name
+        ,db:this.props.kde.dbname
+        ,file:this.props.page.doc.meta.filename
         ,pageid:this.props.pageid
         ,start:this.quote.start
         ,len:this.quote.len

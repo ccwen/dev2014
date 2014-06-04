@@ -363,7 +363,15 @@ var surface = React.createClass({
 
   }, 
   showMakelinkDialog:function(menupos) {
-    if (!this.state.linktarget || this.hasMarkupAt(menupos) ) return;
+    if (!this.state.linktarget) return;
+
+    var markups=this.getMarkupsAt(menupos);
+    var linkby=markups.filter(function(m){return m.payload.type=="linkby"});
+
+    //already build link
+    if (linkby.length && linkby[0].start==this.state.linktarget.start) return;
+    //has other markup at same pos
+    if (markups.length !=linkby.length) return; 
     this.showinlinedialog(menupos);
   },
   componentDidMount:function() {

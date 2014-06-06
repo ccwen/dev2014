@@ -134,7 +134,17 @@ gulp.task('qunit',function(){
   }
   
 });
-
+gulp.task('mkdb',function() {
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['name'];
+  if (name) {
+    process.chdir(name);
+  }
+  if (!fs.existsSync("ksana.json")) {
+    throw " must be a ksana_databases"
+  }
+  require("./node_scripts/buildindex")(".");
+});
 gulp.task('default',['run','watch'])
 
 module.exports=gulp;

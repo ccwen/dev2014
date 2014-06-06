@@ -30,6 +30,8 @@ module.exports=function(appname){
 '    "ksanaforge/boot": "*",\n'+
 '    "socketio/socketio": "*",\n'+
 '    "brighthas/bootstrap": "*",\n'+
+'    "ksana/document": "*",\n'+
+'    "ksanaforge/kse": "*",\n'+
 '    "component/jquery": "*"\n'+
 '  },\n'+
 '  "development": {},\n'+

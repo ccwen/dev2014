@@ -81,8 +81,11 @@ var startserver=function() {
 			 });
 		}
 		var uri = url.parse(req.url).pathname;
+
 		appendhtml=false;
 		if (uri[uri.length-1]=='/') {
+			var newbase=uri.substr(1,uri.length-2);
+			rpc_node.rebase(newbase);
 			uri+='index.html';
 			appendhtml=true;
 		}
@@ -114,10 +117,9 @@ var startserver=function() {
 			res.end();
 			return;			
 		}
-		
 		fs.stat(filename, function(err,stat) {
 			if(!stat) {
-				console.log("not exists: " + filename);
+				console.log("Not exists: " + filename);
 				res.writeHead(200, {'Content-Type': 'text/plain'});
 				res.write('404 Not Found \n'+filename);
 				res.end();

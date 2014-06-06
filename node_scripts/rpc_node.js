@@ -66,8 +66,17 @@ var rpc_init=function(server) {
 		});
 	});
 };
-		
+var rebase=function(path) {
+	//services
+	//set to path
+	var kd=API['document'];
+	if (kd) {
+		console.log("rebase",path)
+		kd.setPath(path);
+	}
+}
 var services=require('./services');
 services(API); 
 rpc_init.finalize=finalize;
+rpc_init.rebase=rebase;
 module.exports=rpc_init;

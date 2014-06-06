@@ -78,7 +78,7 @@ gulp.task('clonerepos',function() {
 });
 
 gulp.task('install-socket.io-cli',function() {
-	return gulp.src('node_modules/socket.io/node_modules/socket.io-client/dist/*')
+	return gulp.src('node_modules/socket.io/node_modules/socket.io-client/socket.io.js')
   .pipe(gulp.dest('components/socketio-socketio/'));
   
 })

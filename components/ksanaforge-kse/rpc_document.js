@@ -8,6 +8,7 @@ var makeinf=function(name) {
 var api={};
 
 api.enumProject=makeinf("enumProject");
+api.enumKdb=makeinf("enumKdb");
 api.getProjectFolders=makeinf("getProjectFolders");
 api.getProjectFiles=makeinf("getProjectFiles");
 api.loadDocumentJSON=makeinf("loadDocumentJSON");

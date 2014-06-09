@@ -69,6 +69,7 @@ var yase=function(){
 
         //document services
         enumProject:makeinf('enumProject'),
+        enumKdb:makeinf('enumKdb'),
         getProjectFolders:makeinf('getProjectFolders'),
         getProjectFiles:makeinf('getProjectFiles'),
         loadDocumentJSON:makeinf('loadDocumentJSON'),

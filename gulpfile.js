@@ -130,6 +130,23 @@ gulp.task('init',function() {  //user create in an empty repository
   createapp(name);
 });
 
+var newkdb=require("./node_scripts/newkdb");
+gulp.task("initdb",function() {
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['name'];
+  var template = argv['template'];
+  var config = argv['config'];
+  if (!name) {
+  	throw "mssing --name=dbid";
+  	return;  	
+  }
+  if (fs.existsSync(name)) {
+  	throw "folder already exists";
+  	return;
+  }
+  newkdb(name,template,config);
+});
+
 gulp.task('qunit',function(){
 	var argv = require('minimist')(process.argv.slice(2));
 	var name = argv['js'];

@@ -105,11 +105,7 @@ gulp.task('setup',['install'],function(){
     console.log(">gulp sampleapp");
 });
 
-var newapp=require('./node_scripts/newapp');
-var newcomponent=require('./node_scripts/newcomponent');
-gulp.task('newapp',function(){
-	var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['name'];
+var createapp=function(name) {
   newapp(name);
   process.chdir(name);
   newcomponent(name+'/main');
@@ -117,6 +113,21 @@ gulp.task('newapp',function(){
   process.chdir('..');
   console.log('success, cd to '+name+' and type')
   console.log('gulp')
+}
+
+var newapp=require('./node_scripts/newapp');
+var newcomponent=require('./node_scripts/newcomponent');
+gulp.task('newapp',function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['name'];
+  createapp(name);
+});
+
+gulp.task('init',function() {  //user create in an empty repository
+  var name=process.cwd();
+  name=name.substring(1+name.lastIndexOf(require("path").sep));
+  process.chdir("..");
+  createapp(name);
 });
 
 gulp.task('qunit',function(){

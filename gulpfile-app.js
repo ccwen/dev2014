@@ -32,7 +32,7 @@ var component=require('gulp-component');
 var rename=require('gulp-rename');
 
 gulp.task('newcomponent',function(){
-	var argv = require('minimist')(process.argv.slice(2));
+  var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   newcomponent(name);
 });
@@ -145,6 +145,8 @@ gulp.task('mkdb',function() {
   }
   require("./node_scripts/buildindex")(".");
 });
+
+
 gulp.task('default',['run','watch'])
 
 module.exports=gulp;

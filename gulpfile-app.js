@@ -168,6 +168,20 @@ gulp.task("initdb",function() {
 });
 
 
+gulp.task("import",function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var xml = argv["xml"];
+  var sep= argv["sep"] || "_.id" ;
+  if (!xml) {
+    console.log("gulp import --xml=filename --sep=tag.attr");
+    console.log("default sep = _.id ");
+    throw "missing filename"
+  }
+
+  var importer=require("./node_scripts/importer");
+  var report=importer(xml,sep);
+  console.log(JSON.stringify(report,'',' '));
+});
 gulp.task('default',['run','watch'])
 
 module.exports=gulp;

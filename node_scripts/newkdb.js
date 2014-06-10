@@ -1,7 +1,7 @@
 module.exports=function(appname,template,config){
 	var configs=require("ksana-document").configs;
-	var template=template||"tibetan";
-	var config=config||"tibetan1";
+	var template=template||"simple";
+	var config=config||"simple1";
 	if (!configs[config]) {
 		throw "config ["+config+"] not found";
 		return;

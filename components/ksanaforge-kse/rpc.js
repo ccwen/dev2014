@@ -11,7 +11,7 @@
 
 	var RPCs={}; //*  key: unique calling id  */
 	if (typeof io=='undefined') io=require("../socketio");
-	var socket = io.connect(window.location.host);
+	var socket = io(window.location.host);//.connect(window.location.host);
   
 	var returnfromserver=function(res) {
 		var slot=RPCs[res.fid];

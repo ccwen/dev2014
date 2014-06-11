@@ -55,10 +55,11 @@ var finalize=function() {
 }
 
 var rpc_init=function(server) {
-	var io=require('socket.io').listen(server);
+	//var io=require('socket.io').listen(server);
+	var io=require('socket.io')(server);
 
-	io.set('log level',0);
-	io.set('transports', ['htmlfile', 'xhr-polling','xhr-pooling']);
+	//io.set('log level',0);
+	//io.set('transports', ['htmlfile', 'xhr-polling','xhr-pooling']);
 	io.on('connection', function(client){
 		client.on('rpc', function(data){
 			//('\nrpc from client',JSON.stringify(data));

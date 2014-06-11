@@ -6,9 +6,9 @@ var sep=require('path').sep;
 var file=process.cwd()+sep+'build'+sep+'build.js';
 
 var watchFiles=function() {
-  fs.watchFile(file, function (event, filename) {
-	console.log('watching ',file,event)
-    if (filename) reload();
+  fs.watchFile(file, function (f1, f2) {
+    console.log('watching ',file)
+    if (f1.mtime.toString()!=f2.mtime.toString()) reload();
   });
 }
 watchFiles();

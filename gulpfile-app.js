@@ -158,8 +158,12 @@ gulp.task("initdb",function() {
   }
 
   if (fs.existsSync(name)) {
-    throw "folder already exists";
-    return;
+    if (fs.existsSync(name+'/ksana.json')) {
+      throw "folder and ksana.json exist";
+      return;
+    }
+  } else {
+    fs.mkdirSync(name);
   }
   newkdb(name,template,config);
   console.log("==build database==");

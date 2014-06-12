@@ -8,8 +8,8 @@ module.exports=function(appname,template,config){
 	}
 	console.log("creating db "+appname+" , template "+template, ", config "+config);
 	var fs=require("fs");
-	fs.mkdirSync(appname);
-	fs.mkdirSync(appname+"/1");
+	
+	if (!fs.existsSync(appname+"/1")) fs.mkdirSync(appname+"/1");
 
 	var ksanajson={
 		  "name":appname

@@ -171,6 +171,7 @@ gulp.task("initdb",function() {
   console.log("gulp mkdb");
 });
 
+var Stream=require("stream");
 
 gulp.task("import",function(){
   var argv = require('minimist')(process.argv.slice(2));
@@ -181,11 +182,30 @@ gulp.task("import",function(){
     console.log("default sep = _.id ");
     throw "missing filename"
   }
-
   var importer=require("./node_scripts/importer");
-  var report=importer(xml,sep);
-  console.log(JSON.stringify(report,'',' '));
+  var Path=require("path");
+  function gulpImport(obj) {
+    var stream = new Stream.Transform({objectMode: true});
+    stream._transform = function(file, unused, callback) {
+      var relativepath=Path.relative(process.cwd(),Path.dirname(file.path));
+      var fn=relativepath+Path.sep+file.relative;
+      if (Path.extname(fn)=="") fn+=".xml";
+      if (Path.extname(fn)==".xml") {
+        var report=importer(fn,sep);
+        console.log(fn,JSON.stringify(report));        
+      }
+      callback(null, file);
+    }
+    return stream;
+   }
+   gulp.src(xml).pipe(gulpImport());
+
 });
-gulp.task('default',['run','watch'])
+
+gulp.task('default',['run','watch']);
+gulp.task("test",function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var xml = argv["xml"];
+})
 
 module.exports=gulp;

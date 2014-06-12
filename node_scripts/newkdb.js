@@ -39,8 +39,12 @@ module.exports=function(appname,template,config){
 	"}\n"+
 	"if (fs.existsSync(path.resolve(gulpfn))) { require(gulpfn) ;}"
 
+	var gitignore="*.kd\n*.kdx\n*.kdb\n"
+
+	
 	fs.writeFileSync(appname+'/ksana.json',JSON.stringify(ksanajson,'',' '),'utf8');
 	fs.writeFileSync(appname+'/gulpfile.js',gulpfile,'utf8');
+	fs.writeFileSync(appname+'/.gitignore',gitignore,'utf8');
 	var kd_serialized="[\n"+kd_stringified.join("\n,")+"\n]";
 	fs.writeFileSync(appname+'/1/1.kd',kd_serialized,'utf8');
 };

@@ -62,6 +62,7 @@ gulp.task('jsx2js_common',function() {
     pipe(react()).pipe(gulp.dest("../components"));
 });
 
+
 gulp.task('componentbuild',['jsx2js','jsx2js_common'],function() {
   return gulp.src('./component.json')
   .pipe(component({standalone: true}))
@@ -191,8 +192,9 @@ gulp.task("import",function(){
       var fn=relativepath+Path.sep+file.relative;
       if (Path.extname(fn)=="") fn+=".xml";
       if (Path.extname(fn)==".xml") {
+        console.log("importing",fn);
         var report=importer(fn,sep);
-        console.log(fn,JSON.stringify(report));        
+        console.log(JSON.stringify(report));        
       }
       callback(null, file);
     }
@@ -206,6 +208,7 @@ gulp.task('default',['run','watch']);
 gulp.task("test",function(){
   var argv = require('minimist')(process.argv.slice(2));
   var xml = argv["xml"];
+  console.log(module.cwd);
 })
 
 module.exports=gulp;

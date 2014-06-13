@@ -22,7 +22,7 @@
     "socket.io": "*"
   },
   "scripts": {
-    "preinstall": "npm install -g jshint gulp component",
+    "preinstall": "npm install -g jshint react-tools gulp component",
     "postinstall": "gulp setup"
   }
 }

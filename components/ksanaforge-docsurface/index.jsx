@@ -21,6 +21,9 @@ var surface = React.createClass({
       this.inlinedialogopened=null;
     }
   },
+  selectedText:function() {
+    return this.props.page.inscription.substr(this.props.selstart,this.props.sellength);
+  },
   moveInputBox:function(rect) {
     var inputbox=this.refs.inputbox.getDOMNode();
     var surfacerect=this.refs.surface.getDOMNode().getBoundingClientRect();

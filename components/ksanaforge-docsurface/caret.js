@@ -171,6 +171,11 @@ var Create=function(_surface) {
       
     }
     else if (kc==40) moveCaretDown();
+    else if (kc==67) {
+      if (e.ctrlKey) {
+        surface.props.action("copy",surface.selectedText());
+      }
+    }
     else if (kc==38) moveCaretUp();
     else if (kc==46) strikeout();
     else if (kc==36) moveCaret(beginOfLine());

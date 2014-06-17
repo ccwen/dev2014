@@ -135,7 +135,7 @@ var Create=function(_surface) {
     //}
 
     if (surface.hasMarkupAt(sel.start)) {
-      surface.openinlinemenu(sel.start);
+      surface.openinlinedialog(sel.start);
     } else {
       addSuggestion(sel.start,sel.len);
     }

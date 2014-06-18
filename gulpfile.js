@@ -165,15 +165,26 @@ gulp.task('qunit',function(){
 		console.log('gulp qunit --js=debuggee.js');
 	}
 });
+var chdir_initcwd=function() {
+  if (!process.env.INIT_CWD) {
+    throw "please update to gulp >3.8.1"
+  }
+  process.chdir(process.env.INIT_CWD);
+}
 
 gulp.task('mkdb',function() {
+  chdir_initcwd();
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   if (name) {
-  	process.chdir(name);
+    process.chdir(name);
   }
   if (!fs.existsSync("ksana.json")) {
     throw " must be a ksana_databases"
   }
-  require("./node_scripts/buildindex")(".");
+  if (fs.existsSync("mkdb.js")) { //user specify a setting file
+    require("./node_scripts/buildfromxml")(".");
+  } else {
+    require("./node_scripts/buildindex")(".");
+  }
 });

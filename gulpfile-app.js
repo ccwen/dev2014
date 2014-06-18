@@ -143,19 +143,25 @@ gulp.task('qunit',function(){
 });
 
 gulp.task('mkdb',function() {
-  chdir_initcwd();
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
+
+  var buildfromxml=require("./node_scripts/buildfromxml");
+  var buildindex=require("./node_scripts/buildindex");
+
+  chdir_initcwd();
   if (name) {
     process.chdir(name);
   }
+  
   if (!fs.existsSync("ksana.json")) {
     throw " must be a ksana_databases"
   }
+  
   if (fs.existsSync("mkdb.js")) { //user specify a setting file
-    require("./node_scripts/buildfromxml")(".");
+    buildfromxml(".");
   } else {
-    require("./node_scripts/buildindex")(".");
+    buildindex(".");
   }
 });
 

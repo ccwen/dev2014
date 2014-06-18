@@ -24,28 +24,30 @@ var build=function(path){
       throw "no "+mkdbjs  ;
   }
   var fn=require("path").resolve(path,mkdbjs);
-  var setting=require(fn);
-  console.log(setting,fn);
-  
-  return;
-  path=path||".";
+  var mkdbconfig=require(fn);
+  var glob = require("glob");
   var indexer=require("ksana-document").indexer;
-
+  var timer=null;
+  glob(mkdbconfig.glob, function (err, files) {
+    if (err) {
+      throw err;
+    }
+    mkdbconfig.files=files;
+    var session=indexer.start(mkdbconfig);
+    if (!session) {
+      console.log("No file to index");
+      return;
+    }
+    timer=setInterval( getstatus, 1000);
+  });
   var getstatus=function() {
     var status=indexer.status();
     outback((Math.floor(status.progress*1000)/10)+'%'+status.message);
     if (status.done) {
-      status.outputfn=movefile(status.outputfn,"..");
+      //status.outputfn=movefile(status.outputfn,"..");
       clearInterval(timer);
     }
   }
-
-  var session=indexer.start(path);
-  if (!session) {
-    console.log("No file to index");
-    return;
-  }
-  var timer=setInterval( getstatus, 1000);
 }
 
 module.exports=build;

@@ -28,22 +28,10 @@ module.exports=function(appname,template,config){
 	]
 	var kd_stringified=kd.map(function(obj) {return JSON.stringify(obj)});
 
-	var gulpfile=	
-	"// work around for GULP 1.2-2.4 (11/12/13) chdir to gulpfile directory before loading it \n"+
-	"var fs=require('fs');\n"+
-	"var gulpfn='gulpfile-app.js';\n"+
-	"var path=require('path');\n"+
-	"while (!fs.existsSync(path.resolve(gulpfn))) {\n"+
-	"	if (path.resolve(gulpfn)==path.resolve('../'+gulpfn)) break;\n"+
-	"	gulpfn='../'+gulpfn;\n"+
-	"}\n"+
-	"if (fs.existsSync(path.resolve(gulpfn))) { require(gulpfn) ;}"
 
 	var gitignore="*.kd\n*.kdx\n*.kdb\n"
-
 	
 	fs.writeFileSync(appname+'/ksana.json',JSON.stringify(ksanajson,'',' '),'utf8');
-	fs.writeFileSync(appname+'/gulpfile.js',gulpfile,'utf8');
 	fs.writeFileSync(appname+'/.gitignore',gitignore,'utf8');
 	var kd_serialized="[\n"+kd_stringified.join("\n,")+"\n]";
 	fs.writeFileSync(appname+'/1/1.kd',kd_serialized,'utf8');

@@ -3,7 +3,7 @@
   "description": "dev platform 2014",
   "version": "0.0.1",
   "devDependencies": {
-    "gulp": "*",
+    "gulp": "~3.8.1",
     "gulp-react": "*",
     "gulp-jshint": "*",
     "gulp-concat": "~2.1.7",

@@ -119,10 +119,16 @@ gulp.task('mkzip',['min'],function(){
   var platform=argv['platform'] || process.platform;;
   mkzip(appname,platform,argv['product']);
 });
-
+var chdir_initcwd=function() {
+  if (!process.env.INIT_CWD) {
+    throw "please update to gulp >3.8.1"
+  }
+  process.chdir(process.env.INIT_CWD);
+}
 gulp.task('qunit',function(){
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['js'];
+  chdir_initcwd();  
   var filename=process.cwd()+require('path').sep+name;
   while (!fs.existsSync('qunit.cmd')) {
     process.chdir('..');
@@ -135,7 +141,9 @@ gulp.task('qunit',function(){
   }
   
 });
+
 gulp.task('mkdb',function() {
+  chdir_initcwd();
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   if (name) {
@@ -144,11 +152,16 @@ gulp.task('mkdb',function() {
   if (!fs.existsSync("ksana.json")) {
     throw " must be a ksana_databases"
   }
-  require("./node_scripts/buildindex")(".");
+  if (fs.existsSync("mkdb.js")) { //user specify a setting file
+    require("./node_scripts/buildfromxml")(".");
+  } else {
+    require("./node_scripts/buildindex")(".");
+  }
 });
 
 var newkdb=require("./node_scripts/newkdb");
 gulp.task("initdb",function() {
+  chdir_initcwd();
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv["name"];
   var template = argv["template"];
@@ -184,6 +197,7 @@ gulp.task("import",function(){
     throw "missing filename"
   }
   var importer=require("./node_scripts/importer");
+  chdir_initcwd();
   var Path=require("path");
   function gulpImport(obj) {
     var stream = new Stream.Transform({objectMode: true});
@@ -205,10 +219,5 @@ gulp.task("import",function(){
 });
 
 gulp.task('default',['run','watch']);
-gulp.task("test",function(){
-  var argv = require('minimist')(process.argv.slice(2));
-  var xml = argv["xml"];
-  console.log(module.cwd);
-})
 
 module.exports=gulp;

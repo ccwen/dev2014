@@ -19,7 +19,7 @@ var movefile=function(sourcefn,targetfolder) {
 }
 var build=function(path){
   path=path||".";
-  var indexer=require("ksana-document").indexer;
+  var indexer=require("ksana-document").indexer_kd;
 
   var getstatus=function() {
     var status=indexer.status();

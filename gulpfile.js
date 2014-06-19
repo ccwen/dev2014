@@ -154,6 +154,7 @@ gulp.task("initdb",function() {
 gulp.task('qunit',function(){
 	var argv = require('minimist')(process.argv.slice(2));
 	var name = argv['js'];
+	chdir_initcwd();  
 	var filename=process.cwd()+require('path').sep+name;
 	while (!fs.existsSync('qunit.cmd')) {
 		process.chdir('..');

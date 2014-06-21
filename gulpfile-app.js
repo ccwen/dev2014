@@ -223,7 +223,20 @@ gulp.task("import",function(){
    gulp.src(xml).pipe(gulpImport());
 
 });
+gulp.task("get",function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var path = argv["p"] || argv["path"];
+  if (!path) {
+    console.log("gulp get --path=db.x.y.z");
+    throw "missing db name and path"
+  }
+  var getpath=require("./node_scripts/getpath");
+  chdir_initcwd();
 
+  getpath(path,function(data){
+    console.log("result=",JSON.stringify(data,""," "));
+  });
+});
 gulp.task('default',['run','watch']);
 
 module.exports=gulp;

@@ -39,6 +39,7 @@ var yase=function(){
     api_document(ksana.services);
 
     return { //turn into async, for compatible with node_server
+      
         phraseSearch: makeinf('phraseSearch'),
         boolSearch: makeinf('boolSearch'),
         search: makeinf('search'),

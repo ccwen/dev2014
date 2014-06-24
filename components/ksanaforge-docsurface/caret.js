@@ -112,15 +112,15 @@ var Create=function(_surface) {
     return caretpos;
   };
 
-  var addSuggestion=function(start,len) {
+  var addSuggestion=function(start,len,defaulttext) {
     var prev=caretPos();
     if (prev===0) return 0;  
     
     var len=prev-start;
-    surface.props.action("addsuggestion",start,len);
+    surface.props.action("addsuggestion",start,len,defaulttext);
   };
 
-  var spacebar=function() {
+  var inlinedialog=function(thekey) {
     var sel={};
     //if (surface.props.sellength==0) {
       var here=selstartFromCaret();
@@ -128,16 +128,11 @@ var Create=function(_surface) {
       var sel=selstartFromCaret();
       moveCaret(caretnode.nextSibling);
       sel.len=here.start-sel.start;
-    //} else {
-    //  return;
-    //  sel.start=surface.props.selstart;
-    //  sel.len=surface.props.sellength;
-    //}
 
     if (surface.hasMarkupAt(sel.start)) {
       surface.openinlinedialog(sel.start);
     } else {
-      addSuggestion(sel.start,sel.len);
+      addSuggestion(sel.start,sel.len,thekey||"");
     }
   }
 
@@ -150,42 +145,54 @@ var Create=function(_surface) {
     moveCaret(caretnode.nextSibling);
     updateSelStart();
   }
-
-	this.keydown=function(e) {
-
+var validchar=function(kc) {
+  return  (kc>=0x41 && kc<=0x5F);
+}
+this.keypress=function(e) {
+  var kc=e.which;
+  inlinedialog(String.fromCharCode(kc));
+}
+this.keydown=function(e) {
+   var prevent=true;
     shiftkey=e.shiftKey;
-    var kc=e.keyCode;
+    var kc=e.which;
     if (kc==37) {
       if (e.ctrlKey) {
-        if (!surface.inlinemenuopened) surface.props.action("prevmistake");
+        if (!surface.inlinedialogopened) surface.props.action("prevmistake");
       } else {
         moveCaret(caretnode.previousSibling);
       }
     }
     else if (kc==39) {
       if (e.ctrlKey) {
-        if (!surface.inlinemenuopened) surface.props.action("nextmistake");
+        if (!surface.inlinedialogopened) surface.props.action("nextmistake");
       } else {
         moveCaret(caretnode.nextSibling);  
       }
       
     }
     else if (kc==40) moveCaretDown();
-    else if (kc==67) {
-      if (e.ctrlKey) {
-        surface.props.action("copy",surface.selectedText());
-      }
-    }
     else if (kc==38) moveCaretUp();
     else if (kc==46) strikeout();
     else if (kc==36) moveCaret(beginOfLine());
     else if (kc==35) moveCaret(endOfLine());
-    else if (kc==32) spacebar();
+    else if (kc==32) inlinedialog();
     else if (kc==13) enter();
     else if (kc==27) surface.closeinlinedialog();
+    else if (validchar(kc)) {
+
+      if (kc==67 && e.ctrlKey) {
+        surface.props.action("copy",surface.selectedText());
+      } else {
+        prevent=false;
+      }
+
+    }
 
     if (kc>=27&&kc<50)  updateSelStart();
-	}	
+    if (prevent) e.preventDefault();
+
+ }	
   this.show=function() {
     //this.refs.surface.getDOMNode().focus();
     var pos=surface.props.selstart+surface.props.sellength;

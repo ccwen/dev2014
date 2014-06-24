@@ -79,7 +79,8 @@ var surface = React.createClass({
     if (start+selectionlength==nextstart) {//select till end of last token
       length=selectionlength;
     } else {
-      length=end-start;
+      if (selectionlength)   length=nextstart-start; //https://github.com/ksanaforge/workshop/issues/50
+      else length=end-start;
       //if (range.endOffset>range.startOffset &&!length) length=1;
       if (length<0) {
           temp=end; end=start; start=end;
@@ -344,6 +345,7 @@ var surface = React.createClass({
           {this.addInlinedialog()}
           <div ref="surface" tabIndex="0" 
             onKeyDown={this.caret.keydown} 
+            onKeyPress={this.caret.keypress} 
             onClick={this.tokenclicked} 
             onMouseDown={this.mouseDown}
             onMouseUp={this.mouseUp}

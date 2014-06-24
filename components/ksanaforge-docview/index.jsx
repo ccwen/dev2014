@@ -164,8 +164,8 @@ var docview = React.createClass({
       cssgen.applyStyles(this.props.styles,tagset,"div[data-id='"+uuid+"'] ");
     }
   }, 
-  addSuggestion:function(start,len) {
-    var text=this.getSelectedText(start,len);
+  addSuggestion:function(start,len,defaulttext) {
+    var text=this.getSelectedText(start,len)+defaulttext;
     var payload={type:"suggest",
                   author:this.props.user.name,
                   text:text
@@ -224,8 +224,9 @@ var docview = React.createClass({
     } else if (action=="addsuggestion") {
       var ss=args[0]||this.state.selstart;
       var sl=args[1]||this.state.sellength;
+      var text=args[2]||"";
       if (sl>maxlen) return;
-      this.addSuggestion(ss,sl);
+      this.addSuggestion(ss,sl,text);
     } else if (action=="addmarkup") { 
       var payload=args[0];
       payload.i=this.props.pageid;

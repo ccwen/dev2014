@@ -159,6 +159,8 @@ gulp.task('mkdb',function() {
   }
   
   if (fs.existsSync("mkdb.js")) { //user specify a setting file
+    var mkdb=require("./mkdb.js");
+    mkdb.gulp=true;
     buildfromxml(".");
   } else {
     buildindex(".");

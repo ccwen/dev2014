@@ -189,3 +189,20 @@ gulp.task('mkdb',function() {
     require("./node_scripts/buildindex")(".");
   }
 });
+
+gulp.task("get",function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var path = argv["p"] || argv["path"];
+  var recursive = argv["r"] || argv["recursive"];
+  if (!path) {
+    console.log("gulp get --path=db.x.y.z  or -p db.x.y.z");
+    console.log("optional flag --recursive or -r");
+    throw "missing db name and path";
+  }
+  var getpath=require("./node_scripts/getpath");
+  chdir_initcwd();
+
+  getpath(path,!!recursive,function(data){
+    console.log("result=",JSON.stringify(data,""," "));
+  });
+});

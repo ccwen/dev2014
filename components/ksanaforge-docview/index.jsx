@@ -342,7 +342,7 @@ var docview = React.createClass({
                 preview={this.props.preview}
                 customfunc={this.props.customfunc}
                 hits={this.props.hits}
-                > 
+                >  
        </surface>   
       <div ref="linkto" className="btnlinkto-container">
         <span onClick={this.showlinktomenu} className="btnlinkto">{"\u21dd"}</span>

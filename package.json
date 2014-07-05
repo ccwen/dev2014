@@ -3,24 +3,25 @@
   "description": "dev platform 2014",
   "version": "0.0.1",
   "devDependencies": {
-    "gulp": "~3.8.1",
-    "gulp-react": "*",
-    "gulp-jshint": "*",
-    "gulp-concat": "~2.1.7",
-    "gulp-uglify": "~0.2.1",
-    "gulp-rename": "~1.1.0",
-    "unzip": "~0.1.9",
     "fstream": "~0.1.25",
+    "gulp": "~3.8.1",
     "gulp-clean": "~0.2.4",
-    "minimist": "0.0.7",
-    "gulp-filelog": "~0.2.0",
-    "gulp-tap": "*",
     "gulp-component": "~0.1.5",
-    "tar": "*"
-  },
-  "dependencies": {
+    "gulp-concat": "~2.1.7",
+    "gulp-filelog": "~0.2.0",
+    "gulp-jshint": "*",
+    "gulp-react": "*",
+    "gulp-rename": "~1.1.0",
+    "gulp-tap": "*",
+    "gulp-uglify": "~0.2.1",
+    "minimist": "0.0.7",
+    "tar": "*",
+    "unzip": "~0.1.9",
     "glob": "^4.0.2",
     "socket.io": "*"
+  },
+  "dependencies": {
+    "sax":"*"
   },
   "scripts": {
     "preinstall": "npm install -g jshint react-tools gulp component",

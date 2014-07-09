@@ -381,6 +381,7 @@ var surface = React.createClass({
   },
   componentDidMount:function() {
     this.showMakelinkDialog(this.props.selstart);
+    this.caret.show();
   },
   componentDidUpdate:function() {
     if (this.props.scrollto) this.scrollToSelection();

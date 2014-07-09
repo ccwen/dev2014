@@ -19,7 +19,7 @@ var docview = React.createClass({
     return (p.page!=np.page || p.pageid!=np.pageid ||
      s.selstart!=ns.selstart || s.sellength!=ns.sellength
      ||s.newMarkupAt!=ns.newMarkupAt
-     ||this.hits!=this.props.hits
+     ||this.hits!=np.hits
      ||this.state.linkby!=nextState.linkby
      ||this.state.linkto!=nextState.linkto);
 

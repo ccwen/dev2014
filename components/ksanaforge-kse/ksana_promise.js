@@ -1,7 +1,7 @@
 var $=require('../jquery');
-var yase=require('./yase');
-var $yase=function(api,opts) {
-    if (typeof yase[api]!=='function') {
+var ksana=require('./ksana');
+var $ksana=function(api,opts) {
+    if (typeof ksana[api]!=='function') {
       throw api+' not found';
       return;
     }
@@ -9,7 +9,7 @@ var $yase=function(api,opts) {
     var promise=deferred.promise();
     var that=this;
 
-    yase[api](opts,function(err,data){
+    ksana[api](opts,function(err,data){
       if (err) deferred.fail(err);
       else deferred.resolveWith(that,[data]);
       deferred.always(err);
@@ -17,4 +17,4 @@ var $yase=function(api,opts) {
 
     return promise;
 };
-module.exports=$yase;
+module.exports=$ksana;

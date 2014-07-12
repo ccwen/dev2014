@@ -9,5 +9,5 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": ["index.js","rpc.js",
-  "rpc_yase.js","rpc_document.js","yase.js","yase_promise.js"]
+  "rpc_yase.js","rpc_document.js","ksana.js","ksana_promise.js"]
 }

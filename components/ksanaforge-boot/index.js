@@ -8,7 +8,7 @@ if (typeof process !="undefined") {
 	ksana.platform="chrome";
 }
 
-var React=require('../react');
+if (typeof React=="undefined") window.React=require('../react');
 //require("../cortex");
 var Require=function(arg){return require("../"+arg)};
 var boot=function(appId,main,maindiv) {
@@ -18,7 +18,6 @@ var boot=function(appId,main,maindiv) {
 
 	ksana.mainComponent=React.renderComponent(Require(main)(),document.getElementById(maindiv));	
 }
-window.React=React;
 window.ksana=ksana;
 window.Require=Require;
 module.exports=boot;

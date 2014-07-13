@@ -5,6 +5,7 @@
 *
 * Designed and built with all the love in the world by @mdo and @fat.
 */
+
 // if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
 
 /* ========================================================================
@@ -25,8 +26,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ======================================================================== */
-
-var jQuery =  require("jquery");
+//if (typeof jQuery=="undefined") var jQuery =  require("jquery");
 
 +function ($) { "use strict";
 
@@ -2000,5 +2000,3 @@ var jQuery =  require("jquery");
   })
 
 }(jQuery);
-
-module.exports = jQuery;

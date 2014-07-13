@@ -1,11 +1,11 @@
-var $=require('../jquery');
+//var $=require('../jquery');
 var ksana=require('./ksana');
 var $ksana=function(api,opts) {
     if (typeof ksana[api]!=='function') {
       throw api+' not found';
       return;
     }
-    var deferred = new $.Deferred();
+    var deferred = new jQuery.Deferred();
     var promise=deferred.promise();
     var that=this;
 

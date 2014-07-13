@@ -72,6 +72,8 @@ gulp.task('componentbuild',['jsx2js','jsx2js_common'],function() {
 gulp.task('rebuild',['componentbuild'],function(){
   /* remove use strict in build.js 
      workaround for socketio not strict safe */
+  
+  //socket io is rebuild from build.js ..2014.7.13
   var buildjs=fs.readFileSync('./build/build.js','utf8')
   var buildjs=buildjs.replace("'use strict';","// 'use strict'; // socketio is not strict safe");
   fs.writeFileSync('./build/build.js',buildjs,'utf8')
@@ -115,11 +117,10 @@ gulp.task('min',['rebuild'],function(){
 gulp.task('mkzip',['min'],function(){
   var mkzip=require('./node_scripts/mkzip');
   chdir_initcwd();
-  var appname=process.cwd();
-  
+  var appfolder=process.cwd();
   var argv = require('minimist')(process.argv.slice(2));
   var platform=argv['platform'] || process.platform;;
-  mkzip(appname,platform,argv['product']);
+  mkzip(appfolder,platform,argv['product']);
 });
 var chdir_initcwd=function() {
   if (!process.env.INIT_CWD) {

@@ -27,16 +27,12 @@ module.exports=function(appname){
 '  "version": "0.0.1",\n'+
 '  "keywords": [],\n'+
 '  "dependencies": {\n'+
-'    "ksanaforge/boot": "*",\n'+
-'    "socketio/socketio": "*",\n'+
-'    "brighthas/bootstrap": "*",\n'+
-'    "ksana/document": "*",\n'+
-'    "ksanaforge/kse": "*",\n'+
-'    "component/jquery": "*"\n'+
+'    "ksanaforge/boot": "*"\n'+
+'    ,"ksana/document": "*"\n'+
+'    ,"ksanaforge/kse": "*"\n'+
 '  },\n'+
 '  "development": {},\n'+
 '  "paths": ["components","../components","../node_modules/"],\n'+
-'  "local": ["facebook/react"],\n'+
 '  "license": "MIT",\n'+
 '  "main": "index.js",\n'+
 '  "scripts": ["index.js"],\n'+
@@ -49,6 +45,9 @@ module.exports=function(appname){
 						'<head>\n'+
 						'<meta charset="utf-8" />\n'+
 						'<script src="../nodemain.js"></script>\n'+
+						'<script src="../components/component-jquery/jquery.js"></script>\n'+
+						'<script src="../components/socketio-socketio/socket.io.js"></script>\n'+
+						'<script src="../components/facebook-react/react-with-addons.js"></script>\n'+
 						'<link type="text/css" rel="stylesheet" href="build/build.css">\n'+
 						'</head>\n'+
 						'<div id="main"></div>\n'+
@@ -72,6 +71,16 @@ module.exports=function(appname){
 						'       }  \n'+
 						'    ]\n'+
 						'}';
+	
+	
+	var mkzipjson='{"files":[\n'+
+			'"components/facebook-react/react-with-addons.js"\n'+
+			',"components/component-jquery/jquery.js"\n'+
+			',"components/socketio-socketio/socket.io.js"\n'+
+			'],\n'+
+			'"repos":["node_modules/ksana-document"\n'+
+		'}';
+
 	var chromemain='chrome.app.runtime.onLaunched.addListener(function(launchData) {\n'+
   			'chrome.app.window.create("index.html", {id:"'+appname+'", bounds: {width: 800, height: 500}}, function(win) {\n'+
 			'win.contentWindow.launchData = launchData;\n'+
@@ -106,6 +115,7 @@ module.exports=function(appname){
 	fs.writeFileSync(appname+'/gulpfile.js',gulpfile,'utf8');
 	fs.writeFileSync(appname+'/component.json',componentjson,'utf8');
 	fs.writeFileSync(appname+'/index.js',indexjs,'utf8');
+	fs.writeFileSync(appname+'/mkzip.json',mkzipjson,'utf8');
 	fs.writeFileSync(appname+'/package.json',packagejson,'utf8');
 	fs.writeFileSync(appname+'/index.css',indexcss,'utf8');
 	fs.writeFileSync(appname+'/index.html',indexhtml,'utf8');

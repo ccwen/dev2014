@@ -1,6 +1,5 @@
 ﻿/** @jsx React.DOM */
 var bootstrap=Require('bootstrap');
-if (typeof $ =='undefined') $=Require('jquery');
 var contentpf="C_";
 var Tabui = React.createClass({
   getInitialState:function(){

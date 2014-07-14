@@ -20,6 +20,7 @@ api.buildIndex=makeinf("buildIndex");
 api.buildStatus=makeinf("buildStatus");
 api.stopIndex=makeinf("stopIndex");
 api.get=makeinf("get");
+api.search=makeinf("search");
 
 rpc.exec(function(err,data){
 	api.version=data;

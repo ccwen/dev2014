@@ -14,18 +14,19 @@ var SetIntervalMixin = {
     this.intervals.map(clearInterval);
   }
 };
-var kse=require("../kse")
+var kse=require("../kse");
 var YaseMixin = {
   componentWillMount:function() {
-    this.$yase=function() {
-      return kse.$yase.apply(this,arguments);
+    this.$yase=function() { //for backward compatibility
+      return kse.$ksana.apply(this,arguments);
     }
     this.$ksana=function() { //new name
-      return kse.$yase.apply(this,arguments);
-    }
+      return kse.$ksana.apply(this,arguments);
+    }/*
     this.useDB=function() {
       return kse.useDB.apply(this,arguments);
     }
+    */
   }
 }
 

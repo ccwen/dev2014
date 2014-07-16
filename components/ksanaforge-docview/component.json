@@ -6,8 +6,7 @@
   "keywords": [],
   "dependencies": {
     "ksanaforge/docsurface": "*",
-    "brighthas/bootstrap":"*",
-    "component/jquery":"*"
+    "brighthas/bootstrap":"*"
     },
   "development": {},
   "license": "MIT",

@@ -73,10 +73,10 @@ gulp.task('rebuild',['componentbuild'],function(){
   /* remove use strict in build.js 
      workaround for socketio not strict safe */
   
-  //socket io is rebuild from build.js ..2014.7.13
-  var buildjs=fs.readFileSync('./build/build.js','utf8')
-  var buildjs=buildjs.replace("'use strict';","// 'use strict'; // socketio is not strict safe");
-  fs.writeFileSync('./build/build.js',buildjs,'utf8')
+  //socket io is removed from build.js ..2014.7.13
+//  var buildjs=fs.readFileSync('./build/build.js','utf8')
+//  var buildjs=buildjs.replace("'use strict';","// 'use strict'; // socketio is not strict safe");
+//  fs.writeFileSync('./build/build.js',buildjs,'utf8')
 
   tempjs.map(function(f){fs.unlink(f)});
   tempjs.length=0;

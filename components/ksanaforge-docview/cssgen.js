@@ -14,7 +14,7 @@ var insertRule=function(sheet,tags,prefix,SS) {
 	var combined=" ";
 	for (var j=0;j<SS.length;j++) {
 		var S=SS[j];
-		for (k in S) {
+		for (var k in S) {
 			if (k==="background-image") {
 				background_images.push(S[k]);
 			} else {

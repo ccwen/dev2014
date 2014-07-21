@@ -99,7 +99,7 @@ gulp.task('run',['rebuild'],function(){
 });
 
 
-gulp.task('server',['rebuild'],function(){
+gulp.task('server',['rebuild','watch'],function(){
   var instance=spawn("node",['../node_scripts/server'])
 
   instance.on('exit',function(){

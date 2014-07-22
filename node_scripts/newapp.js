@@ -28,6 +28,7 @@ module.exports=function(appname){
 '  "keywords": [],\n'+
 '  "dependencies": {\n'+
 '    "ksanaforge/boot": "*"\n'+
+'    "brighthas/bootstrap": "*"\n'+
 '    ,"ksana/document": "*"\n'+
 '    ,"ksanaforge/kse": "*"\n'+
 '  },\n'+

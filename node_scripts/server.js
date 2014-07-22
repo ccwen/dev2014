@@ -43,8 +43,8 @@ try { return fs.statSync(d).isDirectory() }
 var servestatic=function(filename,stat,req,res) {
 	var ext=filename.substring(filename.lastIndexOf("."));
 	var etag = stat.size + '-' + Date.parse(stat.mtime);
-	var nocache=(req.connection.remoteAddress=='127.0.0.1') && 
-	(ext=='.js' || ext=='.tmpl');
+	var nocache=(req.connection.remoteAddress=='127.0.0.1') || 
+	(ext=='.js' || ext=='.tmpl' || ext==".manifest");
 	
 	if(!nocache && req.headers['if-none-match'] === etag) {
 		res.statusCode = 304;
@@ -129,7 +129,7 @@ var startserver=function() {
 			
  
 		}); //end path.exists
-	}).listen(port,"127.0.0.1");	
+	}).listen(port,"0.0.0.0");	
 	if (autostart) spawn('cmd', ["/c","start",'http://127.0.0.1:'+port+'/'+startfolder+'/']);
 	rpc_node(httpd);  //enable server side API, pass in httpd server handle
 }

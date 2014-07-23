@@ -39,30 +39,36 @@ try { return fs.statSync(d).isDirectory() }
 	res.end();
 	return;
  }
- 
 var servestatic=function(filename,stat,req,res) {
 	var ext=filename.substring(filename.lastIndexOf("."));
 	var etag = stat.size + '-' + Date.parse(stat.mtime);
 	var nocache=(req.connection.remoteAddress=='127.0.0.1') || 
-	(ext=='.js' || ext=='.tmpl' || ext==".manifest");
+	(ext=='.js' || ext=='.tmpl' || ext==".manifest" || ext==".kdb");
 	
 	if(!nocache && req.headers['if-none-match'] === etag) {
 		res.statusCode = 304;
 		res.end();
 	} else {
+	 	var range=null, opts={};
+	 	if (req.headers.range) range=req.headers.range.match(/bytes=(\d+)-(\d+)/);
 		
 		var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
+		var header={"Content-Type":mimeType, "Content-Length":stat.size};
+	 	if (range) {
+	 		opts={start:parseInt(range[1]),end:parseInt(range[2])};
+	 		header["Content-Length"]=opts.end-opts.start+1;
+	 	}
+
 		if ( nocache) {
 			console.log('serving no cache file '+filename);
-			res.writeHead(200, {'Content-Type':
-			mimeType,'Content-Length':stat.size	} );
 		} else {
 			console.log('serving file '+filename);
-			res.writeHead(200, {'Content-Type':
-			mimeType,'Content-Length':stat.size ,'Last-Modified': stat.mtime,
-			'ETag': etag} );
+			header['Last-Modified']=stat.mtime;
+			header['ETag']= etag;
 		}
-		var fileStream = fs.createReadStream(filename);
+		res.writeHead(200, header);
+		
+		var fileStream = fs.createReadStream(filename,opts);
 		fileStream.pipe(res);
 	}
 }

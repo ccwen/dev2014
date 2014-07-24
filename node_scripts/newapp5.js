@@ -1,3 +1,10 @@
+//create new html5 app
+/*
+  no socket.io
+  add offline.appcache
+  add 
+*/
+
 module.exports=function(appname){
 
 	var fs=require('fs');
@@ -30,7 +37,6 @@ module.exports=function(appname){
 '    "ksanaforge/boot": "*"\n'+
 '    ,"brighthas/bootstrap": "*"\n'+
 '    ,"ksana/document": "*"\n'+
-'    ,"ksanaforge/kse": "*"\n'+
 '  },\n'+
 '  "development": {},\n'+
 '  "paths": ["components","../components","../node_modules/"],\n'+
@@ -42,13 +48,11 @@ module.exports=function(appname){
 
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
-	var indexhtml='<html>\n'+
+	var indexhtml='<html manifest="offline.appcache">\n'+
 						'<head>\n'+
 						'<meta charset="utf-8" />\n'+
-						'<script src="../nodemain.js"></script>\n'+
-						'<script src="../components/component-jquery/jquery.js"></script>\n'+
-						'<script src="../components/socketio-socketio/socket.io.js"></script>\n'+
-						'<script src="../components/facebook-react/react-with-addons.js"></script>\n'+
+						'<script src="jquery.js"></script>\n'+
+						'<script src="react-with-addons.js"></script>\n'+
 						'<link type="text/css" rel="stylesheet" href="build/build.css">\n'+
 						'</head>\n'+
 						'<div id="main"></div>\n'+
@@ -56,7 +60,7 @@ module.exports=function(appname){
 						'</html>';
 	var packagejson='{\n'+
 						'  "name": "'+appname+'",\n'+
-						'  "description": "New application",\n'+
+						'  "description": "New html5 application",\n'+
 						'  "version": "0.0.1",\n'+
 						'  "main": "index.html",\n'+
 						'  "single-instance":true,\n'+
@@ -73,54 +77,31 @@ module.exports=function(appname){
 						'    ]\n'+
 						'}';
 	
-	
-	var mkzipjson='{"files":[\n'+
-			'"components/facebook-react/react-with-addons.js"\n'+
-			',"components/component-jquery/jquery.js"\n'+
-			',"components/socketio-socketio/socket.io.js"\n'+
-			'],\n'+
-			'"repos":["node_modules/ksana-document"\n'+
-		'}';
 
-	var chromemain='chrome.app.runtime.onLaunched.addListener(function(launchData) {\n'+
-  			'chrome.app.window.create("index.html", {id:"'+appname+'", bounds: {width: 800, height: 500}}, function(win) {\n'+
-			'win.contentWindow.launchData = launchData;\n'+
-			'});\n'+
-			'});'
+
+	var appcache='CACHE MANIFEST\n'
+		+'# Updated on: 2014-1-1 10:10:10;\n'
+		+'/'+appname+'/index.html\n'
+		+'/'+appname+'/build/build.js\n'
+		+'/'+appname+'/build/build.css\n'
+		+'/'+appname+'/jquery.js\n'
+		+'/'+appname+'/react-with-addons.js';
 
 	//default gulpfile to prevent from using parent gulpfile
 	var gulpfile="require('../gulpfile-app.js');";
-	var manifestjson='{\n'+
-		'"name": "'+appname+'",\n'+
-		'"version": "0.1",\n'+
-		'"manifest_version": 2,\n'+
-		'"description": "'+appname+'",\n'+
-		'"icons": { "16": "icons/icon16.png",\n'+
-		'          "48": "icons/icon48.png",\n'+
-       	'	    "128": "icons/icon128.png" },\n'+
-    	'"app": {\n'+
-		'	"background": {\n'+
-		'	"scripts": ["chrome-main.js"]\n'+
-		'	}\n'+
-		'},\n'+
-		'"permissions": [\n'+
-		'"chrome://favicon/",\n'+
-		'"clipboardRead",\n'+
-		'"clipboardWrite",\n'+
-		'"notifications",\n'+
-		'{"fileSystem": ["write", "retainEntries", "directory"]},\n'+
-		'"storage"\n'+
-		']\n'+
-		'}';
-
+	//copy jquery and react
+	var copyFile=function(path) {
+		var fn=path.substr(path.lastIndexOf("/"));
+		fs.writeFileSync(appname+fn, fs.readFileSync(path));
+	}
+	copyFile("components/component-jquery/jquery.js");
+	copyFile("components/facebook-react/react-with-addons.js");
 	fs.writeFileSync(appname+'/gulpfile.js',gulpfile,'utf8');
 	fs.writeFileSync(appname+'/component.json',componentjson,'utf8');
 	fs.writeFileSync(appname+'/index.js',indexjs,'utf8');
-	fs.writeFileSync(appname+'/mkzip.json',mkzipjson,'utf8');
+	fs.writeFileSync(appname+'/offline.appcache',appcache,'utf8');
 	fs.writeFileSync(appname+'/package.json',packagejson,'utf8');
 	fs.writeFileSync(appname+'/index.css',indexcss,'utf8');
 	fs.writeFileSync(appname+'/index.html',indexhtml,'utf8');
-//	fs.writeFileSync(appname+'/chrome_main.js',indexhtml,'utf8'); //for chrome app
-	fs.writeFileSync(appname+'/manifest.json',manifestjson,'utf8'); //for chrome app
 	fs.mkdirSync(appname+'/components');
 }

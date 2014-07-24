@@ -68,8 +68,16 @@ gulp.task('componentbuild',['jsx2js','jsx2js_common'],function() {
   .pipe(component({standalone: true}))
   .pipe(gulp.dest('./build'));
 });
-
-gulp.task('rebuild',['componentbuild'],function(){
+gulp.task('touchappcache',function(){
+  var fn="offline.appcache";
+  if (fs.existsSync(fn)){
+    var content=fs.readFileSync(fn,"utf8").replace(/\r\n/g,"\n").split("\n");
+    content[1]="# Updated on "+new Date();
+    fs.writeFileSync(fn,content.join("\n"),"utf8");
+    console.log("touch offline.appcache",content.length);
+  }
+})
+gulp.task('rebuild',['componentbuild','touchappcache'],function(){
   /* remove use strict in build.js 
      workaround for socketio not strict safe */
   
@@ -131,11 +139,16 @@ var chdir_initcwd=function() {
 gulp.task('qunit',function(){
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['js'];
+  var filename=name;
   chdir_initcwd();  
-  var filename=process.cwd()+require('path').sep+name;
+  var cwd=process.cwd();
+  
+  if (name[0]!='/' && name[1]!=':') filename=process.cwd()+require('path').sep+name;
+
   while (!fs.existsSync('qunit.cmd')) {
     process.chdir('..');
   }
+  console.log(cwd,filename);
   if (fs.existsSync(filename)) {
     spawn('qunit.cmd',[filename]);  
   } else {

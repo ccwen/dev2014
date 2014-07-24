@@ -105,7 +105,7 @@ gulp.task('setup',['install'],function(){
     console.log(">gulp sampleapp");
 });
 
-var createapp=function(name) {
+var createapp=function(name,newapp) {
   if (fs.existsSync(name+'/gulpfile.js')) {
   	throw "not an empty folder";
   	return;
@@ -120,11 +120,17 @@ var createapp=function(name) {
 }
 
 var newapp=require('./node_scripts/newapp');
+var newapp5=require('./node_scripts/newapp5');
 var newcomponent=require('./node_scripts/newcomponent');
 gulp.task('newapp',function(){
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   createapp(name);
+});
+gulp.task('newapp5',function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['name'];
+  createapp(name,newapp5);
 });
 
 gulp.task('init',function() {  //user create in an empty repository
@@ -155,10 +161,11 @@ gulp.task('qunit',function(){
 	var argv = require('minimist')(process.argv.slice(2));
 	var name = argv['js'];
 	chdir_initcwd();  
-	var filename=process.cwd()+require('path').sep+name;
+	var filename=name;//process.cwd()+require('path').sep+name;
 	while (!fs.existsSync('qunit.cmd')) {
 		process.chdir('..');
 	}
+
 	if (fs.existsSync(filename)) {
 		spawn('qunit.cmd',[filename]);	
 	} else {

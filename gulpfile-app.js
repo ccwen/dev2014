@@ -108,14 +108,26 @@ gulp.task('run',['rebuild'],function(){
 
 
 gulp.task('server',['rebuild','watch'],function(){
-  var instance=spawn("node",['../node_scripts/server'])
-
+  var instance=spawn("node",['../node_scripts/server','--cwd','..'])
+  chdir_initcwd();
   instance.on('exit',function(){
     appprocessexit();
   });
   var appfolder=process.cwd().match(/[\/\\]([^\/\\]*?)$/)[1];
   console.log("your application can be accessed from ");
   console.log(("http://127.0.0.1:2556/"+appfolder));
+});
+
+gulp.task('default',['rebuild','watch'],function(){
+  console.log('default')
+  var appfolder=process.cwd().match(/[\/\\]([^\/\\]*?)$/)[1];
+  var instance=spawn("node",["../node_scripts/server"])
+  chdir_initcwd();
+  instance.on('exit',function(){
+    appprocessexit();
+  });
+  console.log("your application can be accessed from ");
+  console.log(("http://127.0.0.1:2556/"));
 });
 
 gulp.task('min',['rebuild'],function(){
@@ -257,6 +269,6 @@ gulp.task("get",function(){
     console.log("result=",JSON.stringify(data,""," "));
   });
 });
-gulp.task('default',['run','watch']);
+gulp.task('nw',['run','watch']);
 
 module.exports=gulp;

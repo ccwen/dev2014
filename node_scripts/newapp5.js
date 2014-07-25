@@ -81,11 +81,11 @@ module.exports=function(appname){
 
 	var appcache='CACHE MANIFEST\n'
 		+'# Updated on: 2014-1-1 10:10:10;\n'
-		+'/'+appname+'/index.html\n'
-		+'/'+appname+'/build/build.js\n'
-		+'/'+appname+'/build/build.css\n'
-		+'/'+appname+'/jquery.js\n'
-		+'/'+appname+'/react-with-addons.js';
+		+'/index.html\n'
+		+'/build/build.js\n'
+		+'/build/build.css\n'
+		+'/jquery.js\n'
+		+'/react-with-addons.js';
 
 	//default gulpfile to prevent from using parent gulpfile
 	var gulpfile="require('../gulpfile-app.js');";

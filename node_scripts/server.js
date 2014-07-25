@@ -6,27 +6,29 @@ var restart=require('./restart');//restart helper
 var rpc_node=require('./rpc_node');
 //var googlelogin=require('./googlelogin');
 var googlelogin={};
-  
-var mimeTypes = {
-    "html": "text/html",
-	  "htm": "text/html",
-    "jpeg": "image/jpeg",
-    "jpg": "image/jpeg",
-    "png": "image/png",
-    "svg": "image/svg+xml",
-    "js": "application/javascript",
-    "css": "text/css"};
+/*
+offline application
+  <html manifest="offline.appcache" 
+	chrome://appcache-internals/ 
+	http://appcachefacts.info/
+*/  
 	
 var spawn = require('child_process').spawn;
-var argv=process.argv;
+var argv = require("minimist")(process.argv.slice(2));
 
-var port=argv[3] || "2556";  //default port
-var autostart=!!argv[2];
-var startfolder=argv[2]||"launcher"; 
+var port= parseInt(argv.port|| argv.p || "2556"); 
 var appendhtml=false;
 
-port=parseInt(port);
-process.chdir('..');
+if (argv.cwd) {
+	process.chdir(argv.cwd);
+}
+
+if (argv.help) {
+	console.log("--port ");
+	console.log("--cwd ");
+	return;
+}
+console.log("home dir",process.cwd())
 function dirExistsSync (d) {
 try { return fs.statSync(d).isDirectory() }
   catch (er) { return false }
@@ -39,12 +41,26 @@ try { return fs.statSync(d).isDirectory() }
 	res.end();
 	return;
  }
+ var getMIMEType=function(ext) {
+	var mimeTypes = {
+	    "html": "text/html",
+	    "htm": "text/html",
+	    "jpeg": "image/jpeg",
+	    "jpg": "image/jpeg",
+	    "png": "image/png",
+	    "svg": "image/svg+xml",
+	    "js": "application/javascript",
+	    "appcache": "text/cache-manifest",
+	    "css": "text/css"
+	};
+ 	return mimeTypes[ext] || 'application/octet-stream';
+ }
 var servestatic=function(filename,stat,req,res) {
 	var ext=filename.substring(filename.lastIndexOf("."));
 	var etag = stat.size + '-' + Date.parse(stat.mtime);
 	var nocache=(req.connection.remoteAddress=='127.0.0.1') || 
 	(ext=='.js' || ext=='.tmpl' || ext==".manifest" || ext==".kdb");
-	
+	var statuscode=200;
 	if(!nocache && req.headers['if-none-match'] === etag) {
 		res.statusCode = 304;
 		res.end();
@@ -52,11 +68,15 @@ var servestatic=function(filename,stat,req,res) {
 	 	var range=null, opts={};
 	 	if (req.headers.range) range=req.headers.range.match(/bytes=(\d+)-(\d+)/);
 		
-		var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
+		var mimeType = getMIMEType(path.extname(filename).split(".")[1]);
 		var header={"Content-Type":mimeType, "Content-Length":stat.size};
 	 	if (range) {
 	 		opts={start:parseInt(range[1]),end:parseInt(range[2])};
+	 		var totalbytes=opts.end-opts.start+1;
 	 		header["Content-Length"]=opts.end-opts.start+1;
+	 		//header["Content-Range"]='bytes ' + opts.start + '-' + opts.end + '/' + totalbytes;
+	 		//header["Accept-Ranges"]='bytes';
+	 		//statuscode=206;
 	 	}
 
 		if ( nocache) {
@@ -66,10 +86,13 @@ var servestatic=function(filename,stat,req,res) {
 			header['Last-Modified']=stat.mtime;
 			header['ETag']= etag;
 		}
-		res.writeHead(200, header);
-		
-		var fileStream = fs.createReadStream(filename,opts);
-		fileStream.pipe(res);
+		res.writeHead(statuscode, header);
+		if (req.method=="HEAD") {
+			res.end();
+		} else {
+			var fileStream = fs.createReadStream(filename,opts);
+			fileStream.pipe(res);			
+		}
 	}
 }
 
@@ -136,7 +159,6 @@ var startserver=function() {
  
 		}); //end path.exists
 	}).listen(port,"0.0.0.0");	
-	if (autostart) spawn('cmd', ["/c","start",'http://127.0.0.1:'+port+'/'+startfolder+'/']);
 	rpc_node(httpd);  //enable server side API, pass in httpd server handle
 }
 

@@ -37,16 +37,16 @@ var surface = React.createClass({
     var domnode=this.getDOMNode().querySelector('span[data-n="'+start+'"]');
     if (!domnode) return;
 
-    var menu=this.refs.inlinedialog.getDOMNode();
-    var menuheight=menu.firstChild.offsetHeight;
+    var dialog=this.refs.inlinedialog.getDOMNode();
+    var dialogheight=menu.firstChild.offsetHeight;
 
-    menu.style.left=domnode.offsetLeft - this.getDOMNode().offsetLeft ;
-    menu.style.top=domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight ;
-    if (menuheight>0 && menuheight<parseInt(menu.style.top)) {
-      menu.style.top=parseInt(menu.style.top)-menuheight-domnode.offsetHeight;
+    dialog.style.left=domnode.offsetLeft - this.getDOMNode().offsetLeft ;
+    dialog.style.top=domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight ;
+    if (dialogheight>0 && dialogheight<parseInt(dialog.style.top)) {
+      dialog.style.top=parseInt(menu.style.top)-dialogheight-domnode.offsetHeight;
     }
-    menu.style.display='inline';
-    this.inlinedialogopened=menu;
+    dialog.style.display='inline';
+    this.inlinedialogopened=dialog;
   },
   getRange:function() {
     var sel = getSelection();

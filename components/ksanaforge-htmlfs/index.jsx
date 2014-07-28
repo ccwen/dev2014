@@ -69,10 +69,9 @@ var htmlfs = React.createClass({
 		},0);
 	},
 	queryQuota:function() {
-		var that=this;
 		html5fs.queryQuota(function(usage,quota){
-			that.setState({usage:usage,quota:quota,Initialized:true});
-		});
+			this.setState({usage:usage,quota:quota,Initialized:true});
+		},this);
 	},
 	render:function() {
 		var that=this;

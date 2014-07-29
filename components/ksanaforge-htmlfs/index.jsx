@@ -2,14 +2,15 @@
 var html5fs=Require("ksana-document").html5fs;
 var htmlfs = React.createClass({
 	getInitialState:function() {
-		return {ready:false, quota:0,usage:0,Initialized:false,silent:this.props.silent};
+		return {ready:false, quota:0,usage:0,Initialized:false,autoclose:this.props.autoclose};
 	},
 	initFilesystem:function() {
 		var quota=this.props.quota||1024*1024*128; // default 128MB
+		quota=parseInt(quota);
 		html5fs.init(quota,function(q){
 			this.dialog=false;
 			$(this.refs.dialog1.getDOMNode()).modal('hide');
-			this.setState({quota:q,silent:true});
+			this.setState({quota:q,autoclose:true});
 		},this);
 	},
 	welcome:function() {
@@ -83,7 +84,7 @@ var htmlfs = React.createClass({
 				return <span>checking quota</span>
 			}			
 		} else {
-			if (!this.state.silent)	 {
+			if (!this.state.autoclose) {
 				this.dialog=true;
 				return this.renderDefault(); 
 			}

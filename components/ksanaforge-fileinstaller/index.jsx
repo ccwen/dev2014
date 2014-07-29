@@ -1,4 +1,7 @@
 /** @jsx React.DOM */
+var htmlfs=Require("htmlfs");    
+var checkbrowser=Require("checkbrowser");  
+
 var html5fs=Require("ksana-document").html5fs;
 var filelist = React.createClass({
 	getInitialState:function() {
@@ -37,6 +40,7 @@ var filelist = React.createClass({
 		var url=e.target.dataset["url"];
 		var filename=e.target.dataset["filename"];
 		this.setState({downloading:true,progress:0});
+		this.userbreak=false;
 		html5fs.download(url,filename,function(){
 			this.reloadDir();
 			this.setState({downloading:false,progress:1});
@@ -46,6 +50,7 @@ var filelist = React.createClass({
 			 	}
 			 	this.setState({progress:progress});
 			 	//if user press abort return true
+			 	return this.userbreak;
 			}
 		,this);
 	},
@@ -64,16 +69,23 @@ var filelist = React.createClass({
 		$(this.refs.dialog1.getDOMNode()).modal('hide');
 		this.props.action("dismiss");
 	},
+	abortdownload:function() {
+		this.userbreak=true;
+	},
 	showProgress:function() {
 	     if (this.state.downloading) {
 	      var progress=Math.round(this.state.progress*100);
 	      return (
-	      <div key="progress" className="progress">
+	      	<div>
+	      <div  key="progress" className="progress col-md-8">
 	          <div className="progress-bar" role="progressbar" 
 	              aria-valuenow={progress} aria-valuemin="0" 
 	              aria-valuemax="100" style={{width: progress+"%"}}>
 	            {progress}%
 	          </div>
+	        </div>
+	        <button onClick={this.abortdownload} 
+	        	className="btn btn-danger col-md-4">Abort</button>
 	        </div>
 	        );
 	      } else {
@@ -116,11 +128,16 @@ var filelist = React.createClass({
 /*TODO kdb check version*/
 var filemanager = React.createClass({
 	getInitialState:function() {
-		var dbname=this.props.db;
-		var missing=this.missingKdb();
-		var silent=this.props.silent||missing.length;
-		var files=this.genFileList(html5fs.files,missing);
-		return {missing:missing,silent:silent, files:files};
+		var quota=this.getQuota();
+		return {browserReady:false,requestQuota:quota};
+	},
+	getQuota:function() {
+		var q=this.props.quota||"128M";
+		var unit=q[q.length-1];
+		var times=1;
+		if (unit=="M") times=1024*1024;
+		else if (unit="K") times=1024;
+		return parseInt(q) * times;
 	},
 	missingKdb:function() {
 		var missing=this.props.needed.filter(function(kdb){
@@ -152,13 +169,31 @@ var filemanager = React.createClass({
 	  	this.reload();
 	  },this);
 	},
+	onQuoteOk:function(quota,usage) {
+		var missing=this.missingKdb();
+		var autoclose=this.props.autoclose||missing.length;
+		var files=this.genFileList(html5fs.files,missing);
+		this.setState({autoclose:autoclose,quota:quota,usage:usage,files:files,missing:missing});
+	},  
+	onBrowserOk:function() {
+	  this.setState({browserReady:true});  
+	},
+	dismiss:function() {
+		this.props.onReady(this.state.usage,this.state.quota);
+	},
 	render:function(){
-		if (this.state.missing.length==0 && this.state.silent) {
-			setTimeout( this.props.onReady.bind(this),0);
-			return <span></span>
-		} else {
-			return <filelist action={this.action} files={this.state.files}/>
-		}
+    		if (!this.state.browserReady) {   
+      			return <checkbrowser feature="fs" onReady={this.onBrowserOk}/>
+    		} if (!this.state.quota) {  
+      			return <htmlfs quota={this.state.requestQuota} autoclose="true" onReady={this.onQuoteOk}/>
+      		} else {
+			if (this.state.missing.length==0 && this.state.autoclose) {
+				setTimeout( this.dismiss.bind(this),0);
+				return <span></span>
+			} else {
+				return <filelist action={this.action} files={this.state.files}/>
+			}      			
+      		}
 	},
 
 	action:function() {
@@ -170,7 +205,7 @@ var filemanager = React.createClass({
 	  }  else if (type=="reload") {
 	  	this.reload();
 	  } else if (type=="dismiss") {
-	  	this.props.onReady();
+	  	this.dismiss();
 	  }
 	}
 });

@@ -4,7 +4,10 @@
   "description": "file installer",
   "version": "0.0.1",
   "keywords": [],
-  "dependencies": {},
+  "dependencies": {
+    "ksanaforge/checkbrowser":"*"
+    ,"ksanaforge/htmlfs":"*"
+  },
   "development": {},
   "license": "MIT",
   "main": "index.js",

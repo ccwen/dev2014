@@ -39,7 +39,7 @@ var filelist = React.createClass({
 	download:function(e) {
 		var url=e.target.dataset["url"];
 		var filename=e.target.dataset["filename"];
-		this.setState({downloading:true,progress:0});
+		this.setState({downloading:true,progress:0,url:url});
 		this.userbreak=false;
 		html5fs.download(url,filename,function(){
 			this.reloadDir();
@@ -77,6 +77,7 @@ var filelist = React.createClass({
 	      var progress=Math.round(this.state.progress*100);
 	      return (
 	      	<div>
+	      	Download from {this.state.url}
 	      <div  key="progress" className="progress col-md-8">
 	          <div className="progress-bar" role="progressbar" 
 	              aria-valuenow={progress} aria-valuemin="0" 
@@ -177,7 +178,7 @@ var filemanager = React.createClass({
 	},  
 	onBrowserOk:function() {
 	  this.setState({browserReady:true});  
-	},
+	}, 
 	dismiss:function() {
 		this.props.onReady(this.state.usage,this.state.quota);
 	},
@@ -185,10 +186,11 @@ var filemanager = React.createClass({
     		if (!this.state.browserReady) {   
       			return <checkbrowser feature="fs" onReady={this.onBrowserOk}/>
     		} if (!this.state.quota) {  
+    			//TODO , show dialog to increase quota, remaining disk space not enough
       			return <htmlfs quota={this.state.requestQuota} autoclose="true" onReady={this.onQuoteOk}/>
       		} else {
 			if (this.state.missing.length==0 && this.state.autoclose) {
-				setTimeout( this.dismiss.bind(this),0);
+				setTimeout( this.dismiss ,0);
 				return <span></span>
 			} else {
 				return <filelist action={this.action} files={this.state.files}/>

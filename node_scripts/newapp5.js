@@ -48,7 +48,7 @@ module.exports=function(appname){
 
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
-	var indexhtml='<html manifest="offline.appcache">\n'+
+	var indexhtml='<!DOCTYPE html>\n<html manifest="offline.appcache">\n'+
 						'<head>\n'+
 						'<meta charset="utf-8" />\n'+
 						'<script src="jquery.js"></script>\n'+

@@ -10,9 +10,9 @@ var get=function(path,recursive,cb) {
 		throw "db "+fn+" not found";
 		return;
 	}
-	var db=Kdb(fn);
-	console.log("getting",paths,"from",fn);
-	//if (paths.length==0) paths=["meta"];
-	db.get(paths,recursive,cb);
+	new Kdb(fn,{},function(db){
+		console.log("getting",paths,"from",fn);
+		db.get(paths,recursive,cb);
+	});
 }
 module.exports=get;

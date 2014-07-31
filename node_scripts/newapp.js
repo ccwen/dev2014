@@ -42,7 +42,7 @@ module.exports=function(appname){
 
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
-	var indexhtml='<html>\n'+
+	var indexhtml='<!DOCTYPE html>\n<html>\n'+
 						'<head>\n'+
 						'<meta charset="utf-8" />\n'+
 						'<script src="../nodemain.js"></script>\n'+

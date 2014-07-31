@@ -71,13 +71,13 @@ var htmlfs = React.createClass({
 	},
 	queryQuota:function() {
 		html5fs.queryQuota(function(usage,quota){
-			this.setState({usage:usage,quota:quota,Initialized:true});
+			this.setState({usage:usage,quota:quota,initialized:true});
 		},this);
 	},
 	render:function() {
 		var that=this;
-		if (!this.state.quota) {
-			if (this.state.Initialized) {
+		if (!this.state.quota || this.state.quota<this.props.quota) {
+			if (this.state.initialized) {
 				this.dialog=true;
 				return this.welcome();	
 			} else {

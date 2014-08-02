@@ -23,6 +23,7 @@ var htmlfs = React.createClass({
 		        </div>
 		        <div className="modal-body">
 		          {this.props.welcome?welcome():"welcome message"}
+		          Browser will ask for your confirmation.
 		        </div>
 		        <div className="modal-footer">
 		          <button onClick={this.initFilesystem} type="button" 

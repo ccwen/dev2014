@@ -132,12 +132,13 @@ var createapp=function(name,newapp) {
 var newapp=require('./node_scripts/newapp');
 var newapp5=require('./node_scripts/newapp5');
 var newcomponent=require('./node_scripts/newcomponent');
-gulp.task('newapp',function(){
+
+gulp.task('newapp-nw',function(){ //rename from newapp
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   createapp(name);
 });
-gulp.task('newapp5',function(){
+gulp.task('newapp',function(){  // make newapp5 default task
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   createapp(name,newapp5);

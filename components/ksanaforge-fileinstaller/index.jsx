@@ -7,13 +7,25 @@ var filelist = React.createClass({
 	getInitialState:function() {
 		return {downloading:false,progress:0};
 	},
+	updatable:function(f) {
+        	var classes="btn btn-warning";
+        	if (this.state.downloading) classes+=" disabled";
+		if (f.hasUpdate) return <button className={classes} 
+			data-filename={f.filename}  data-url={f.url}
+	            onClick={this.download}
+	       >Update</button>
+		else return null;
+	},
 	showLocal:function(f) {
         var classes="btn btn-danger";
         if (this.state.downloading) classes+=" disabled";
 	  return <tr><td>{f.filename}</td>
 	      <td></td>
-	      <td><button className={classes} 
-	               onClick={this.deleteFile} data-url={f.url}>Delete</button></td>
+	      <td className="pull-right">
+	      {this.updatable(f)}<button className={classes} 
+	               onClick={this.deleteFile} data-filename={f.filename}>Delete</button>
+	        
+	      </td>
 	  </tr>
 	},  
 	showRemote:function(f) { 
@@ -54,13 +66,9 @@ var filelist = React.createClass({
 			}
 		,this);
 	},
-	openFile:function(e) {
-		var url=e.target.attributes["data-url"].value;
-		this.props.action("open",url);
-	},
 	deleteFile:function( e) {
-		var url=e.target.attributes["data-url"].value;
-		this.props.action("delete",url);
+		var filename=e.target.attributes["data-filename"].value;
+		this.props.action("delete",filename);
 	},
 	allFilesReady:function(e) {
 		return this.props.files.every(function(f){ return f.ready});
@@ -130,7 +138,7 @@ var filelist = React.createClass({
 var filemanager = React.createClass({
 	getInitialState:function() {
 		var quota=this.getQuota();
-		return {browserReady:false,requestQuota:quota};
+		return {browserReady:false,noupdate:false,requestQuota:quota,updateChecked:false};
 	},
 	getQuota:function() {
 		var q=this.props.quota||"128M";
@@ -149,11 +157,15 @@ var filemanager = React.createClass({
 		},this);
 		return missing;
 	},
-
+	getRemoteUrl:function(fn) {
+		var f=this.props.needed.find(function(f){return f.filename==fn});
+		if (f) return f.url;
+	},
 	genFileList:function(existing,missing){
 		var out=[];
 		for (var i in existing) {
-			out.push({filename:existing[i][0], url :existing[i][0], ready:true });
+			var url=this.getRemoteUrl(existing[i][0]);
+			out.push({filename:existing[i][0], url :url, ready:true });
 		}
 		for (var i in missing) {
 			out.push(missing[i]);
@@ -180,7 +192,30 @@ var filemanager = React.createClass({
 	  this.setState({browserReady:true});  
 	}, 
 	dismiss:function() {
-		this.props.onReady(this.state.usage,this.state.quota);
+		this.props.onReady(this.state.usage,this.state.quota);	
+		setTimeout(function(){
+			$(".modal.in").modal('hide');
+		},500);
+	}, 
+	checkIfUpdate:function() {
+		var taskqueue=[],files=this.state.files;
+		for (var i=0;i<this.state.files.length;i++) {
+			taskqueue.push(
+				(function(idx){
+					return (function(data){					
+						if (!(typeof data=='object' && data.__empty)) files[idx-1].hasUpdate=data;
+						html5fs.checkUpdate(files[idx].url,files[idx].filename,taskqueue.shift());
+					});
+				})(i)
+			);
+		}
+		var that=this;
+		taskqueue.push(function(data){	
+			files[files.length-1].hasUpdate=data;
+			var hasupdate=files.some(function(f){return f.hasUpdate});
+			setTimeout(function(){that.setState({noupdate:!hasupdate,updateChecked:true})},0);
+		});
+		taskqueue.shift()({__empty:true});
 	},
 	render:function(){
     		if (!this.state.browserReady) {   
@@ -189,12 +224,15 @@ var filemanager = React.createClass({
     			//TODO , show dialog to increase quota, remaining disk space not enough
       			return <htmlfs quota={this.state.requestQuota} autoclose="true" onReady={this.onQuoteOk}/>
       		} else {
-			if (this.state.missing.length==0 && this.state.autoclose) {
-				setTimeout( this.dismiss ,0);
+      			if (!this.state.updateChecked) this.checkIfUpdate();
+			if (this.state.autoclose && this.state.noupdate && this.state.missing.length==0) {
+				setTimeout( this.dismiss ,10);
 				return <span></span>
-			} else {
+			} else if (this.state.updateChecked) {
 				return <filelist action={this.action} files={this.state.files}/>
-			}      			
+			} else {
+				return <span></span>
+			}
       		}
 	},
 

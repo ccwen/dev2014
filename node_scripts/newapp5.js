@@ -37,6 +37,9 @@ module.exports=function(appname){
 '    "ksanaforge/boot": "*"\n'+
 '    ,"brighthas/bootstrap": "*"\n'+
 '    ,"ksana/document": "*"\n'+
+'    ,"ksanaforge/fileinstaller":"*"\n'+
+'    ,"ksanaforge/checkbrowser":"*"\n'+
+'    ,"ksanaforge/htmlfs":"*"\n'+
 '  },\n'+
 '  "development": {},\n'+
 '  "paths": ["components","../components","../node_modules/"],\n'+

@@ -81,6 +81,7 @@ var servestatic=function(filename,stat,req,res) {
 
 		if ( nocache) {
 			console.log('serving no cache file '+filename);
+			header['Date']= stat.mtime;
 		} else {
 			console.log('serving file '+filename);
 			header['Last-Modified']=stat.mtime;

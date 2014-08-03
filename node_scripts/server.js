@@ -78,13 +78,11 @@ var servestatic=function(filename,stat,req,res) {
 	 		//header["Accept-Ranges"]='bytes';
 	 		//statuscode=206;
 	 	}
-
+	 	header['Last-Modified']=stat.mtime;
 		if ( nocache) {
 			console.log('serving no cache file '+filename);
-			header['Date']= stat.mtime;
 		} else {
-			console.log('serving file '+filename);
-			header['Last-Modified']=stat.mtime;
+			console.log('serving file '+filename);			
 			header['ETag']= etag;
 		}
 		res.writeHead(statuscode, header);

@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var html5fs=Require("ksana-document").html5fs;
 var htmlfs = React.createClass({
-	getInitialState:function() {
+	getInitialState:function() { 
 		return {ready:false, quota:0,usage:0,Initialized:false,autoclose:this.props.autoclose};
 	},
 	initFilesystem:function() {

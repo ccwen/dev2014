@@ -1,4 +1,7 @@
 /** @jsx React.DOM */
+
+/* todo , optional kdb */
+
 var htmlfs=Require("htmlfs");    
 var checkbrowser=Require("checkbrowser");  
 
@@ -138,7 +141,8 @@ var filelist = React.createClass({
 var filemanager = React.createClass({
 	getInitialState:function() {
 		var quota=this.getQuota();
-		return {browserReady:false,noupdate:false,requestQuota:quota,updateChecked:false};
+		return {browserReady:false,noupdate:true,
+			requestQuota:quota,remain:0};
 	},
 	getQuota:function() {
 		var q=this.props.quota||"128M";
@@ -183,13 +187,22 @@ var filemanager = React.createClass({
 	  },this);
 	},
 	onQuoteOk:function(quota,usage) {
-		var missing=this.missingKdb();
-		var autoclose=this.props.autoclose||missing.length;
-		var files=this.genFileList(html5fs.files,missing);
-		this.setState({autoclose:autoclose,quota:quota,usage:usage,files:files,missing:missing});
+		var files=this.genFileList(html5fs.files,this.missingKdb());
+		var that=this;
+		that.checkIfUpdate(files,function(hasupdate) {
+			var missing=this.missingKdb();
+			var autoclose=this.props.autoclose;
+			if (missing.length) autoclose=false;
+			var files=this.genFileList(html5fs.files,missing);
+			that.setState({autoclose:autoclose,
+				quota:quota,usage:usage,files:files,
+				missing:missing,
+				noupdate:!hasupdate,
+				remain:quota-usage});
+		});
 	},  
 	onBrowserOk:function() {
-	  this.setState({browserReady:true});  
+	  this.totalDownloadSize();
 	}, 
 	dismiss:function() {
 		this.props.onReady(this.state.usage,this.state.quota);	
@@ -197,12 +210,32 @@ var filemanager = React.createClass({
 			$(".modal.in").modal('hide');
 		},500);
 	}, 
-	checkIfUpdate:function() {
-		var taskqueue=[],files=this.state.files;
-		for (var i=0;i<this.state.files.length;i++) {
+	totalDownloadSize:function() {
+		var files=this.missingKdb();
+		var taskqueue=[],totalsize=0;
+		for (var i=0;i<files.length;i++) {
 			taskqueue.push(
 				(function(idx){
-					return (function(data){					
+					return (function(data){
+						if (!(typeof data=='object' && data.__empty)) totalsize+=data;
+						html5fs.getDownloadSize(files[idx].url,taskqueue.shift());
+					});
+				})(i)
+			);
+		}
+		var that=this;
+		taskqueue.push(function(data){	
+			totalsize+=data;
+			setTimeout(function(){that.setState({requireSpace:totalsize,browserReady:true})},0);
+		});
+		taskqueue.shift()({__empty:true});
+	},
+	checkIfUpdate:function(files,cb) {
+		var taskqueue=[];
+		for (var i=0;i<files.length;i++) {
+			taskqueue.push(
+				(function(idx){
+					return (function(data){
 						if (!(typeof data=='object' && data.__empty)) files[idx-1].hasUpdate=data;
 						html5fs.checkUpdate(files[idx].url,files[idx].filename,taskqueue.shift());
 					});
@@ -213,25 +246,25 @@ var filemanager = React.createClass({
 		taskqueue.push(function(data){	
 			files[files.length-1].hasUpdate=data;
 			var hasupdate=files.some(function(f){return f.hasUpdate});
-			setTimeout(function(){that.setState({noupdate:!hasupdate,updateChecked:true})},0);
+			if (cb) cb.apply(that,[hasupdate]);
 		});
 		taskqueue.shift()({__empty:true});
 	},
 	render:function(){
     		if (!this.state.browserReady) {   
       			return <checkbrowser feature="fs" onReady={this.onBrowserOk}/>
-    		} if (!this.state.quota) {  
-    			//TODO , show dialog to increase quota, remaining disk space not enough
-      			return <htmlfs quota={this.state.requestQuota} autoclose="true" onReady={this.onQuoteOk}/>
+    		} if (!this.state.quota || this.state.remain<this.state.requireSpace) {  
+    			var quota=this.state.requestQuota;
+    			if (this.state.usage+this.state.requireSpace>quota) {
+    				quota=(this.state.usage+this.state.requireSpace)*1.5;
+    			}
+      			return <htmlfs quota={quota} autoclose="true" onReady={this.onQuoteOk}/>
       		} else {
-      			if (!this.state.updateChecked) this.checkIfUpdate();
-			if (this.state.autoclose && this.state.noupdate && this.state.missing.length==0) {
-				setTimeout( this.dismiss ,10);
-				return <span></span>
-			} else if (this.state.updateChecked) {
+			if (!this.state.noupdate || this.missingKdb().length || !this.state.autoclose) {
 				return <filelist action={this.action} files={this.state.files}/>
 			} else {
-				return <span></span>
+				setTimeout( this.dismiss ,0);
+				return <span></span>;
 			}
       		}
 	},

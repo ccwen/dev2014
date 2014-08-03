@@ -62,12 +62,12 @@ gulp.task('jsx2js_common',function() {
     pipe(react()).pipe(gulp.dest("../components"));
 });
 
-
 gulp.task('componentbuild',['jsx2js','jsx2js_common'],function() {
   return gulp.src('./component.json')
   .pipe(component({standalone: true}))
-  .pipe(gulp.dest('./build'));
+  .pipe(gulp.dest('.'));
 });
+
 gulp.task('touchappcache',function(){
   var fn="offline.appcache";
   if (fs.existsSync(fn)){

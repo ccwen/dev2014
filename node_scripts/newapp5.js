@@ -57,7 +57,7 @@ module.exports=function(appname){
 						'<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=2.0; user-scalable=1;"/>\n'+
 						'<script src="jquery.js"></script>\n'+
 						'<script src="react-with-addons.js"></script>\n'+
-						'<link type="text/css" rel="stylesheet" href="build/build.css">\n'+
+						'<link type="text/css" rel="stylesheet" href="build.css">\n'+
 						'</head>\n'+
 						'<div id="main"></div>\n'+
 						'<script src="build/build.js"></script>\n'+
@@ -84,10 +84,10 @@ module.exports=function(appname){
 
 
 	var appcache='CACHE MANIFEST\n'
-		+'# Updated on: 2014-1-1 10:10:10;\n'
+		+'# Updated on: 2014-8-1 10:10:10;\n'
 		+'/index.html\n'
-		+'/build/build.js\n'
-		+'/build/build.css\n'
+		+'/build.js\n'
+		+'/build.css\n'
 		+'/jquery.js\n'
 		+'/react-with-addons.js';
 

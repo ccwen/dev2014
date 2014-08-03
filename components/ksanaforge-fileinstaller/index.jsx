@@ -193,7 +193,6 @@ var filemanager = React.createClass({
 			var missing=this.missingKdb();
 			var autoclose=this.props.autoclose;
 			if (missing.length) autoclose=false;
-			var files=this.genFileList(html5fs.files,missing);
 			that.setState({autoclose:autoclose,
 				quota:quota,usage:usage,files:files,
 				missing:missing,

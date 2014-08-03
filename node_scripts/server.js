@@ -76,13 +76,13 @@ var servestatic=function(filename,stat,req,res) {
 	 		header["Content-Length"]=opts.end-opts.start+1;
 	 		//header["Content-Range"]='bytes ' + opts.start + '-' + opts.end + '/' + totalbytes;
 	 		//header["Accept-Ranges"]='bytes';
-	 		//statuscode=206;
+	 		statuscode=200;
 	 	}
 	 	header['Last-Modified']=stat.mtime;
 		if ( nocache) {
 			console.log('serving no cache file '+filename);
 		} else {
-			console.log('serving file '+filename);			
+			console.log('serving file '+filename);
 			header['ETag']= etag;
 		}
 		res.writeHead(statuscode, header);

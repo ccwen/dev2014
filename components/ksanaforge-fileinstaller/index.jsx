@@ -107,25 +107,31 @@ var filelist = React.createClass({
 	      		
 	      }
 	},
+	showUsage:function() {
+		var percent=this.props.remainPercent;
+           return (<div><span className="pull-left">Usage:</span><div className="progress">
+		  <div className="progress-bar progress-bar-success progress-bar-striped" role="progressbar"  style={{width: percent+"%"}}>
+		    	{percent+"%"}
+		  </div>
+		</div></div>);
+	},
 	render:function() {
 	  	return (
 		<div ref="dialog1" className="modal fade" data-backdrop="static">
 		    <div className="modal-dialog">
 		      <div className="modal-content">
 		        <div className="modal-header">
-		          <h4 className="modal-title">Install Required File</h4>
+		          <h4 className="modal-title">File Installer</h4>
 		        </div>
 		        <div className="modal-body">
 		        	<table className="table">
-		        	<thead>
-		        	<tr><td>Filename</td><td></td></tr>
-		        	</thead>
 		        	<tbody>
 		          	{this.props.files.map(this.showFile)}
 		          	</tbody>
 		          </table>
 		        </div>
 		        <div className="modal-footer">
+		        	{this.showUsage()}
 		           {this.showProgress()}
 		        </div>
 		      </div>
@@ -260,14 +266,14 @@ var filemanager = React.createClass({
       			return <htmlfs quota={quota} autoclose="true" onReady={this.onQuoteOk}/>
       		} else {
 			if (!this.state.noupdate || this.missingKdb().length || !this.state.autoclose) {
-				return <filelist action={this.action} files={this.state.files}/>
+				var remain=Math.round((this.state.usage/this.state.quota)*100);				
+				return <filelist action={this.action} files={this.state.files} remainPercent={remain}/>
 			} else {
 				setTimeout( this.dismiss ,0);
 				return <span></span>;
 			}
       		}
 	},
-
 	action:function() {
 	  var args = Array.prototype.slice.call(arguments);
 	  var type=args.shift();

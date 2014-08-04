@@ -168,8 +168,8 @@ var filemanager = React.createClass({
 		return missing;
 	},
 	getRemoteUrl:function(fn) {
-		var f=this.props.needed.find(function(f){return f.filename==fn});
-		if (f) return f.url;
+		var f=this.props.needed.filter(function(f){return f.filename==fn});
+		if (f.length ) return f[0].url;
 	},
 	genFileList:function(existing,missing){
 		var out=[];

@@ -210,7 +210,7 @@ var filemanager = React.createClass({
 	  this.totalDownloadSize();
 	}, 
 	dismiss:function() {
-		this.props.onReady(this.state.usage,this.state.quota);	
+		this.props.onReady(this.state.usage,this.state.quota);
 		setTimeout(function(){
 			$(".modal.in").modal('hide');
 		},500);
@@ -270,7 +270,7 @@ var filemanager = React.createClass({
 				return <filelist action={this.action} files={this.state.files} remainPercent={remain}/>
 			} else {
 				setTimeout( this.dismiss ,0);
-				return <span></span>;
+				return <span>Success</span>;
 			}
       		}
 	},

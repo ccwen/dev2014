@@ -22,7 +22,6 @@ var htmlfs = React.createClass({
 		          <h4 className="modal-title">Welcome</h4>
 		        </div>
 		        <div className="modal-body">
-		          {this.props.welcome?welcome():"welcome message"}
 		          Browser will ask for your confirmation.
 		        </div>
 		        <div className="modal-footer">

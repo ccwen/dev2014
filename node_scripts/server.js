@@ -59,7 +59,7 @@ var servestatic=function(filename,stat,req,res) {
 	var ext=filename.substring(filename.lastIndexOf("."));
 	var etag = stat.size + '-' + Date.parse(stat.mtime);
 	var nocache=(req.connection.remoteAddress=='127.0.0.1') || 
-	(ext=='.js' || ext=='.tmpl' || ext==".manifest" || ext==".kdb");
+	(ext=='.js' || ext=='.tmpl' || ext==".appcache" || ext==".kdb");
 	var statuscode=200;
 	if(!nocache && req.headers['if-none-match'] === etag) {
 		res.statusCode = 304;

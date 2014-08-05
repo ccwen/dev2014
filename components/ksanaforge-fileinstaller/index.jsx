@@ -4,7 +4,7 @@
 
 var htmlfs=Require("htmlfs");    
 var checkbrowser=Require("checkbrowser");  
-
+  
 var html5fs=Require("ksana-document").html5fs;
 var filelist = React.createClass({
 	getInitialState:function() {
@@ -88,7 +88,7 @@ var filelist = React.createClass({
 	      var progress=Math.round(this.state.progress*100);
 	      return (
 	      	<div>
-	      	Download from {this.state.url}
+	      	Downloading from {this.state.url}
 	      <div  key="progress" className="progress col-md-8">
 	          <div className="progress-bar" role="progressbar" 
 	              aria-valuenow={progress} aria-valuemin="0" 

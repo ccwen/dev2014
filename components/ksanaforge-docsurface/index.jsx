@@ -60,7 +60,7 @@ var surface = React.createClass({
     return [start,end];
   },
   getSelection:function() {
-    R=this.getRange();
+    var R=this.getRange();
     if (!R) return;
     var start=R[0];
     var end=R[1];

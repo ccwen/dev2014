@@ -38,12 +38,12 @@ var surface = React.createClass({
     if (!domnode) return;
 
     var dialog=this.refs.inlinedialog.getDOMNode();
-    var dialogheight=menu.firstChild.offsetHeight;
+    var dialogheight=dialog.firstChild.offsetHeight;
 
     dialog.style.left=domnode.offsetLeft - this.getDOMNode().offsetLeft ;
     dialog.style.top=domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight ;
     if (dialogheight>0 && dialogheight<parseInt(dialog.style.top)) {
-      dialog.style.top=parseInt(menu.style.top)-dialogheight-domnode.offsetHeight;
+      dialog.style.top=parseInt(dialog.style.top)-dialogheight-domnode.offsetHeight;
     }
     dialog.style.display='inline';
     this.inlinedialogopened=dialog;
@@ -100,8 +100,8 @@ var surface = React.createClass({
       if (m[i].start==n) mm=m[i];
     }
     this.props.onSelection(mm.start,mm.len);
-    var menu=this.props.template.inlinedialog[mm.payload.type];
-    if (menu) {
+    var dialog=this.props.template.inlinedialog[mm.payload.type];
+    if (dialog) {
       this.setState({markup:mm});
     }
   },
@@ -218,10 +218,10 @@ var surface = React.createClass({
 
     var m=this.state.markup;
     var text=this.props.page.inscription.substr(m.start,m.len);
-    var menu=this.props.template.inlinedialog[m.payload.type];
-    if (menu) return (
+    var dialog=this.props.template.inlinedialog[m.payload.type];
+    if (dialog) return (
       <span ref="inlinedialog" className="inlinedialog">
-        {menu({action:this.inlinedialogaction,text:text,markup:m,
+        {dialog({action:this.inlinedialogaction,text:text,markup:m,
           user:this.props.user})}
       </span>
     );
@@ -350,10 +350,10 @@ var surface = React.createClass({
             onMouseDown={this.mouseDown}
             onMouseUp={this.mouseUp}
             onMouseMove={this.mouseMove}
-            >{xml} 
-          </div>
+            >{xml}  
+          </div> 
           <div ref="caretdiv" className="surface-caret-container">
-             <div ref="caret" className="surface-caret"></div>
+             <div ref="caret" className="surface-caret">|</div>
           </div>
 
       </div>
@@ -367,17 +367,17 @@ var surface = React.createClass({
     this.caret=new caret.Create(this);
 
   }, 
-  showMakelinkDialog:function(menupos) {
+  showMakelinkDialog:function(dialgpos) {
     if (!this.state.linktarget) return;
 
-    var markups=this.getMarkupsAt(menupos);
+    var markups=this.getMarkupsAt(dialogpos);
     var linkby=markups.filter(function(m){return m.payload.type=="linkby"});
-
+ 
     //already build link
     if (linkby.length && linkby[0].start==this.state.linktarget.start) return;
     //has other markup at same pos
     if (markups.length !=linkby.length) return; 
-    this.showinlinedialog(menupos);
+    this.showinlinedialog(dialogpos);
   },
   componentDidMount:function() {
     this.showMakelinkDialog(this.props.selstart);

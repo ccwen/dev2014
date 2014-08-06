@@ -14,11 +14,11 @@ var Create=function(_surface) {
     var caretdiv=surface.refs.caretdiv.getDOMNode();
     var caret=surface.refs.caret.getDOMNode();
     var surfacerect=surface.refs.surface.getDOMNode().getBoundingClientRect();
-    var left=rect.left  -surfacerect.left;
-    var top=rect.top - surfacerect.height -surfacerect.top;
-    caretdiv.style.top=top;
-    caretdiv.style.left=left;
-    caretdiv.style.height=rect.height;
+    var left=rect.left  -3;
+    var top=rect.top;
+    caretdiv.style.top=top +"px";
+    caretdiv.style.left=left +"px";
+    caretdiv.style.height=rect.height +"px";
     surface.refs.surface.getDOMNode().focus();
     surface.props.action("caretmoved",left,top,rect.height);
     //this.moveInputBox(rect);

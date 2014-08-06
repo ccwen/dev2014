@@ -264,6 +264,7 @@ var docview = React.createClass({
     }
   },
   showLinkButtons:function(left,top,height) {
+    return;
     if (this.linktimer) clearTimeout(this.linktimer);
     var that=this;
     this.linktimer=setTimeout(function(){
@@ -344,14 +345,17 @@ var docview = React.createClass({
                 hits={this.props.hits}
                 >  
        </surface>   
+      </div>
+    );
+  }
+});
+module.exports=docview;
+/*
       <div ref="linkto" className="btnlinkto-container">
         <span onClick={this.showlinktomenu} className="btnlinkto">{"\u21dd"}</span>
       </div> 
       <div ref="linkby" className="btnlinkby-container">
         <span onClick={this.showlinkbymenu} className="btnlinkby">{"\u21c7"}</span>
       </div>
-      </div>
-    );
-  }
-});
-module.exports=docview;
+
+*/

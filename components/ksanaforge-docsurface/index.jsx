@@ -40,8 +40,8 @@ var surface = React.createClass({
     var dialog=this.refs.inlinedialog.getDOMNode();
     var dialogheight=dialog.firstChild.offsetHeight;
 
-    dialog.style.left=domnode.offsetLeft - this.getDOMNode().offsetLeft ;
-    dialog.style.top=domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight ;
+    dialog.style.left=(domnode.offsetLeft - this.getDOMNode().offsetLeft)+"px" ;
+    dialog.style.top=(domnode.offsetTop - this.getDOMNode().offsetTop + domnode.offsetHeight)+"px" ;
     if (dialogheight>0 && dialogheight<parseInt(dialog.style.top)) {
       dialog.style.top=parseInt(dialog.style.top)-dialogheight-domnode.offsetHeight;
     }

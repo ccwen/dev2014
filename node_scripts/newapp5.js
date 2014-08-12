@@ -54,6 +54,7 @@ module.exports=function(appname){
 	var indexhtml='<!DOCTYPE html>\n<html manifest="offline.appcache">\n'+
 						'<head>\n'+
 						'<meta charset="utf-8" />\n'+
+						'<meta name="mobile-web-app-capable" content="yes" />\n'+
 						'<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=2.0; user-scalable=1;"/>\n'+
 						'<script src="jquery.js"></script>\n'+
 						'<script src="react-with-addons.js"></script>\n'+

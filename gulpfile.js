@@ -172,13 +172,16 @@ gulp.task('qunit',function(){
 	var argv = require('minimist')(process.argv.slice(2));
 	var name = argv['js'];
 	chdir_initcwd();  
+	var shellscript="qunit.cmd";
+	if (process.platform=="darwin") shellscript="./qunit.sh";
 	var filename=name;//process.cwd()+require('path').sep+name;
-	while (!fs.existsSync('qunit.cmd')) {
+
+	while (!fs.existsSync(shellscript)) {
 		process.chdir('..');
 	}
 
 	if (fs.existsSync(filename)) {
-		spawn('qunit.cmd',[filename]);	
+		spawn(shellscript,[filename]);	
 	} else {
 		console.log('cannot find debuggee, syntax: ');
 		console.log('gulp qunit --js=debuggee.js');

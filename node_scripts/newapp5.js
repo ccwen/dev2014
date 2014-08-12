@@ -61,7 +61,7 @@ module.exports=function(appname){
 						'<link type="text/css" rel="stylesheet" href="build.css">\n'+
 						'</head>\n'+
 						'<div id="main"></div>\n'+
-						'<script src="build/build.js"></script>\n'+
+						'<script src="build.js"></script>\n'+
 						'</html>';
 	var packagejson='{\n'+
 						'  "name": "'+appname+'",\n'+

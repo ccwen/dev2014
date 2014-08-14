@@ -172,23 +172,27 @@ gulp.task("initdb",function() {
 });
 
 gulp.task('qunit',function(){
-	var argv = require('minimist')(process.argv.slice(2));
-	var name = argv['js'];
-	chdir_initcwd();  
-	var shellscript="qunit.cmd";
-	if (process.platform=="darwin") shellscript="./qunit.sh";
-	var filename=name;//process.cwd()+require('path').sep+name;
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['js'];
+  var filename=name;
+  var shellscript="qunit.cmd";
+  if (process.platform=="darwin") shellscript="./qunit.sh";
+  chdir_initcwd();  
+  var cwd=process.cwd();
+  
+  if (name[0]!='/' && name[1]!=':') filename=process.cwd()+require('path').sep+name;
 
-	while (!fs.existsSync(shellscript)) {
-		process.chdir('..');
-	}
-
-	if (fs.existsSync(filename)) {
-		spawn(shellscript,[filename]);	
-	} else {
-		console.log('cannot find debuggee, syntax: ');
-		console.log('gulp qunit --js=debuggee.js');
-	}
+  if (fs.existsSync(filename)) {
+    while (!fs.existsSync(shellscript)) process.chdir("..")
+    exec(shellscript+" "+filename, {}, function(error, stdout, stderr) {
+  // work with result
+      if (error) throw error;
+    });
+    
+  } else {
+    console.log('cannot find debuggee, syntax: ');
+    console.log('gulp qunit --js=debuggee.js');
+  }
 });
 var chdir_initcwd=function() {
   if (!process.env.INIT_CWD) {

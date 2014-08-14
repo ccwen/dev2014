@@ -24,11 +24,14 @@
 		var fileref=document.createElement('script');
 		var filename=location.hash.substring(1);
   		fileref.setAttribute("type","text/javascript")
-  	    fileref.setAttribute("src", filename)
+  	    
   	    document.getElementsByTagName("head")[0].appendChild(fileref);
   	    filename=filename.replace(/\\/g,'/');
   	    var path=filename.substring(0,filename.lastIndexOf('/'));
-  	    if (path) process.chdir(path);//for node context
+  	    if (path) {
+          process.chdir(path);//for node context
+        }
+        require(filename); //entering node context
     } else {
     	document.write('missing test filename')
     }

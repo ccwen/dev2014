@@ -27,6 +27,7 @@ var fs=require('fs')
 var path=require('path')
 var gulp=require('gulp');
 var spawn=require('child_process').spawn;
+var exec=require('child_process').exec;
 var react = require('gulp-react');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
@@ -176,12 +177,13 @@ gulp.task('qunit',function(){
   
   if (name[0]!='/' && name[1]!=':') filename=process.cwd()+require('path').sep+name;
 
-  while (!fs.existsSync(shellscript)) {
-    process.chdir('..');
-  }
-  console.log(cwd,filename);
   if (fs.existsSync(filename)) {
-    spawn(shellscript,[filename]);  
+    while (!fs.existsSync(shellscript)) process.chdir("..")
+    exec(shellscript+" "+filename, {}, function(error, stdout, stderr) {
+  // work with result
+      if (error) throw error;
+    });
+    
   } else {
     console.log('cannot find debuggee, syntax: ');
     console.log('gulp qunit --js=debuggee.js');

@@ -6,7 +6,8 @@ var newcomponent=require('./node_scripts/newcomponent');
 var nw=require('./node_scripts/gulp-nw');
 var paths = {
   buildscripts: ['components/**/*.jsx'],
-  buildscripts_common: ['../components/**/*.jsx']
+  buildscripts_common: ['../components/**/*.jsx'],
+  buildscripts_common2: ['../../components/**/*.jsx']
 };
 
 paths.buildscripts_all=[
@@ -15,7 +16,10 @@ paths.buildscripts_all=[
 "!components/**/index.js",
 "../components/**/*.jsx",
 "../components/**/*.js",
-"!../components/**/index.js"
+"../../components/**/*.jsx",
+"../../components/**/*.js",
+"!../components/**/index.js",
+"!../../components/**/index.js"
 ];
 
 var tempjs=[];
@@ -50,7 +54,7 @@ gulp.task('jsx2js',function() {
 });
 
 gulp.task('jsx2js_common',function() {
-
+  console.log("common1")
     gulp.src(paths.buildscripts_common)
     .pipe(tap(function(file, t) {
         if (path.extname(file.path) === '.jsx') {
@@ -61,8 +65,19 @@ gulp.task('jsx2js_common',function() {
     return gulp.src(paths.buildscripts_common).
     pipe(react()).pipe(gulp.dest("../components"));
 });
-
-gulp.task('componentbuild',['jsx2js','jsx2js_common'],function() {
+gulp.task('jsx2js_common2',function() {
+  console.log("common2")
+    gulp.src(paths.buildscripts_common2)
+    .pipe(tap(function(file, t) {
+        if (path.extname(file.path) === '.jsx') {
+            tempjs.push(file.path.substring(0,file.path.length-1));
+        }
+    }))
+//cannot use tap to invoke react, spent 2 hours to figure out
+    return gulp.src(paths.buildscripts_common2).
+    pipe(react()).pipe(gulp.dest("../../components"));
+});
+gulp.task('componentbuild',['jsx2js','jsx2js_common','jsx2js_common2'],function() {
   return gulp.src('./component.json')
   .pipe(component({standalone: true}))
   .pipe(gulp.dest('.'));
@@ -121,7 +136,9 @@ gulp.task('server',['rebuild','watch'],function(){
 gulp.task('default',['rebuild','watch'],function(){
   console.log('default')
   var appfolder=process.cwd().match(/[\/\\]([^\/\\]*?)$/)[1];
-  var instance=spawn("node",["../node_scripts/server"])
+  var serverfn="../node_scripts/server.js";
+  if (!fs.existsSync(serverfn)) serverfn="../"+serverfn;
+  var instance=spawn("node",[serverfn]);
   chdir_initcwd();
   instance.on('exit',function(){
     appprocessexit();

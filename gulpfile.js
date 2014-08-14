@@ -116,6 +116,9 @@ gulp.task('setup',['install5'],function(){
 });
 
 var createapp=function(name,newapp) {
+  chdir_initcwd();  
+  
+  console.log(name,process.cwd())
   if (fs.existsSync(name+'/gulpfile.js')) {
   	throw "not an empty folder";
   	return;

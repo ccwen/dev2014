@@ -6,7 +6,7 @@
 */
 
 module.exports=function(appname){
-
+	console.log(appname,process.cwd())
 	var fs=require('fs');
 	var getgiturl=function() {
 		var url=fs.readFileSync(appname+'/.git/config','utf8');//.match(/url = (.*?)\n/);
@@ -42,7 +42,7 @@ module.exports=function(appname){
 '    ,"ksanaforge/htmlfs":"*"\n'+
 '  },\n'+
 '  "development": {},\n'+
-'  "paths": ["components","../components","../node_modules/"],\n'+
+'  "paths": ["components","../components","../../components","../node_modules/","../../node_modules/"],\n'+
 '  "license": "MIT",\n'+
 '  "main": "index.js",\n'+
 '  "scripts": ["index.js"],\n'+
@@ -99,8 +99,12 @@ module.exports=function(appname){
 		var fn=path.substr(path.lastIndexOf("/"));
 		fs.writeFileSync(appname+fn, fs.readFileSync(path));
 	}
-	copyFile("components/component-jquery/jquery.js");
-	copyFile("components/facebook-react/react-with-addons.js");
+	var jqueryfn="components/component-jquery/jquery.js";
+	if (!fs.existsSync(jqueryfn))jqueryfn="../"+jqueryfn;
+	var reactfn="components/facebook-react/react-with-addons.js";
+	if (!fs.existsSync(reactfn))reactfn="../"+reactfn;	
+	copyFile(jqueryfn);
+	copyFile(reactfn);
 	fs.writeFileSync(appname+'/gulpfile.js',gulpfile,'utf8');
 	fs.writeFileSync(appname+'/component.json',componentjson,'utf8');
 	fs.writeFileSync(appname+'/index.js',indexjs,'utf8');

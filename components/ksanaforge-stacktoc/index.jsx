@@ -1,6 +1,4 @@
 /** @jsx React.DOM */
-      
-//var othercomponent=Require("other"); 
 var Ancestors=React.createClass({
   goback:function(e) {
     var n=e.target.dataset["n"]; 
@@ -8,11 +6,11 @@ var Ancestors=React.createClass({
     this.props.setCurrent(n); 
   },
   showHit:function(hit) {
-    if (hit>30)  return <span className="pull-right badge">{hit}</span>
+    if (hit)  return <span className="pull-right badge">{hit}</span>
     else return <span></span>;
   },
   renderAncestor:function(n,idx) {
-    var hit=Math.floor(Math.random()*100);
+    var hit=this.props.toc[n].hit;
     return <div key={"a"+n} onClick={this.goback} className="node parent" data-n={n}>{idx+1}.<span>{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
   },
   render:function() {
@@ -25,19 +23,23 @@ var Children=React.createClass({
     var n=e.target.parentNode.dataset["n"];
     if (typeof n!=="undefined") this.props.setCurrent(n);
   }, 
+  showHit:function(hit) {
+    if (hit)  return <span className="pull-right badge">{hit}</span>
+    else return <span></span>;
+  },
   openNode:function() {
     return <button className="btn btn-xs btn-success" onClick={this.open}>...</button>
   },
   renderChild:function(n) {
     var child=this.props.toc[n];
-    //var extra="";
+    var hit=this.props.toc[n].hit;
     var classes="node child",haschild=false;  
     //if (child.extra) extra="<extra>"+child.extra+"</extra>";
     if (!child.hasChild) classes+=" nochild";
     else haschild=true;
 
     return <div className={classes} data-n={n}> 
-    <span onClick={this.go}>{this.props.toc[n].text}</span>{haschild?this.openNode():""}</div>
+    <span onClick={this.go}>{this.props.toc[n].text}</span>{haschild?this.openNode():""}{this.showHit(hit)}</div>
   },
   go:function(e) {
     var n=e.target.parentNode.dataset["n"];
@@ -50,7 +52,7 @@ var Children=React.createClass({
 });
 var stacktoc = React.createClass({
   getInitialState: function() {
-    return {bar: "world",tocReady:false,cur:327};//403
+    return {bar: "world",tocReady:false,cur:0};//403
   },
   buildtoc: function() {
       var toc=this.props.data;
@@ -111,19 +113,73 @@ var stacktoc = React.createClass({
       this.buildtoc();
       this.setState({tocReady:true});
     }
-  }, 
+  },   
   setCurrent:function(n) {
     n=parseInt(n);
     this.setState({cur:n});
   },
+
+  fillHit:function(nodeIds) {
+    if (typeof nodeIds=="number") nodeIds=[nodeIds];
+    var toc=this.props.data;
+    var hits=this.props.hits;
+    var getRange=function(n) {
+      var depth=toc[n].depth , nextdepth=toc[n+1].depth;
+      if (n==toc.length-1 || n==0) {
+          toc[n].end=Math.pow(2, 48);
+          return;
+      } else  if (nextdepth>depth){
+        if (toc[n].next) {
+          toc[n].end= toc[toc[n].next].voff;  
+        } else { //last sibling
+          var next=n+1;
+          while (next<toc.length && toc[next].depth>depth) next++;
+          if (next==toc.length) toc[n].end=Math.pow(2,48);
+          else toc[n].end=toc[next].voff;
+        }
+        
+      } else { //same level or end of sibling
+        toc[n].end=toc[n+1].voff;
+      }
+    }
+    var getHit=function(n) {
+      var start=toc[n].voff;
+      var end=toc[n].end;
+      if (n==0) {
+        toc[0].hit=hits.length;
+      } else {
+        var hit=0;
+        for (var i=0;i<hits.length;i++) {
+          if (hits[i]>=start && hits[i]<end) hit++;
+        }
+        toc[n].hit=hit;
+      }
+    }
+    nodeIds.forEach(function(n){getRange(n)});
+
+    nodeIds.forEach(function(n){getHit(n)});
+  },
+  fillHits:function(ancestors,children) {
+      this.fillHit(ancestors);
+      this.fillHit(children);
+      this.fillHit(this.state.cur);
+  },
+  showHit:function(hit) {
+    if (hit)  return <span className="pull-right badge">{hit}</span>
+    else return <span></span>;
+  },
   render: function() {
     if (!this.props.data || !this.props.data.length) return <div></div>
     var depth=this.props.data[this.state.cur].depth+1;
+    var ancestors=this.enumAncestors();
+    var children=this.enumChildren();
+    var current=this.props.data[this.state.cur];
+    if (this.props.hits && this.props.hits.length) this.fillHits(ancestors,children);
     return (
-      <div> 
-        <Ancestors setCurrent={this.setCurrent} toc={this.props.data} data={this.enumAncestors()}/>
-        <div className="node current" n={this.state.cur}><span>{depth}.</span>{this.props.data[this.state.cur].text}</div>
-        <Children setCurrent={this.setCurrent} toc={this.props.data} data={this.enumChildren()}/>
+      <div className="stacktoc"> 
+        <Ancestors setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
+        <div className="node current" n={this.state.cur}><span>{depth}.</span>{current.text}{this.showHit(current.hit)}</div>
+        <Children setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>
     ); 
   }

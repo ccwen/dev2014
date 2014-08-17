@@ -31,6 +31,7 @@
   	    if (path) {
           process.chdir(path);//for node context
         }
+//https://github.com/rogerwang/node-webkit/wiki/Differences-of-JavaScript-contexts
         require(filename); //entering node context
     } else {
     	document.write('missing test filename')

@@ -39,7 +39,7 @@ var Children=React.createClass({
     else haschild=true;
 
     return <div className={classes} data-n={n}> 
-    <span onClick={this.go}>{this.props.toc[n].text}</span>{haschild?this.openNode():""}{this.showHit(hit)}</div>
+    <span className="text"  onClick={this.go}>{this.props.toc[n].text}</span>{haschild?this.openNode():""}{this.showHit(hit)}</div>
   },
   go:function(e) {
     var n=e.target.parentNode.dataset["n"];

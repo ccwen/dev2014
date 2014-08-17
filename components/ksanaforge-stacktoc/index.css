@@ -4,4 +4,4 @@ div.parent{background:#FFFFCC; }
 div.parent:hover { background:#FFF380; text-decoration:underline;cursor:pointer;}
 div.current {color:black; background:#59E817;border-bottom-right-radius:10px 10px;}
 div.current:hover{background:#85BB65;text-decoration: none;text-decoration:underline;cursor:pointer;}
-div.child span:hover {text-decoration:underline;cursor:pointer;}
+div.child span.text:hover {text-decoration:underline;cursor:pointer;}

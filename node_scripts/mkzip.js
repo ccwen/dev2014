@@ -92,8 +92,8 @@ var add_appfiles=function(appfolder,zip,extras) {
 	zip.addData(appfolder+"/index.html",indexhtml);
 	addfile(appfolder+"/index.css");
 	
-	addfile(appfolder+"/build/build.js",appfolder);
-	addfile(appfolder+"/build/build.css",appfolder);
+	addfile(appfolder+"/build.js",appfolder);
+	addfile(appfolder+"/build.css",appfolder);
 	
 	if (extras) {
 		if (extras.repos) {

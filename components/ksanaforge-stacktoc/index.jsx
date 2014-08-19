@@ -1,34 +1,56 @@
 /** @jsx React.DOM */
+  
+var trimHit=function(hit) {
+  if (hit>999) { 
+    return (Math.floor(hit/1000)).toString()+"K+";
+  } else return hit.toString();
+}
 var Ancestors=React.createClass({
   goback:function(e) {
     var n=e.target.dataset["n"]; 
     if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];
     this.props.setCurrent(n); 
   },
+  showExcerpt:function(e) {
+    var n=parseInt(e.target.parentNode.dataset["n"]);
+    e.stopPropagation();
+    e.preventDefault();
+    this.props.hitClick(n);
+  }, 
   showHit:function(hit) {
-    if (hit)  return <span className="pull-right badge">{hit}</span>
+    if (hit)  return <span onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</span>
     else return <span></span>;
   },
   renderAncestor:function(n,idx) {
     var hit=this.props.toc[n].hit;
-    return <div key={"a"+n} onClick={this.goback} className="node parent" data-n={n}>{idx+1}.<span>{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
+    return <div key={"a"+n} className="node parent" data-n={n}>{idx+1}.<span className="text" onClick={this.goback} >{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
     return <div>{this.props.data.map(this.renderAncestor)}</div>
-  }
-});
+  } 
+}); 
 var Children=React.createClass({
   open:function(e) {
     var n=e.target.parentNode.dataset["n"];
     if (typeof n!=="undefined") this.props.setCurrent(n);
   }, 
   showHit:function(hit) {
-    if (hit)  return <span className="pull-right badge">{hit}</span>
+    if (hit)  return <span onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</span>
     else return <span></span>;
   },
-  openNode:function() {
-    return <button className="btn btn-xs btn-success" onClick={this.open}>...</button>
+  showExcerpt:function(e) {
+    var n=parseInt(e.target.parentNode.dataset["n"]);
+    e.stopPropagation();
+    e.preventDefault();
+    this.props.hitClick(n);
+  }, 
+  openNode:function(haschild) {
+    if (haschild) {
+      return <button className="btn btn-xs btn-success" onClick={this.open}>＋</button>
+    } else {
+      return <button className="btn btn-xs btn-default disabled">－</button>
+    }    
   },
   renderChild:function(n) {
     var child=this.props.toc[n];
@@ -37,10 +59,11 @@ var Children=React.createClass({
     //if (child.extra) extra="<extra>"+child.extra+"</extra>";
     if (!child.hasChild) classes+=" nochild";
     else haschild=true;
-
+     
     return <div className={classes} data-n={n}> 
-    <span className="text"  onClick={this.go}>{this.props.toc[n].text}</span>{haschild?this.openNode():""}{this.showHit(hit)}</div>
-  },
+    {this.openNode(haschild)}
+    <span className="text"  onClick={this.go}>{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
+  }, 
   go:function(e) {
     var n=e.target.parentNode.dataset["n"];
 
@@ -49,7 +72,7 @@ var Children=React.createClass({
     if (!this.props.data || !this.props.data.length) return <div></div>;
     return <div>{this.props.data.map(this.renderChild)}</div>
   }
-});
+}); 
 var stacktoc = React.createClass({
   getInitialState: function() {
     return {bar: "world",tocReady:false,cur:0};//403
@@ -69,22 +92,24 @@ var stacktoc = React.createClass({
         }
         depths[depth]=i;
         prev=depth;
-      }
-    },
+      } 
+    }, 
     enumAncestors:function() {
       var toc=this.props.data;
       if (!toc || !toc.length) return;
       var cur=this.state.cur;
+      if (cur==0) return [];
       var n=cur-1;
       var depth=toc[cur].depth - 1;
       var parents=[];
-      while (n>=0 && depth>=0) {
+      while (n>=0 && depth>0) {
         if (toc[n].depth==depth) {
           parents.unshift(n);
           depth--;
         }
         n--;
       }
+      parents.unshift(0); //first ancestor is root node
       return parents;
     },
     enumChildren : function() {
@@ -156,7 +181,6 @@ var stacktoc = React.createClass({
       }
     }
     nodeIds.forEach(function(n){getRange(n)});
-
     nodeIds.forEach(function(n){getHit(n)});
   },
   fillHits:function(ancestors,children) {
@@ -164,8 +188,18 @@ var stacktoc = React.createClass({
       this.fillHit(children);
       this.fillHit(this.state.cur);
   },
+  hitClick:function(n) {
+    if (this.props.onHitClick) {
+      this.props.onHitClick(n);
+    }
+  },
+  onHitClick:function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.hitClick(this.state.cur);
+  },
   showHit:function(hit) {
-    if (hit)  return <span className="pull-right badge">{hit}</span>
+    if (hit)  return <span onClick={this.onHitClick} className="pull-right badge">{trimHit(hit)}</span>
     else return <span></span>;
   },
   render: function() {
@@ -177,9 +211,9 @@ var stacktoc = React.createClass({
     if (this.props.hits && this.props.hits.length) this.fillHits(ancestors,children);
     return (
       <div className="stacktoc"> 
-        <Ancestors setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
-        <div className="node current" n={this.state.cur}><span>{depth}.</span>{current.text}{this.showHit(current.hit)}</div>
-        <Children setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
+        <Ancestors hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
+        <div className="node current" n={this.state.cur}><span>{depth}.</span><span className="text">{current.text}</span>{this.showHit(current.hit)}</div>
+        <Children hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>
     ); 
   }

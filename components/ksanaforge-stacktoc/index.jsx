@@ -15,7 +15,7 @@ var Ancestors=React.createClass({
     var n=parseInt(e.target.parentNode.dataset["n"]);
     e.stopPropagation();
     e.preventDefault();
-    this.props.hitClick(n);
+    this.props.showExcerpt(n);
   }, 
   showHit:function(hit) {
     if (hit)  return <span onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</span>
@@ -62,11 +62,12 @@ var Children=React.createClass({
      
     return <div className={classes} data-n={n}> 
     {this.openNode(haschild)}
-    <span className="text"  onClick={this.go}>{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
+    <span className="text"  onClick={this.showText}>{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
   }, 
-  go:function(e) {
-    var n=e.target.parentNode.dataset["n"];
-
+  showText:function(e) {
+    var n=e.target.dataset["n"];
+    if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];
+    this.props.showText(parseInt(n));
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
@@ -189,9 +190,7 @@ var stacktoc = React.createClass({
       this.fillHit(this.state.cur);
   },
   hitClick:function(n) {
-    if (this.props.onHitClick) {
-      this.props.onHitClick(n);
-    }
+    if (this.props.showExcerpt)  this.props.showExcerpt(n);
   },
   onHitClick:function(e) {
     e.stopPropagation();
@@ -202,6 +201,12 @@ var stacktoc = React.createClass({
     if (hit)  return <span onClick={this.onHitClick} className="pull-right badge">{trimHit(hit)}</span>
     else return <span></span>;
   },
+  showText:function(e) {
+    var n=e.target.dataset["n"];
+    if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];
+    this.props.showText(parseInt(n));
+  },
+
   render: function() {
     if (!this.props.data || !this.props.data.length) return <div></div>
     var depth=this.props.data[this.state.cur].depth+1;
@@ -209,11 +214,11 @@ var stacktoc = React.createClass({
     var children=this.enumChildren();
     var current=this.props.data[this.state.cur];
     if (this.props.hits && this.props.hits.length) this.fillHits(ancestors,children);
-    return (
+    return ( 
       <div className="stacktoc"> 
-        <Ancestors hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
-        <div className="node current" n={this.state.cur}><span>{depth}.</span><span className="text">{current.text}</span>{this.showHit(current.hit)}</div>
-        <Children hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
+        <Ancestors showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
+        <div onClick={this.showText} className="node current" data-n={this.state.cur}><span>{depth}.</span><span className="text">{current.text}</span>{this.showHit(current.hit)}</div>
+        <Children showText={this.props.showText} hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>
     ); 
   }

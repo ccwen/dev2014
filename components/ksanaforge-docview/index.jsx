@@ -249,7 +249,7 @@ var docview = React.createClass({
     } else if (action=="getmarkupsat") {
       return this.getMarkupsAt(args[0]);
     } else if (action=="copy") {
-      if (!process) return;
+      if (typeof process=="undefined") return;
       var text=args[0];
       var gui = nodeRequire('nw.gui');
       var clipboard = gui.Clipboard.get();

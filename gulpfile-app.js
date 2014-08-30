@@ -169,6 +169,10 @@ var chdir_initcwd=function() {
 gulp.task('qunit',function(){
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['js'];
+  if (!name) {
+    name = "!"+argv['nodejs'];   //forcing nodejs context, QUnit
+  }
+
   var filename=name;
   var shellscript="qunit.cmd";
   if (process.platform=="darwin") shellscript="./qunit.sh";

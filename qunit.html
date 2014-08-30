@@ -21,22 +21,34 @@
   <script src="node_scripts/qunit/qunit.js"></script>
   <script type="text/javascript">
     if (location.hash.length) {
-		var fileref=document.createElement('script');
 		var filename=location.hash.substring(1);
-  		fileref.setAttribute("type","text/javascript")
-  	    
-  	    document.getElementsByTagName("head")[0].appendChild(fileref);
-  	    filename=filename.replace(/\\/g,'/');
-  	    var path=filename.substring(0,filename.lastIndexOf('/'));
-  	    if (path) {
-          process.chdir(path);//for node context
-        }
-//https://github.com/rogerwang/node-webkit/wiki/Differences-of-JavaScript-contexts
-        require(filename); //entering node context
-    } else {
-    	document.write('missing test filename')
+    
+    if (!filename) {
+        document.write('missing test filename')
+        //throw "missing filename"
     }
-  
+  	var nodemode=false;
+    if (filename[0]=="!") {
+      filename=filename.substring(1);
+      nodemode=true;
+    }
+
+    filename=filename.replace(/\\/g,'/');
+    var path=filename.substring(0,filename.lastIndexOf('/'));
+    if (path) {
+      process.chdir(path);//for node context
+    }
+
+    if (nodemode) {
+  //https://github.com/rogerwang/node-webkit/wiki/Differences-of-JavaScript-contexts
+        require(filename); //entering node context      
+    } else {
+      var fileref=document.createElement('script');
+      fileref.setAttribute("type","text/javascript")
+      fileref.setAttribute("src", filename)
+      document.getElementsByTagName("head")[0].appendChild(fileref);
+    }
+  }
   </script>
 </body>
 </html>

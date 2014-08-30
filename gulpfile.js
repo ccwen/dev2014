@@ -174,6 +174,10 @@ gulp.task("initdb",function() {
 gulp.task('qunit',function(){
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['js'];
+  if (!name) {
+    name = "!"+argv['nodejs'];   //forcing nodejs context, QUnit
+  }
+  
   var filename=name;
   var shellscript="qunit.cmd";
   if (process.platform=="darwin") shellscript="./qunit.sh";
@@ -192,6 +196,7 @@ gulp.task('qunit',function(){
   } else {
     console.log('cannot find debuggee, syntax: ');
     console.log('gulp qunit --js=debuggee.js');
+    console.log('gulp qunit --nodejs=debuggee.js');
   }
 });
 var chdir_initcwd=function() {

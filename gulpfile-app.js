@@ -149,7 +149,7 @@ gulp.task('default',['rebuild','watch'],function(){
 });
 
 gulp.task('min',['rebuild'],function(){
-  return gulp.src('build/build.js').pipe(uglify()).
+  return gulp.src('build.js').pipe(uglify()).
   pipe(rename('build.min.js')).pipe(gulp.dest('build'));
 })
 gulp.task('mkzip',['min'],function(){

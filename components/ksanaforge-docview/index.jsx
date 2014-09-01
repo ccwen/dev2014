@@ -248,12 +248,14 @@ var docview = React.createClass({
       this.setState({selstart:newstart,sellength:0});
     } else if (action=="getmarkupsat") {
       return this.getMarkupsAt(args[0]);
+/*      
     } else if (action=="copy") {
       if (typeof process=="undefined") return;
       var text=args[0];
       var gui = nodeRequire('nw.gui');
       var clipboard = gui.Clipboard.get();
       clipboard.set(text);
+*/
     } else if (action=="caretmoved") {
       this.showLinkButtons(args[0],args[1],args[2]);
     } else if (action=="openlink") { 

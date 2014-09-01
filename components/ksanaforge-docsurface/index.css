@@ -1,7 +1,3 @@
-@-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
 *:focus {
     outline: none;
 }
@@ -15,10 +11,7 @@
 .surface-caret {  -webkit-animation: fadein 1.0s ease-in alternate infinite;}
 .menuopened {background:LemonChiffon;}
 .selected {background: Highlight;height:120%;color:HighlightText;}
-@-webkit-keyframes rainbow {
-  0% {border-color: hsl(0, 100%, 50%);}
-  100% {border-color: hsl(255, 100%, 50%);}
-}
+
 .surface span.remove {color:gray; }
 .surface span[data-to]::after {
  content: attr(data-to);

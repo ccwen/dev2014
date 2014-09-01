@@ -180,15 +180,12 @@ this.keydown=function(e) {
     else if (kc==13) enter();
     else if (kc==27) surface.closeinlinedialog();
     else if (validchar(kc)) {
-
-      if (kc==67 && e.ctrlKey) {
-        surface.props.action("copy",surface.selectedText());
-      } else {
+      //if (kc==67 && e.ctrlKey) {
+      //  surface.props.action("copy",surface.selectedText());
+      //} else {
         prevent=false;
-      }
-
+      //}
     }
-
     if (kc>=27&&kc<50)  updateSelStart();
     if (prevent) e.preventDefault();
 

@@ -87,7 +87,7 @@ var surface = React.createClass({
       }
     }
 
-    sel.empty();
+    //sel.empty();
     this.refs.surface.getDOMNode().focus();
     return {start:start,len:length};
   },

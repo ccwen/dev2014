@@ -173,9 +173,10 @@ gulp.task("initdb",function() {
 
 gulp.task('qunit',function(){
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['js'];
+  var name = argv['js'],nodemode="";
   if (!name) {
-    name = "!"+argv['nodejs'];   //forcing nodejs context, QUnit
+    name = argv['nodejs'];   //forcing nodejs context, QUnit
+    nodemode="!";
   }
   
   var filename=name;
@@ -188,7 +189,7 @@ gulp.task('qunit',function(){
 
   if (fs.existsSync(filename)) {
     while (!fs.existsSync(shellscript)) process.chdir("..")
-    exec(shellscript+" "+filename, {}, function(error, stdout, stderr) {
+    exec(shellscript+" "+filename+nodemode, {}, function(error, stdout, stderr) {
   // work with result
       if (error) throw error;
     });

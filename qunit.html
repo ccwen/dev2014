@@ -28,8 +28,8 @@
         //throw "missing filename"
     }
   	var nodemode=false;
-    if (filename[0]=="!") {
-      filename=filename.substring(1);
+    if (filename[filename.length-1]=="!") {
+      filename=filename.substr(0,filename.length-1);
       nodemode=true;
     }
 

@@ -150,7 +150,7 @@ gulp.task('default',['rebuild','watch'],function(){
 
 gulp.task('min',['rebuild'],function(){
   return gulp.src('build.js').pipe(uglify()).
-  pipe(rename('build.min.js')).pipe(gulp.dest('build'));
+  pipe(rename('build.min.js')).pipe(gulp.dest('.'));
 })
 gulp.task('mkzip',['min'],function(){
   var mkzip=require('./node_scripts/mkzip');

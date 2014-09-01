@@ -301,9 +301,10 @@ var docview = React.createClass({
       menu.style.left=x+'px';
       var menuheight=menu.querySelector(".dropdown-menu").offsetHeight;
       var yy=y-this.getDOMNode().offsetTop;
-      if (yy+menuheight>this.getDOMNode().offsetHeight) {
+      if (yy+menuheight-20>this.getDOMNode().offsetHeight) {
         yy-=menuheight;
       }
+      if (yy<0) yy=0;
       menu.style.top=yy+'px'; 
     }
   },

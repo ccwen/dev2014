@@ -189,14 +189,14 @@ this.keydown=function(e) {
     if (kc>=27&&kc<50)  updateSelStart();
     if (prevent) e.preventDefault();
 
- }	
+  }
   this.show=function() {
     //this.refs.surface.getDOMNode().focus();
     var pos=surface.props.selstart+surface.props.sellength;
     var c=surface.refs.surface.getDOMNode().querySelector(
       'span[data-n="'+(pos)+'"]');
     moveCaret(c);
-  }
+  } 
 
 }
 

@@ -26,7 +26,11 @@ var insertRule=function(sheet,tags,prefix,SS) {
 		combined+='background-image:'+background_images.join(",");
 	}
 	var rule=prefix+"."+tags.join("__")+"{"+combined+"}";
-	sheet.insertRule(rule,0);
+ 	try {
+ 		sheet.insertRule(rule,0);	
+ 	} catch(e) {
+ 		console.log(e);
+ 	}
 }
 var applyStyles=function(styles,tagset,prefix) {
 	prefix=prefix||"";

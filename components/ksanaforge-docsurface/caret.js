@@ -179,7 +179,7 @@ this.keydown=function(e) {
     else if (kc==32) inlinedialog();
     else if (kc==13) enter();
     else if (kc==27) surface.closeinlinedialog();
-    else if (validchar(kc)) {
+    else if (validchar(kc) || (kc>=112 && kc<=123))  {
       //if (kc==67 && e.ctrlKey) {
       //  surface.props.action("copy",surface.selectedText());
       //} else {

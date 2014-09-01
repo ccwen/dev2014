@@ -299,7 +299,12 @@ var docview = React.createClass({
       var menu=this.refs.menu.getDOMNode();
       menu.classList.add("open");
       menu.style.left=x+'px';
-      menu.style.top=(y-this.getDOMNode().offsetTop)+'px'; 
+      var menuheight=menu.querySelector(".dropdown-menu").offsetHeight;
+      var yy=y-this.getDOMNode().offsetTop;
+      if (yy+menuheight>this.getDOMNode().offsetHeight) {
+        yy-=menuheight;
+      }
+      menu.style.top=yy+'px'; 
     }
   },
   onSelection:function(start,len,x,y,e) {

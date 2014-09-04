@@ -3,6 +3,8 @@
 	shared gulpfile for applications
 */
 var newcomponent=require('./node_scripts/newcomponent');
+var newmodule=require('./node_scripts/newmodule');
+
 var nw=require('./node_scripts/gulp-nw');
 var paths = {
   buildscripts: ['components/**/*.jsx'],
@@ -40,6 +42,11 @@ gulp.task('newcomponent',function(){
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   newcomponent(name);
+});
+gulp.task('newmodule',function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['name'];
+  newmodule(name);
 });
 
 gulp.task('jsx2js',function() {

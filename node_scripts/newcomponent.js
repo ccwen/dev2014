@@ -28,6 +28,7 @@ module.exports=function(name,opts) {
 
 	var indexjsx=
 '/** @jsx React.DOM */\n\n'+
+'/* to rename the component, change name of ./component.js and  "dependencies" section of ../../component.js */\n\n'+
 '//var othercomponent=Require("other"); \n'+
 'var '+componentname+' = React.createClass({\n'+
 '  getInitialState: function() {\n'+

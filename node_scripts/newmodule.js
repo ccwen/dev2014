@@ -62,6 +62,7 @@ var indexcss='.'+componentname+' {}';
 
 	fs.writeFileSync(newfolder+'/index.js',indexjsx,'utf8');
 	fs.writeFileSync(newfolder+'/component.json',componentjson,'utf8');
+	fs.writeFileSync(newfolder+'/module1.js',module1,'utf8');
 
 /* add dependency to component.json*/
 	var json=JSON.parse(fs.readFileSync('component.json','utf8'));

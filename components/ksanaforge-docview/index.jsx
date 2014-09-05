@@ -210,7 +210,7 @@ var docview = React.createClass({
     }
   },
   action:function() {
-    var maxlen=100;
+    var maxlen=50;
     var args = [],r,username=this.props.user.name;
     var ss=this.state.selstart, sl=this.state.sellength;
     var newstart=this.state.selstart+this.state.sellength;

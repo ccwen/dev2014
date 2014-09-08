@@ -37,7 +37,7 @@ module.exports=function(name,opts) {
 '//var othercomponent=Require("other"); \n'+
 '//new module filename must be added to scripts section of ./component.js and export here\n'+
 'var '+componentname+' = {\n'+
-' module1: require("./module")\n'+
+' module1: require("./module1")\n'+
 '}\n\n'+
 'module.exports='+componentname+';';
 

@@ -43,3 +43,7 @@
  letter-spacing:1em;
  display: table-row;
 }
+
+.viewonlyHolder {
+  cursor:pointer;
+}

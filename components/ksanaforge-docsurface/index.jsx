@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+if (typeof $=="undefined") $=Require("jquery");
 var token = React.createClass({
   render:function() {
     var classname=this.props.cls?this.props.cls.trim():"";
@@ -251,9 +252,26 @@ var surface = React.createClass({
       //if (R[0].start!=i)replaceto="";
     return extraclass;
   },
-
   getMarkupsAt:function(offset) {
     return this.props.action("getmarkupsat",offset);
+  },
+  prepareViewonly:function(page) {
+    var admin_viewable_tags=this.props.template.admin_viewable_tags||[];
+    if (admin_viewable_tags.length==0) return [];
+    var author=this.props.user.name;
+    var viewonly=page.filterMarkup(function(m){
+      return (admin_viewable_tags.indexOf(m.payload.type)>-1) 
+        && (author!=m.payload.author);
+    })
+    return viewonly;
+  },
+  findViewable:function(viewonlys,offset) {
+    return viewonlys.filter(function(v){
+      return (v.start==offset);
+    });
+  },
+  openViewonly:function(e) {
+    $(e.target).popover("toggle");
   },
   toXML : function(opts) {
     var page=this.props.page;
@@ -269,7 +287,8 @@ var surface = React.createClass({
     var xml=[], hits=this.props.hits ||[], nhit=0, voff=0;
     var tagset={};//tags used in the page, comma to seperate overlap tag 
     var selstart=opts.selstart||0,sellength=opts.sellength||0;
-    
+    var viewonlys = this.prepareViewonly(page);
+
     for (var i=0;i<TK.length;i++) {
       var tk=TK[i];
       var classes="",extraclass="";
@@ -330,15 +349,23 @@ var surface = React.createClass({
       classes=(markupclasses.join("__")).trim()+" "+extraclass;
       xml.push(token({ key:i , cls:classes ,n:offsets[i],ch:ch, appendtext:appendtext}));
       if (inlinedialog) xml.push(inlinedialog);
+      var viewonly=this.findViewable(viewonlys,offsets[i]);
+      if (viewonly) viewonly.map(function(v){
+        xml.push(<a tabindex="0" href="#" className="btn btn-xs btn-warning viewonlyHolder" 
+          data-toggle="popover" onClick={this.openViewonly} data-trigger="focus" data-content={v.payload.hint}
+          title={v.payload.type+" by "+v.payload.author}
+          >*</a> );
+      },this);
     }     
     xml.push(<token key={i} n={offsets[i]}/>);
+
 
     if (this.props.onTagSet) {
       this.props.onTagSet(Object.keys(tagset).sort(),this.state.uuid);
     }
     if (this.props.preview && this.props.template.typeset) {
       xml=this.props.template.typeset(xml);
-    }    
+    }
     return xml;
   },  
   render: function() {
@@ -392,6 +419,8 @@ var surface = React.createClass({
     if (this.props.scrollto) this.scrollToSelection();
     this.caret.show();
     this.showinlinedialog();
+    
+    //$(".viewonlyHolder").popover();
   }
 });
 

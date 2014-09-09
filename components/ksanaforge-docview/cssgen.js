@@ -25,9 +25,9 @@ var insertRule=function(sheet,tags,prefix,SS) {
 	if (background_images.length) {
 		combined+='background-image:'+background_images.join(",");
 	}
-	var rule=prefix+"."+tags.join("__")+"{"+combined+"}";
+	var rule=prefix+"."+tags.join("__")+" {"+combined+"}";
  	try {
- 		sheet.insertRule(rule,0);	
+ 		sheet.insertRule(rule,1);	
  	} catch(e) {
  		console.log(e);
  	}

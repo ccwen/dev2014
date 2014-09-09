@@ -47,7 +47,7 @@ var docview = React.createClass({
     }
     return {selstart:s, sellength:l,newMarkupAt:null, linktarget:linktarget,linksource:linksource};
   },
-  orMarkups:function(m1,m2) { // m1 has higher priority
+  concatMarkups:function(m1,m2) { // m1 has higher priority
     var out=[],positions={};
     m1.map(function(m){ 
       out.push(m);
@@ -68,14 +68,15 @@ var docview = React.createClass({
     var user=this.props.user;
     M=M||page.filterMarkup(function(){return true});
     if (!M.length) return []; 
-    var out=M.filter(function(e){return e.payload.author===user.name});
+    var filterCB=function(e){return e.payload.author===user.name};
+    var out=M.filter(filterCB);
     if (user.admin) {
       var merged=M.filter(function(e){return e.payload.author!=user.name});
       merged=page.mergeMarkup(merged,this.offsets);
       if (typeof offset!='undefined'){
         merged=merged.filter(function(e){return offset>=e.start && offset<e.start+e.len});
       }
-      out=this.orMarkups(out,merged);
+      out=this.concatMarkups(out,merged);
       out.sort(function(m1,m2){return m1.start-m2.start});
     }
     return out;

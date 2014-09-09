@@ -230,7 +230,6 @@ var docview = React.createClass({
       this.addSuggestion(ss,sl,text);
     } else if (action=="addmarkup") { 
       var payload=args[0];
-      payload.i=this.props.pageid;
       var silent=args[1];
       payload.author=this.props.user.name;
       if (sl>maxlen) return;

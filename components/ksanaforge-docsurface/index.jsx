@@ -271,7 +271,9 @@ var surface = React.createClass({
     });
   },
   openViewonly:function(e) {
-    $(e.target).popover("toggle");
+    var dom=e.target;
+    if (dom.className!="viewonlyHolder") dom=dom.parentElement;
+    $(dom).popover("toggle");
   },
   toXML : function(opts) {
     var page=this.props.page;
@@ -342,7 +344,7 @@ var surface = React.createClass({
       }  
 
       markupclasses.sort();
-
+   
       if (markupclasses.length) tagset[markupclasses.join(",")]=true;
       var ch=tk;  
       if (ch==="\n") {ch="\u21a9";extraclass+=' br';}
@@ -351,10 +353,10 @@ var surface = React.createClass({
       if (inlinedialog) xml.push(inlinedialog);
       var viewonly=this.findViewable(viewonlys,offsets[i]);
       if (viewonly) viewonly.map(function(v){
-        xml.push(<a tabindex="0" href="#" className="btn btn-xs btn-warning viewonlyHolder" 
+        xml.push(<span tabindex="0" href="#" className="viewonlyHolder" 
           data-toggle="popover" onClick={this.openViewonly} data-trigger="focus" data-content={v.payload.hint}
           title={v.payload.type+" by "+v.payload.author}
-          >*</a> );
+          ><span className="author">{v.payload.author.substr(0,2)}</span>.</span> );
       },this);
     }     
     xml.push(<token key={i} n={offsets[i]}/>);

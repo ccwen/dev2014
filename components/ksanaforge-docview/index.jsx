@@ -228,7 +228,7 @@ var docview = React.createClass({
       var text=args[2]||"";
       if (sl>maxlen) return;
       this.addSuggestion(ss,sl,text);
-    } else if (action=="addmarkup") { 
+    } else if (action=="addmarkup") {
       var payload=args[0];
       var silent=args[1];
       payload.author=this.props.user.name;
@@ -326,7 +326,7 @@ var docview = React.createClass({
 
     if (this.props.onSelection) {  
       this.props.onSelection(start,len,x,y);
-    } 
+    }
     this.props.action("makingselection",start,start+len);
   },
   render: function() {

@@ -265,10 +265,20 @@ var surface = React.createClass({
     })
     return viewonly;
   },
-  findViewable:function(viewonlys,offset) {
-    return viewonlys.filter(function(v){
-      return (v.start==offset);
-    });
+  putSurfaceElement:function(viewonlys,offsets,idx) {
+    var surface_elements=this.props.template.surface_elements; //from workshop-project
+    var res=[];
+    if (surface_elements)  {
+        var viewonly=viewonlys.filter(function(v){return (v.start==offsets[idx]);});
+        if (viewonly) viewonly.map(function(v){
+          var element=surface_elements[v.payload.type];
+          if (element) res.push(element({payload:v.payload}));
+          else {
+            console.error("element ",v.payload.type,"not defined in surface_elements")
+          }
+        });        
+    }
+    return res;
   },
   toXML : function(opts) {
     var page=this.props.page;
@@ -299,13 +309,7 @@ var surface = React.createClass({
           nhit++;
         }
       }
-
       if (!isSkip(tk)) voff++;
-      //var R=page.revisionAt(i),
-      //if (R.length) extraclass+=this.renderRevision(R[0],xml);
-
-      //naive solution, need to create many combination class
-      //create dynamic stylesheet,concat multiple background image with ,
       var inlinedialog=null;      
       for (var j in M) {
         markupclasses.push(M[j].payload.type);
@@ -321,7 +325,6 @@ var surface = React.createClass({
           inlinedialog=this.addInlinedialog(M[j],text);
         }
         */
-
         //append text
         if (M[j].payload.selected) {
           appendtext=M[j].payload.choices[M[j].payload.selected-1].text;
@@ -337,7 +340,6 @@ var surface = React.createClass({
           if (M[j].start+M[j].len!=offsets[i]+tk.length) appendtext=""; 
         }
       }  
-
       markupclasses.sort();
    
       if (markupclasses.length) tagset[markupclasses.join(",")]=true;
@@ -346,12 +348,8 @@ var surface = React.createClass({
       classes=(markupclasses.join("__")).trim()+" "+extraclass;
       xml.push(token({ key:i , cls:classes ,n:offsets[i],ch:ch, appendtext:appendtext}));
       if (inlinedialog) xml.push(inlinedialog);
-      var viewonly=this.findViewable(viewonlys,offsets[i]);
-      var template=this.props.template.surface_elements; //from workshop-project
-      if (viewonly && template) viewonly.map(function(v){
-        var element=template[v.payload.type];
-        if (element) xml.push(element({payload:v.payload}));
-      });
+      var res=this.putSurfaceElement(viewonlys,offsets,i);
+      if (res.length) xml.push(res);
     }     
     xml.push(<token key={i} n={offsets[i]}/>);
 

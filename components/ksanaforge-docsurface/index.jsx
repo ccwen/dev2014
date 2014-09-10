@@ -270,11 +270,6 @@ var surface = React.createClass({
       return (v.start==offset);
     });
   },
-  openViewonly:function(e) {
-    var dom=e.target;
-    if (dom.className!="viewonlyHolder") dom=dom.parentElement;
-    $(dom).popover("toggle");
-  },
   toXML : function(opts) {
     var page=this.props.page;
     if (!page) return [];
@@ -352,15 +347,13 @@ var surface = React.createClass({
       xml.push(token({ key:i , cls:classes ,n:offsets[i],ch:ch, appendtext:appendtext}));
       if (inlinedialog) xml.push(inlinedialog);
       var viewonly=this.findViewable(viewonlys,offsets[i]);
-      if (viewonly) viewonly.map(function(v){
-        xml.push(<span tabindex="0" href="#" className="viewonlyHolder" 
-          data-toggle="popover" onClick={this.openViewonly} data-trigger="focus" data-content={v.payload.hint}
-          title={v.payload.type+" by "+v.payload.author}
-          ><span className="author">{v.payload.author.substr(0,2)}</span>.</span> );
-      },this);
+      var template=this.props.template.surface_elements; //from workshop-project
+      if (viewonly && template) viewonly.map(function(v){
+        var element=template[v.payload.type];
+        if (element) xml.push(element({payload:v.payload}));
+      });
     }     
     xml.push(<token key={i} n={offsets[i]}/>);
-
 
     if (this.props.onTagSet) {
       this.props.onTagSet(Object.keys(tagset).sort(),this.state.uuid);

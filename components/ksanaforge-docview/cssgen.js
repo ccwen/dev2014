@@ -27,7 +27,7 @@ var insertRule=function(sheet,tags,prefix,SS) {
 	}
 	var rule=prefix+"."+tags.join("__")+" {"+combined+"}";
  	try {
- 		sheet.insertRule(rule,1);	
+ 		sheet.insertRule(rule,sheet.rules.length);	
  	} catch(e) {
  		console.log(e);
  	}

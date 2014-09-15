@@ -117,14 +117,11 @@ var surface = React.createClass({
   tokenclicked:function(e) {
     if (!e.target.attributes['data-n']) return;
     var n=e.target.attributes['data-n'].value;
-    if (n) {
-
-      this.openinlinedialog(n);
-      return true;
-    } else return false;
+    if (n) this.openinlinedialog(n);
+    return (!!n);
   },
   mouseDown:function(e) {
-     if (this.inlinedialogopened) {
+    if (this.inlinedialogopened) {
         e.preventDefault();
         return;
     }

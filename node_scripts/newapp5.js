@@ -48,7 +48,7 @@ module.exports=function(appname){
 '  "scripts": ["index.js"],\n'+
 '  "styles": ["index.css"]\n'+
 '}';
-	var gitignore="*.kdb\n*.kdbk\n*.pdf";
+	var gitignore="*.kdb\n*.kdbk\n*.pdf\nbuild.js\nbuild.css";
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
 	var indexhtml='<!DOCTYPE html>\n<html manifest="offline.appcache">\n'+

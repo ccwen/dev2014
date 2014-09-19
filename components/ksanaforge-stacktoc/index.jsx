@@ -67,7 +67,7 @@ var Children=React.createClass({
   showText:function(e) {
     var n=e.target.dataset["n"];
     if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];
-    this.props.showText(parseInt(n));
+    if (this.props.showText) this.props.showText(parseInt(n));
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
@@ -133,12 +133,18 @@ var stacktoc = React.createClass({
         if (n) child=toc[n];else break;
       }
       return children;
-    },
-  componentDidUpdate:function() {
+  },
+  rebuildToc:function() {
     if (!this.state.tocReady && this.props.data) {
       this.buildtoc();
       this.setState({tocReady:true});
     }
+  },
+  componentDidMount:function() {
+    this.rebuildToc();
+  },
+  componentDidUpdate:function() {
+    this.rebuildToc();
   },   
   setCurrent:function(n) {
     n=parseInt(n);

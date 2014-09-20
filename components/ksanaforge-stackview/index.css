@@ -1,2 +1,16 @@
+
 .stackview {height:100%;}
 .splitterPane {overflow:auto}
+.selected_b {border-width:1px;border-left-style:dotted;border-top-left-radius:30%;border-bottom-left-radius:30%;}
+.selected   {
+	background-color:Highlight;
+	border-width:1px;border-top-style:dotted;border-bottom-style:dotted;
+  -webkit-animation: myselection 1s infinite;
+}
+.selected_e {border-width:1px;border-right-style:dotted;border-top-right-radius:30%;border-bottom-right-radius:30%;}
+
+@-webkit-keyframes myselection {
+	0%   {border-color:blue;}
+	50%  {border-color:yellow;border-width:1px;}
+  100% {border-color:blue;}
+}

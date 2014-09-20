@@ -1,0 +1,15 @@
+{
+  "name": "stackview",
+  "repo": "ksanaforge/stackview",
+  "description": "hello world",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "ksanaforge/splitter":"*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": ["index.js"],
+  "styles": ["index.css"]
+}

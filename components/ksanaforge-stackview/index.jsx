@@ -1,5 +1,11 @@
 /** @jsx React.DOM */
 Require("splitter");
+
+var dummyview = React.createClass({
+  render:function() {
+    return <div>{this.text}</div>
+  }
+});
 var stackview = React.createClass({
   getInitialState: function() {
     this.start=0;
@@ -25,13 +31,33 @@ var stackview = React.createClass({
     this.start=0;
   },
   componentDidMount:function() {
-    setTimeout(this.createSplitter.bind(this),100);
+    setTimeout(this.createSplitter,100);
   },
   componentDidUpdate:function() {
     
   },
+  action:function() {
+    var args=[] , handled=false;
+    Array.prototype.push.apply( args, arguments );
+    var action=args.shift();
+    if (action=="something") {
+      handle=false;
+    }
+
+    if (!handled) {
+      args.unshift(action);
+      return this.props.action.apply(this,args);
+    }
+
+  },
+  getDefaultProps:function() {
+    return {
+      view: dummyview
+    }
+  },
   renderView:function(v) {
-    return <div className="splitterPane" dangerouslySetInnerHTML={{__html:v.content}}></div>
+    return this.props.view({action:this.action,text:v.content});
+    //return <div className="splitterPane" dangerouslySetInnerHTML={{__html:v.content}}></div>
   },
   createNestedView:function() {
     if (this.start>=this.props.views.length) return null;

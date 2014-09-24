@@ -1,19 +1,19 @@
 .vsplitbar {
 	width: 4px;
-	background-color: #c66;
+	background-color: #ccc;
 }
 .vsplitbar.active, .vsplitbar:hover {
-	background-color: #c66;
+	background-color: #ccc;
 	width: 4px;
 	opacity: 0.5;
 }
 
 .hsplitbar {
 	height: 4px;
-	background-color: #c66;
+	background-color: #ccc;
 }
 .hsplitbar.active, .hsplitbar:hover {
-	background-color: #c66;
+	background-color: #ccc;
 	height: 4px;
 	opacity: 0.5;
 }

@@ -8,4 +8,4 @@ var splitter = React.createClass({
     return null;
   }
 });
-module.exports=splitter;
+module.exports=splitter; 

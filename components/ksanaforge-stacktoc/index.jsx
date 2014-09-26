@@ -156,6 +156,10 @@ var stacktoc = React.createClass({
     var toc=this.props.data;
     var hits=this.props.hits;
     var getRange=function(n) {
+      if (n+1>=toc.length) {
+        console.error("exceed toc length",n);
+        return;
+      }
       var depth=toc[n].depth , nextdepth=toc[n+1].depth;
       if (n==toc.length-1 || n==0) {
           toc[n].end=Math.pow(2, 48);

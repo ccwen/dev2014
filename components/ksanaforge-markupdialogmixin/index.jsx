@@ -3,6 +3,7 @@ var markupdialogmixin = {
   getInitialState: function() {
      return {
         className: 'modal fade'
+        ,edit:false
       };
   },
   activate:function(opts) {
@@ -12,8 +13,14 @@ var markupdialogmixin = {
     if (this.state.immediate) { //immediate execution
       this.execute.apply(this,arguments);
     } else {
-      this.show.apply(this,arguments);
+      this.show();
     }
+  },
+  edit:function(markup) {
+    if (this.loadMarkup) this.loadMarkup(markup);
+    else console.error("missing loadMarkup");
+    this.setState({edit:true});
+    this.show();
   },
   show: function() {
     this.setState({ className: 'modal fade show' });
@@ -22,8 +29,12 @@ var markupdialogmixin = {
       if (this.onShow) this.onShow();
     }.bind(this), 0);
   },
-  _ok:function(e) {
-    if (this.ok) this.ok(this.opts);
+  _create:function(e) {
+    if (this.create) this.create(this.opts);
+    this.hide();
+  },
+  _save:function(e) {
+    if (this.save) this.save(this.opts);
     this.hide();
   },
   _cancel:function(e) {
@@ -39,6 +50,13 @@ var markupdialogmixin = {
       this.opts=null;
     }.bind(this), 400);
   },
+  confirmButton:function() {
+    if (this.state.edit) {
+      return <button type="button" className="btn btn-default" onClick={this._save}>Save</button>
+    } else {
+      return <button type="button" className="btn btn-default" onClick={this._create}>Create</button>
+    }
+  },
   renderDialog:function(body) {
     return (
         <div className={this.state.className}>
@@ -53,7 +71,7 @@ var markupdialogmixin = {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-default" onClick={this._cancel}>Close</button>
-                <button type="button" className="btn btn-default" onClick={this._ok}>Ok</button>
+                {this.confirmButton()}
               </div>
             </div>
           </div>

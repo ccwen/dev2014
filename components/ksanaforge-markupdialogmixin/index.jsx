@@ -13,6 +13,7 @@ var markupdialogmixin = {
     if (this.state.immediate) { //immediate execution
       this.execute.apply(this,arguments);
     } else {
+      this.setState({edit:false});
       this.show();
     }
   },

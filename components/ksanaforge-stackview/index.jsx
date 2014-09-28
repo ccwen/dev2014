@@ -56,7 +56,7 @@ var stackview = React.createClass({
     }
   },
   renderView:function(v) {
-    return this.props.view({extra:this.props.extra,action:this.action,text:v.content});
+    return this.props.view({name:v.name,extra:this.props.extra,action:this.action,text:v.content});
     //return <div className="splitterPane" dangerouslySetInnerHTML={{__html:v.content}}></div>
   },
   createNestedView:function() {

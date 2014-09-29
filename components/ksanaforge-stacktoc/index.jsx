@@ -150,7 +150,19 @@ var stacktoc = React.createClass({
     n=parseInt(n);
     this.setState({cur:n});
   },
-
+  findByVoff:function(voff) {
+    for (var i=0;i<this.props.data.length;i++) {
+      var t=this.props.data[i];
+      if (t.voff>voff) return i-1;
+    }
+    return 0; //return root node
+  },
+  shouldComponentUpdate:function(nextProps,nextState) {
+    if (nextProps.goVoff&&nextProps.goVoff !=this.props.goVoff) {
+      nextState.cur=this.findByVoff(this.props.goVoff);
+    }
+    return true;
+  },
   fillHit:function(nodeIds) {
     if (typeof nodeIds=="number") nodeIds=[nodeIds];
     var toc=this.props.data;

@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-Require("splitter");
+//Require("splitter");
 
 var dummyview = React.createClass({
   render:function() {
@@ -11,6 +11,7 @@ var stackview = React.createClass({
     this.start=0;
     return {bar: "world",cur:0};//403
   },
+  /*
   createSplitter:function() {
     var mainheight=$(this.getDOMNode()).height();
     var mainwidth=$(this.getDOMNode()).width();
@@ -27,11 +28,12 @@ var stackview = React.createClass({
       );      
     }
   },
+  */
   componentWillUpdate:function() {
     this.start=0;
   },
   componentDidMount:function() {
-    setTimeout(this.createSplitter,100);
+    //setTimeout(this.createSplitter,100);
   },
   componentDidUpdate:function() {
     
@@ -55,17 +57,24 @@ var stackview = React.createClass({
       view: dummyview
     }
   },
-  renderView:function(v) {
-    return this.props.view({name:v.name,extra:this.props.extra,action:this.action,text:v.content});
+  renderView:function(v) { 
+    return <div className="viewdiv">
+      {this.props.view({name:v.name,extra:this.props.extra(v.name),action:this.action,text:v.content})}
+      <hr/>
+    </div>
     //return <div className="splitterPane" dangerouslySetInnerHTML={{__html:v.content}}></div>
   },
   createNestedView:function() {
-    if (this.start>=this.props.views.length) return null;
+    /*
+    if (!this.props.views || this.start>=this.props.views.length) return null;
     return React.DOM.div(
       {ref:"v"+this.start}, 
       this.renderView(this.props.views[this.start++]),
       this.createNestedView() 
-    );       
+    );
+*/
+    if (!this.props.views) return;
+    return this.props.views.map(this.renderView);
   },  
   render: function() {
     return <div className="stackview">

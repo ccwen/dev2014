@@ -70,9 +70,13 @@ var htmlfs = React.createClass({
 		},0);
 	},
 	queryQuota:function() {
-		html5fs.queryQuota(function(usage,quota){
-			this.setState({usage:usage,quota:quota,initialized:true});
-		},this);
+		if (typeof ksanagap=="undefined") {
+			html5fs.queryQuota(function(usage,quota){
+				this.setState({usage:usage,quota:quota,initialized:true});
+			},this);			
+		} else {
+			this.setState({usage:333,quota:1000*1000*1024,initialized:true,autoclose:true});
+		}
 	},
 	render:function() {
 		var that=this;

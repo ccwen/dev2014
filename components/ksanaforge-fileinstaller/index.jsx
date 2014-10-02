@@ -147,8 +147,7 @@ var filelist = React.createClass({
 var filemanager = React.createClass({
 	getInitialState:function() {
 		var quota=this.getQuota();
-		return {browserReady:false,noupdate:true,
-			requestQuota:quota,remain:0};
+		return {browserReady:false,noupdate:true,	requestQuota:quota,remain:0};
 	},
 	getQuota:function() {
 		var q=this.props.quota||"128M";
@@ -159,6 +158,7 @@ var filemanager = React.createClass({
 		return parseInt(q) * times;
 	},
 	missingKdb:function() {
+		if (typeof ksanagap!="undefined") return [];
 		var missing=this.props.needed.filter(function(kdb){
 			for (var i in html5fs.files) {
 				if (html5fs.files[i][0]==kdb.filename) return false;
@@ -193,6 +193,13 @@ var filemanager = React.createClass({
 	  },this);
 	},
 	onQuoteOk:function(quota,usage) {
+		if (typeof ksanagap!="undefined") {
+			console.log("onquoteok");
+			this.setState({noupdate:true,missing:[],files:[],autoclose:true
+				,quota:quota,remain:quota-usage});
+			return;
+		}
+		console.log("quote ok");
 		var files=this.genFileList(html5fs.files,this.missingKdb());
 		var that=this;
 		that.checkIfUpdate(files,function(hasupdate) {

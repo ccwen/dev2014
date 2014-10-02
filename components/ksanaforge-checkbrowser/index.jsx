@@ -1,7 +1,8 @@
 /** @jsx React.DOM */
 
 var checkfs=function() {
-	return (navigator && navigator.webkitPersistentStorage);
+	return (navigator && navigator.webkitPersistentStorage) || 
+	(typeof ksanagap!="undefined");
 }
 var featurechecks={
 	"fs":checkfs

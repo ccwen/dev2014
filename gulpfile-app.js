@@ -111,7 +111,9 @@ gulp.task('rebuild',['componentbuild','touchappcache'],function(){
 
   tempjs.map(function(f){fs.unlink(f)});
   tempjs.length=0;
-
+  if (gulp.afterbuild) {
+    gulp.afterbuild();
+  }
 	return true;
 })
 gulp.task('watch', function () {

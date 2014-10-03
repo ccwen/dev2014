@@ -159,7 +159,7 @@ var stacktoc = React.createClass({
   },
   shouldComponentUpdate:function(nextProps,nextState) {
     if (nextProps.goVoff&&nextProps.goVoff !=this.props.goVoff) {
-      nextState.cur=this.findByVoff(this.props.goVoff);
+      nextState.cur=this.findByVoff(nextProps.goVoff);
     }
     return true;
   },

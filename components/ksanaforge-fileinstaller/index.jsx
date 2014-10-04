@@ -194,12 +194,12 @@ var filemanager = React.createClass({
 	},
 	onQuoteOk:function(quota,usage) {
 		if (typeof ksanagap!="undefined") {
-			console.log("onquoteok");
+			//console.log("onquoteok");
 			this.setState({noupdate:true,missing:[],files:[],autoclose:true
-				,quota:quota,remain:quota-usage});
+				,quota:quota,remain:quota-usage,usage:usage});
 			return;
 		}
-		console.log("quote ok");
+		//console.log("quote ok");
 		var files=this.genFileList(html5fs.files,this.missingKdb());
 		var that=this;
 		that.checkIfUpdate(files,function(hasupdate) {

@@ -9,7 +9,8 @@ if (typeof process !="undefined") {
 	ksana.platform="chrome";
 }
 
-if (typeof React=="undefined") window.React=require('../react');
+//if (typeof React=="undefined") window.React=require('../react');
+
 //require("../cortex");
 var Require=function(arg){return require("../"+arg)};
 var boot=function(appId,main,maindiv) {

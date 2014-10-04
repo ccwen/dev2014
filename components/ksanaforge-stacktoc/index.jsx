@@ -94,45 +94,45 @@ var stacktoc = React.createClass({
         depths[depth]=i;
         prev=depth;
       } 
-    }, 
-    enumAncestors:function() {
-      var toc=this.props.data;
-      if (!toc || !toc.length) return;
-      var cur=this.state.cur;
-      if (cur==0) return [];
-      var n=cur-1;
-      var depth=toc[cur].depth - 1;
-      var parents=[];
-      while (n>=0 && depth>0) {
-        if (toc[n].depth==depth) {
-          parents.unshift(n);
-          depth--;
-        }
-        n--;
+  }, 
+  enumAncestors:function() {
+    var toc=this.props.data;
+    if (!toc || !toc.length) return;
+    var cur=this.state.cur;
+    if (cur==0) return [];
+    var n=cur-1;
+    var depth=toc[cur].depth - 1;
+    var parents=[];
+    while (n>=0 && depth>0) {
+      if (toc[n].depth==depth) {
+        parents.unshift(n);
+        depth--;
       }
-      parents.unshift(0); //first ancestor is root node
-      return parents;
-    },
-    enumChildren : function() {
-      var cur=this.state.cur;
-      var toc=this.props.data;
-      if (!toc || !toc.length) return;
-      if (toc[cur+1].depth!= 1+toc[cur].depth) return ;  // no children node
-      var n=cur+1;
-      var child=toc[n];
-      var children=[];
-      while (child) {
-        children.push(n);
-        var next=toc[n+1];
-        if (!next) break;
-        if (next.depth==child.depth) {
-          n++;
-        } else if (next.depth>child.depth) {
-          n=child.next;
-        } else break;
-        if (n) child=toc[n];else break;
-      }
-      return children;
+      n--;
+    }
+    parents.unshift(0); //first ancestor is root node
+    return parents;
+  },
+  enumChildren : function() {
+    var cur=this.state.cur;
+    var toc=this.props.data;
+    if (!toc || !toc.length) return;
+    if (toc[cur+1].depth!= 1+toc[cur].depth) return ;  // no children node
+    var n=cur+1;
+    var child=toc[n];
+    var children=[];
+    while (child) {
+      children.push(n);
+      var next=toc[n+1];
+      if (!next) break;
+      if (next.depth==child.depth) {
+        n++;
+      } else if (next.depth>child.depth) {
+        n=child.next;
+      } else break;
+      if (n) child=toc[n];else break;
+    }
+    return children;
   },
   rebuildToc:function() {
     if (!this.state.tocReady && this.props.data) {
@@ -185,7 +185,6 @@ var stacktoc = React.createClass({
           if (next==toc.length) toc[n].end=Math.pow(2,48);
           else toc[n].end=toc[next].voff;
         }
-        
       } else { //same level or end of sibling
         toc[n].end=toc[n+1].voff;
       }

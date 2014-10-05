@@ -56,9 +56,12 @@ gulp.task('jsx2js',function() {
             tempjs.push(file.path.substring(0,file.path.length-1));
         }
     }))
-
-    return gulp.src(paths.buildscripts).
-    pipe(react()).pipe(gulp.dest("components"));
+    console.log("JSX2JX");
+    return gulp.src(paths.buildscripts).pipe(tap(function(file,f){
+      process.stdout.write("converting "+file.path+"    \033[0G");
+      gulp.src(file.path).pipe(react()).pipe(gulp.dest("components"));  
+    }));
+    
 });
 
 gulp.task('jsx2js_common',function() {

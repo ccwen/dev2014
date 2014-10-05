@@ -49,7 +49,21 @@ gulp.task('newmodule',function(){
   newmodule(name);
 });
 
-gulp.task('jsx2js',function() {
+var jsx2js_check=function(path) {
+    return gulp.src(path).pipe(tap(function(file,f){
+        var r=gulp.src(file.path).pipe(react()).on('error', 
+         function(error) {
+          console.log("Line:"+error.lineNumber+",Col:"+error.column+" of "+ file.path);
+          console.log(error.description);
+          throw ("jsx to jx error");
+        }
+    )}));
+}
+gulp.task('jsx2js_test',function(){
+  return jsx2js_check(paths.buildscripts);
+});
+
+gulp.task('jsx2js',['jsx2js_test'],function() {
     gulp.src(paths.buildscripts)
     .pipe(tap(function(file, t) {
         if (path.extname(file.path) === '.jsx') {
@@ -57,20 +71,15 @@ gulp.task('jsx2js',function() {
         }
     }))
 
-    /* first pass , any error will throw , file name will remain on screen*/
-    console.log("JSX2JX");
-    gulp.src(paths.buildscripts).pipe(tap(function(file,f){
-      process.stdout.write("converting "+file.path+"    \033[0G");
-      gulp.src(file.path).pipe(react());
-    }));
-
-    /* second pass, generate js on disk */
-    return gulp.src(paths.buildscripts).pipe(react()).pipe(gulp.dest("components"));
-
+    return gulp.src(paths.buildscripts).pipe(react()).pipe(gulp.dest("components"))  
 });
 
-gulp.task('jsx2js_common',function() {
-  console.log("common1")
+
+gulp.task('jsx2js_common_test',function(){
+  return jsx2js_check(paths.buildscripts_common);
+});
+
+gulp.task('jsx2js_common',['jsx2js_common_test'],function() {
     gulp.src(paths.buildscripts_common)
     .pipe(tap(function(file, t) {
         if (path.extname(file.path) === '.jsx') {
@@ -81,8 +90,13 @@ gulp.task('jsx2js_common',function() {
     return gulp.src(paths.buildscripts_common).
     pipe(react()).pipe(gulp.dest("../components"));
 });
-gulp.task('jsx2js_common2',function() {
-  console.log("common2")
+
+
+gulp.task('jsx2js_common2_test',function(){
+  return jsx2js_check(paths.buildscripts_common2);
+});
+
+gulp.task('jsx2js_common2',['jsx2js_common2_test'],function() {
     gulp.src(paths.buildscripts_common2)
     .pipe(tap(function(file, t) {
         if (path.extname(file.path) === '.jsx') {

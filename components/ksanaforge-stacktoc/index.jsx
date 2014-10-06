@@ -116,11 +116,11 @@ var stacktoc = React.createClass({
   enumChildren : function() {
     var cur=this.state.cur;
     var toc=this.props.data;
-    if (!toc || !toc.length) return;
-    if (toc[cur+1].depth!= 1+toc[cur].depth) return ;  // no children node
+    var children=[];
+    if (!toc || !toc.length) return children;
+    if (toc[cur+1].depth!= 1+toc[cur].depth) return children;  // no children node
     var n=cur+1;
     var child=toc[n];
-    var children=[];
     while (child) {
       children.push(n);
       var next=toc[n+1];
@@ -164,6 +164,7 @@ var stacktoc = React.createClass({
     return true;
   },
   fillHit:function(nodeIds) {
+    if (typeof nodeIds=="undefined") return;
     if (typeof nodeIds=="number") nodeIds=[nodeIds];
     var toc=this.props.data;
     var hits=this.props.hits;

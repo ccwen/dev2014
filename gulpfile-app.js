@@ -119,7 +119,6 @@ gulp.task('touchappcache',function(){
     var content=fs.readFileSync(fn,"utf8").replace(/\r\n/g,"\n").split("\n");
     content[1]="# Updated on "+new Date();
     fs.writeFileSync(fn,content.join("\n"),"utf8");
-    console.log("touch offline.appcache",content.length);
   }
 })
 gulp.task('rebuild',['componentbuild','touchappcache'],function(){
@@ -166,7 +165,6 @@ gulp.task('server',['rebuild','watch'],function(){
 });
 
 gulp.task('default',['rebuild','watch'],function(){
-  console.log('default')
   var appfolder=process.cwd().match(/[\/\\]([^\/\\]*?)$/)[1];
   var serverfn="../node_scripts/server.js";
   if (!fs.existsSync(serverfn)) serverfn="../"+serverfn;

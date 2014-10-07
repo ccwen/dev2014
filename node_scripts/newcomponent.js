@@ -32,12 +32,12 @@ module.exports=function(name,opts) {
 '//var othercomponent=Require("other"); \n'+
 'var '+componentname+' = React.createClass({\n'+
 '  getInitialState: function() {\n'+
-'    return {bar: "world"};\n'+
+'    return {};\n'+
 '  },\n'+
 '  render: function() {\n'+
 '    return (\n'+
 '      <div>\n'+
-'        Hello,{this.state.bar}\n'+
+'        Rendering '+componentname+'\n'+
 '      </div>\n'+
 '    );\n'+
 '  }\n'+

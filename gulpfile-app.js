@@ -166,15 +166,19 @@ gulp.task('server',['rebuild','watch'],function(){
 
 gulp.task('default',['rebuild','watch'],function(){
   var appfolder=process.cwd().match(/[\/\\]([^\/\\]*?)$/)[1];
-  var serverfn="../node_scripts/server.js";
-  if (!fs.existsSync(serverfn)) serverfn="../"+serverfn;
-  var instance=spawn("node",[serverfn]);
   chdir_initcwd();
+  process.chdir("..");//switch to upper directory
+
+  var serverfn="node_scripts/server.js";
+  //if (!fs.existsSync(serverfn)) serverfn="../"+serverfn;
+
+  var instance=spawn("node",[serverfn]);
   instance.on('exit',function(){
     appprocessexit();
   });
+  chdir_initcwd();
   console.log("your application can be accessed from ");
-  console.log(("http://127.0.0.1:2556/"));
+  console.log(("http://127.0.0.1:2556/"+appfolder));
 });
 
 gulp.task('min',['rebuild'],function(){

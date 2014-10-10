@@ -152,7 +152,7 @@ gulp.task('run',['rebuild'],function(){
   })
 });
 
-
+//run server and use current directory as wwwroot
 gulp.task('server',['rebuild','watch'],function(){
   var instance=spawn("node",['../node_scripts/server','--cwd','..'])
   chdir_initcwd();
@@ -164,14 +164,12 @@ gulp.task('server',['rebuild','watch'],function(){
   console.log(("http://127.0.0.1:2556/"+appfolder));
 });
 
-gulp.task('default',['rebuild','watch'],function(){
+var runserver=function(serverfn){
   var appfolder=process.cwd().match(/[\/\\]([^\/\\]*?)$/)[1];
   chdir_initcwd();
   process.chdir("..");//switch to upper directory
 
-  var serverfn="node_scripts/server.js";
   //if (!fs.existsSync(serverfn)) serverfn="../"+serverfn;
-
   var instance=spawn("node",[serverfn]);
   instance.on('exit',function(){
     appprocessexit();
@@ -179,6 +177,14 @@ gulp.task('default',['rebuild','watch'],function(){
   chdir_initcwd();
   console.log("your application can be accessed from ");
   console.log(("http://127.0.0.1:2556/"+appfolder));
+}
+
+gulp.task('pouchdb',['rebuild','watch'],function(){
+  runserver("node_scripts/express.js");
+});
+
+gulp.task('default',['rebuild','watch'],function(){
+  runserver("node_scripts/server.js");
 });
 
 gulp.task('min',['rebuild'],function(){

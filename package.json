@@ -17,7 +17,11 @@
     "minimist": "~0.2.0",
     "tar": "*",
     "unzip": "~0.1.9",
-    "socket.io": "*"
+    "socket.io": "*",
+    "express": "*",
+    "morgan": "*",
+    "express-pouchdb": "*",
+    "serve-static": "*"
   },
   "dependencies": {
     "sax":"*",

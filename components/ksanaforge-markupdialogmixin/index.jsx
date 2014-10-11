@@ -13,14 +13,13 @@ var markupdialogmixin = {
     if (this.state.immediate) { //immediate execution
       this.execute.apply(this,arguments);
     } else {
-      this.setState({edit:false});
+      this.setState({edit:false,markup:null});
       this.show();
     }
   },
-  edit:function(markup) {
-    if (this.loadMarkup) this.loadMarkup(markup);
-    else console.error("missing loadMarkup");
-    this.setState({edit:true});
+  edit:function(markup,options) {
+    this.opts={options:options};
+    this.setState({edit:true,markup:markup});
     this.show();
   },
   show: function() {

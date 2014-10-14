@@ -21,7 +21,8 @@
     "express": "*",
     "morgan": "*",
     "express-pouchdb": "*",
-    "serve-static": "*"
+    "serve-static": "*",
+    "pouchdb":"*"
   },
   "dependencies": {
     "sax":"*",

@@ -1,8 +1,12 @@
 /** @jsx React.DOM */
 
 var checkfs=function() {
+	var hasksanagap=typeof ksanagap!="undefined";
+	if (hasksanagap && typeof console=="undefined") {
+		console={log:ksanagap.log,error:ksanagap.error,debug:ksanagap.debug};
+	}
 	return (navigator && navigator.webkitPersistentStorage) || 
-	(typeof ksanagap!="undefined");
+	(hasksanagap);
 }
 var featurechecks={
 	"fs":checkfs

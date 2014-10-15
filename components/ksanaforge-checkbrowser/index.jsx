@@ -3,7 +3,7 @@
 var checkfs=function() {
 	var hasksanagap=typeof ksanagap!="undefined";
 	if (hasksanagap && typeof console=="undefined") {
-		console={log:ksanagap.log,error:ksanagap.error,debug:ksanagap.debug,warn:ksanagap.warn};
+		window.console={log:ksanagap.log,error:ksanagap.error,debug:ksanagap.debug,warn:ksanagap.warn};
 		console.log("install console output funciton");
 	}
 	return (navigator && navigator.webkitPersistentStorage) || 

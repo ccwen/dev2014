@@ -1,7 +1,7 @@
 // settings
 var nw=require('./node_scripts/gulp-nw');
 var extras=require('./node_scripts/gulp-extras');
-var repos=require('./node_scripts/repos');
+//var repos=require('./node_scripts/repos');
 
 //third party
 var gulp = require('gulp'); 
@@ -68,7 +68,7 @@ gulp.task('install-nw', ['install-socket.io-cli'],function() {
 		}
 	});
 });
-
+/*
 gulp.task('clonerepos',function() {
       var argv = require('minimist')(process.argv.slice(2));
       var branch = argv['b'] || "master" ;
@@ -78,7 +78,7 @@ gulp.task('clonerepos',function() {
 		spawn('git', ["clone",repos[i].url,repos[i].target,"-b",branch]);
 	}
 });
-
+*/
 gulp.task('install-socket.io-cli',function() {
 	return gulp.src('node_modules/socket.io/node_modules/socket.io-client/socket.io.js')
   .pipe(gulp.dest('components/socketio-socketio/'));
@@ -89,12 +89,12 @@ gulp.task('component-install',function(){
 })
 
 //default html5 application
-gulp.task('install5',['clonerepos',
+gulp.task('install5',[//'clonerepos',
   'component-install',
   'install-socket.io-cli',
   'install-extras']);
 
-gulp.task('install', ['clonerepos',
+gulp.task('install', [//'clonerepos',
 	'install-nw',
 	'install-socket.io-cli',
 	'component-install',

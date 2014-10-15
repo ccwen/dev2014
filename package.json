@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "sax":"*",
-    "glob":"*"
+    "glob":"*",
+    "ksanaforge/ksana-document",
   },
   "scripts": {
   }

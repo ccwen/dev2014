@@ -1,19 +1,20 @@
 /** @jsx React.DOM */
 
-var checkfs=function() {
-	var hasksanagap=typeof ksanagap!="undefined";
-	if (hasksanagap && typeof console=="undefined") {
+var hasksanagap=(typeof ksanagap!="undefined");
+if (hasksanagap && (typeof console=="undefined" || typeof console.log=="undefined")) {
 		window.console={log:ksanagap.log,error:ksanagap.error,debug:ksanagap.debug,warn:ksanagap.warn};
 		console.log("install console output funciton");
-	}
-	return (navigator && navigator.webkitPersistentStorage) || 
-	(hasksanagap);
+}
+
+var checkfs=function() {
+	return (navigator && navigator.webkitPersistentStorage) || hasksanagap;
 }
 var featurechecks={
 	"fs":checkfs
 }
 var checkbrowser = React.createClass({
 	getInitialState:function() {
+
 		var missingFeatures=this.getMissingFeatures();
 		return {ready:false, missing:missingFeatures};
 	},

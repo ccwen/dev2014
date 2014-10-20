@@ -2,7 +2,7 @@
 var Kdb=require("ksana-document").kdb;
 
 var fs=require("fs");
-var get=function(path,recursive,cb) {
+var get=function(path,opts,cb) {
 	var paths=path.split(".");
 	var fn=paths.shift()+".kdb";
 
@@ -12,7 +12,7 @@ var get=function(path,recursive,cb) {
 	}
 	new Kdb(fn,{},function(db){
 		console.log("getting",paths,"from",fn);
-		db.get(paths,recursive,cb);
+		db.get(paths,opts,cb);
 	});
 }
 module.exports=get;

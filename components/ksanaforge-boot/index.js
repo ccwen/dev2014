@@ -1,8 +1,10 @@
 var ksana={"platform":"remote"};
 
 if (typeof process !="undefined") {
+
 	if (process.versions["node-webkit"]) {
-  	ksana.platform="node-webkit"
+  	ksana.platform="node-webkit";
+  	window.ksanagap={platform:"node-webkit"};
   	if (typeof nodeRequire!="undefined") ksana.require=nodeRequire;
   }
 } else if (typeof chrome!="undefined" && chrome.fileSystem){

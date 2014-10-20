@@ -47,9 +47,9 @@ var Children=React.createClass({
   }, 
   openNode:function(haschild) {
     if (haschild) {
-      return <button className="btn btn-xs btn-success" onClick={this.open}>＋</button>
+      return <button className="btn btn-xs btn-link" onClick={this.open}>＋</button>
     } else {
-      return <button className="btn btn-xs btn-default disabled">－</button>
+      return <button className="btn btn-xs btn-link disabled">－</button>
     }    
   },
   renderChild:function(n) {
@@ -62,8 +62,8 @@ var Children=React.createClass({
      
     return <div className={classes} data-n={n}> 
     {this.openNode(haschild)}
-    <span className="text"  onClick={this.showText}>{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
-  }, 
+    <a className="tocitem text"  onClick={this.showText}>{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
+  },
   showText:function(e) {
     var n=e.target.dataset["n"];
     if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];

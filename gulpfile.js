@@ -128,12 +128,15 @@ var createapp=function(name,newapp) {
   newcomponent(name+'/main');
   newcomponent(name+'/comp1'); //need at least 2 component for gulp to work properly
   process.chdir('..');
+
+  if (newapp.touchComponent) newapp.touchComponent(name);
   console.log('success, cd to '+name+' and type')
   console.log('gulp')
 }
 
 var newapp=require('./node_scripts/newapp');
 var newapp5=require('./node_scripts/newapp5');
+var newkapp=require('./node_scripts/newkapp');
 var newcomponent=require('./node_scripts/newcomponent');
 
 gulp.task('newapp-nw',function(){ //rename from newapp
@@ -145,6 +148,12 @@ gulp.task('newapp',function(){  // make newapp5 default task
   var argv = require('minimist')(process.argv.slice(2));
   var name = argv['name'];
   createapp(name,newapp5);
+});
+
+gulp.task('newkapp',function(){  // make newapp5 default task
+  var argv = require('minimist')(process.argv.slice(2));
+  var name = argv['name'];
+  createapp(name,newkapp);
 });
 
 gulp.task('init',function() {  //user create in an empty repository

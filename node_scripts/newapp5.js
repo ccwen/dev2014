@@ -51,7 +51,7 @@ module.exports=function(appname){
 	var gitignore="*.kdb\n*.kdbk\n*.pdf\nbuild.js\nbuild.css";
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
-	var indexhtml='<!DOCTYPE html>\n<html manifest="offline.appcache">\n'+
+	var indexhtml='<!DOCTYPE html>\n<html><!-- manifest="offline.appcache"//-->\n'+
 						'<head>\n'+
 						'<meta charset="utf-8" />\n'+
 						'<meta name="mobile-web-app-capable" content="yes" />\n'+

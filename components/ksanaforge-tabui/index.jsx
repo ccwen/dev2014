@@ -84,7 +84,7 @@ var Tabui = React.createClass({
     var tabs=this.props.tabs;
     var idx=idx||tabs.length;
     var tabexists=false;
-    for (var i in tabs) {
+    for (var i=0;i<tabs.length;i++) {
       if (tabs[i].id==T.id) {
         tabs[i]=T;
         tabexists=true;

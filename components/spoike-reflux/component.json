@@ -1,0 +1,17 @@
+{
+  "name": "reflux",
+  "repo": "spoike/reflux",
+  "description": "spoike reflux",
+  "version": "0.1.13",
+  "keywords": [],
+  "dependencies": {
+    
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "reflux.js",
+  "scripts": [
+    "reflux.js"
+  ],
+  "remotes": []
+}

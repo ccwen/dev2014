@@ -54,6 +54,7 @@ var newkapp=function(appname){
 
 	var ksanajson='{\n'+
   	'"version": "1",\n'+
+  	'"build": 1,\n'+
   	'"title":"'+appname+'",\n'+
   	'"date":"'+new Date()+'",\n'+
   	'"description":"",\n'+

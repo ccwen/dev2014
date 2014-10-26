@@ -1,13 +1,16 @@
 var ksana={"platform":"remote"};
 
 if (typeof process !="undefined") {
-
 	if (process.versions["node-webkit"]) {
-  	ksana.platform="node-webkit";
-  	window.ksanagap={platform:"node-webkit"};
-  	if (typeof nodeRequire!="undefined") ksana.require=nodeRequire;
-  }
+  		ksana.platform="node-webkit";
+			window.ksanagap=require("./ksanagap"); //compatible layer with mobile
+			window.kfs=require("./kfs");
+  		if (typeof nodeRequire!="undefined") ksana.require=nodeRequire;
+  	}
 } else if (typeof chrome!="undefined" && chrome.fileSystem){
+	window.ksanagap=require("./ksanagap"); //compatible layer with mobile
+	window.ksanagap.platform="chrome";
+	window.kfs=require("./kfs");
 	ksana.platform="chrome";
 }
 

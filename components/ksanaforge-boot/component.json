@@ -8,5 +8,5 @@
   "development": {},
   "license": "MIT",
   "main": "index.js",
-  "scripts": ["index.js"]
+  "scripts": ["index.js","ksanagap.js","downloader.js","kfs.js"]
 }

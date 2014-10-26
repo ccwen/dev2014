@@ -51,6 +51,15 @@ var newkapp=function(appname){
 	var gitignore="*.kdb\n*.kdbk\n*.pdf\nbuild.js\nbuild.css";
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
+
+	var ksanajson='{\n'+
+  	'"version": "1",\n'+
+  	'"title":"'+appname+'",\n'+
+  	'"date":"'+new Date()+'",\n'+
+  	'"description":"",\n'+
+  	'"files":["index.html","build.js","build.css","jquery.js","react-with-addons.js","'+appname+'.kdb"]\n'+
+  	'}';
+
 	var indexhtml='<!DOCTYPE html>\n<html>\n'+
 						'<head>\n'+
 						'<meta charset="utf-8" />\n'+
@@ -99,6 +108,7 @@ var newkapp=function(appname){
 	copyFile(jqueryfn);
 	copyFile(reactfn);
 	fs.writeFileSync(appname+'/.gitignore',gitignore,'utf8');
+	fs.writeFileSync(appname+'/ksana.json',ksanajson,'utf8');
 	fs.writeFileSync(appname+'/gulpfile.js',gulpfile,'utf8');
 	fs.writeFileSync(appname+'/component.json',componentjson,'utf8');
 	fs.writeFileSync(appname+'/index.js',indexjs,'utf8');

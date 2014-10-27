@@ -252,3 +252,16 @@ gulp.task("get",function(){
     console.log("result=",JSON.stringify(data,""," "));
   });
 });
+
+gulp.task("deploy_nw",function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var outputpath = argv["o"] || argv["output"];
+  if (!outputpath) {
+    console.log("gulp deploy_nw --output=/rootfolder  or -o /rootfolder");
+    throw "missing output path";
+  }
+  chdir_initcwd();
+  var deploy=require("./node_scripts/deploy_nw");
+  deploy(process.cwd(), outputpath);
+
+});

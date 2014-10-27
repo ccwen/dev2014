@@ -10,6 +10,5 @@ var getStatus=function(downloadid) {
 	
 }
 
-
 var downloader={start:start, getStatus:getStatus, cancel:cancel};
 module.exports=downloader;

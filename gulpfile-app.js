@@ -363,7 +363,7 @@ gulp.task('deploy',function(){
   var argv = require('minimist')(process.argv.slice(2));
   var outputpath = argv["o"] || argv["output"];
   if (!outputpath) {
-    console.log("gulp get --output=/rootfolder  or -o /rootfolder");
+    console.log("gulp deploy --output=/rootfolder  or -o /rootfolder");
     throw "missing output path";
   }
   chdir_initcwd();

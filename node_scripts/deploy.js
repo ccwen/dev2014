@@ -1,3 +1,6 @@
+/*
+  deploy runtime files to a given folder (USB)
+*/
 var mkdirp=require("./mkdirp");
 var fs=require("fs");
 var touchpackagejson=function(filename) {

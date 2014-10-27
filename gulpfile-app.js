@@ -118,10 +118,14 @@ gulp.task('touchksanajson',function(){
   if (!fs.existsSync(fn))return;
 
   var ksana=JSON.parse(fs.readFileSync(fn,"utf8"));
-  var filedates=ksana.files.map(function(f){
-    return fs.statSync(f).mtime;
-  })
+  var filedates=[],filesizes=[];
+  ksana.files.forEach(function(f){
+    var stat=fs.statSync(f);
+    filedates.push( stat.mtime);
+    filesizes.push( stat.size);
+  });
 
+  ksana.filesizes=filesizes;
   ksana.filedates=filedates;
   ksana.date=new Date();
   ksana.build=parseInt(ksana.build||"1")+1;
@@ -354,5 +358,18 @@ gulp.task("get",function(){
   });
 });
 gulp.task('nw',['run','watch']);
+
+gulp.task('deploy',function(){
+  var argv = require('minimist')(process.argv.slice(2));
+  var outputpath = argv["o"] || argv["output"];
+  if (!outputpath) {
+    console.log("gulp get --output=/rootfolder  or -o /rootfolder");
+    throw "missing output path";
+  }
+  chdir_initcwd();
+
+  var deploy=require("./node_scripts/deploy");
+  deploy(process.cwd(), outputpath);
+});
 
 module.exports=gulp;

@@ -1,6 +1,7 @@
-var start=function(opts, cb, context) {
+var start=function(urls, target) { //return download id
 	
 }
+
 var cancel=function(downloadid) {
 	
 }

@@ -120,6 +120,10 @@ gulp.task('touchksanajson',function(){
   var ksana=JSON.parse(fs.readFileSync(fn,"utf8"));
   var filedates=[],filesizes=[];
   ksana.files.forEach(function(f){
+    if (!fs.existSync(f)) {
+	console.log("missing ",f); 
+	return;
+    };
     var stat=fs.statSync(f);
     filedates.push( stat.mtime);
     filesizes.push( stat.size);

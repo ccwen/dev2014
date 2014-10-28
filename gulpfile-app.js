@@ -113,11 +113,14 @@ gulp.task('componentbuild',['jsx2js','jsx2js_common','jsx2js_common2'],function(
   .pipe(gulp.dest('.'));
 });
 
-gulp.task('touchksanajson',function(){
-  var fn="ksana.json";
+gulp.task('touchksanajs',function(){
+  var fn="ksana.js";
   if (!fs.existsSync(fn))return;
-
-  var ksana=JSON.parse(fs.readFileSync(fn,"utf8"));
+  var handler="jsonp_handler(";
+  var content=fs.readFileSync(fn,"utf8");
+  content=content.replace("})","}");
+  content=content.replace(handler,"");
+  var ksana=JSON.parse(content);
   var filedates=[],filesizes=[];
   if (!ksana || !ksana.files) return;
   ksana.files.forEach(function(f){
@@ -135,7 +138,7 @@ gulp.task('touchksanajson',function(){
   ksana.date=new Date();
   ksana.build=parseInt(ksana.build||"1")+1;
 
-  fs.writeFileSync(fn,JSON.stringify(ksana,""," "),'utf8');
+  fs.writeFileSync(fn,handler+JSON.stringify(ksana,""," ")+")",'utf8');
 
 })
 gulp.task('touchappcache',function(){
@@ -146,7 +149,7 @@ gulp.task('touchappcache',function(){
     fs.writeFileSync(fn,content.join("\n"),"utf8");
   }
 })
-gulp.task('rebuild',['componentbuild','touchksanajson'],function(){
+gulp.task('rebuild',['componentbuild','touchksanajs'],function(){
   /* remove use strict in build.js 
      workaround for socketio not strict safe */
   

@@ -20,14 +20,17 @@ var readDir=function(path) { //simulate Ksanagap function
 }
 var listApps=function() {
 	var fs=nodeRequire("fs");
-	var jsonfile=function(d) {return "../"+d+"/ksana.json"};
+	var ksanajsfile=function(d) {return "../"+d+"/ksana.js"};
 	var dirs=fs.readdirSync("..").filter(function(d){
 				return fs.statSync("../"+d).isDirectory() && d[0]!="."
-				   && fs.existsSync(jsonfile(d));
+				   && fs.existsSync(ksanajsfile(d));
 	});
 	
 	var out=dirs.map(function(d){
-		var obj= JSON.parse(fs.readFileSync(jsonfile(d),"utf8"));
+		var content=fs.readFileSync(ksanajsfile(d),"utf8");
+  	content=content.replace("})","}");
+  	content=content.replace("jsonp_handler(","");
+		var obj= JSON.parse(content);
 		obj.dbid=d;
 		obj.path=d;
 		return obj;

@@ -121,9 +121,9 @@ gulp.task('touchksanajson',function(){
   var filedates=[],filesizes=[];
   if (!ksana || !ksana.files) return;
   ksana.files.forEach(function(f){
-    if (!fs.existSync(f)) {
-	console.log("missing ",f); 
-	return;
+    if (!fs.existsSync(f)) {
+	     console.log("missing ",f); 
+	     return;
     };
     var stat=fs.statSync(f);
     filedates.push( stat.mtime);

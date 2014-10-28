@@ -7,10 +7,10 @@ if (typeof process !="undefined") {
 			window.kfs=require("./kfs");
   		if (typeof nodeRequire!="undefined") ksana.require=nodeRequire;
   	}
-} else if (typeof chrome!="undefined" && chrome.fileSystem){
+} else if (typeof chrome!="undefined"){//} && chrome.fileSystem){
 	window.ksanagap=require("./ksanagap"); //compatible layer with mobile
 	window.ksanagap.platform="chrome";
-	window.kfs=require("./kfs");
+	window.kfs=require("./kfs_html5");
 	ksana.platform="chrome";
 }
 

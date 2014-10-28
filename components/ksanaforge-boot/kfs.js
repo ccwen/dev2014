@@ -32,7 +32,7 @@ var listApps=function() {
 		obj.path=d;
 		return obj;
 	})
-	return out;
+	return JSON.stringify(out);
 }
 
 var kfs={readDir:readDir,listApps:listApps};

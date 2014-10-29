@@ -370,7 +370,7 @@ gulp.task("get",function(){
 });
 gulp.task('nw',['run','watch']);
 
-gulp.task('deploy',function(){
+var deployto=function() {
   var argv = require('minimist')(process.argv.slice(2));
   var outputpath = argv["o"] || argv["output"];
   if (!outputpath) {
@@ -381,6 +381,12 @@ gulp.task('deploy',function(){
 
   var deploy=require("./node_scripts/deploy");
   deploy(process.cwd(), outputpath);
+}
+gulp.task('deploy',function(){
+  deployto();
 });
 
+gulp.task('rebuild-deploy',['rebuild'],function(){
+  deployto();
+});
 module.exports=gulp;

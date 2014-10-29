@@ -1,3 +1,4 @@
+
 var jsonp=function(url,dbid,callback,context) {
   var script=document.getElementById("jsonp");
   if (script) {
@@ -65,6 +66,48 @@ var getRemoteJson=function(apps,cb,context) {
 
   taskqueue.shift()({__empty:true}); //run the task
 }
+var humanFileSize=function(bytes, si) {
+    var thresh = si ? 1000 : 1024;
+    if(bytes < thresh) return bytes + ' B';
+    var units = si ? ['kB','MB','GB','TB','PB','EB','ZB','YB'] : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+    var u = -1;
+    do {
+        bytes /= thresh;
+        ++u;
+    } while(bytes >= thresh);
+    return bytes.toFixed(1)+' '+units[u];
+};
 
-var liveupdate={ needToUpdate: needToUpdate , jsonp:jsonp, getUpdatables:getUpdatables};
+var getUrls=function(ksanajs) {
+  var baseurl=ksanajs.baseurl|| "http://127.0.0.1:8080/"+ksanajs.dbid+"/";
+  if (baseurl[baseurl.length-1]!="/") baseurl+="/";
+  var urls=[];
+  ksanajs.newsfiles.map(function(f){
+    urls.push(baseurl+f);
+  });
+  return urls;
+}
+var start=function(ksanajs,cb,context){
+  var baseurl=ksanajs.baseurl|| "http://127.0.0.1:8080/"+ksanajs.dbid+"/";
+  var downloadid=ksanagap.startDownload(ksanajs.dbid,baseurl,ksanajs.newfiles.join("\uffff"));
+  cb.apply(context,[downloadid]);
+}
+var status=function(downloadid){
+  var nfile=ksanagap.downloadingFile(downloadid);
+  var downloadByte=ksanagap.downloadedByte(downloadid);
+  var done=ksanagap.doneDownload();
+  return {nfile:nfile,downloadByte:downloadByte, done:done};
+}
+
+var cancel=function(downloadid){
+  return ksanagap.cancelDownload(downloadid);
+}
+
+var liveupdate={ humanFileSize: humanFileSize, 
+  needToUpdate: needToUpdate , jsonp:jsonp, 
+  getUpdatables:getUpdatables,
+  start:start,
+  cancel:cancel,
+  status:status
+  };
 module.exports=liveupdate;

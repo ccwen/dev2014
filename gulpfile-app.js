@@ -123,6 +123,9 @@ gulp.task('touchksanajs',function(){
   var ksana=JSON.parse(content);
   var filedates=[],filesizes=[];
   if (!ksana || !ksana.files) return;
+  if (ksana.files.indexOf("ksana.js")==-1) {
+    ksana.files.push("ksana.js");
+  }
   ksana.files.forEach(function(f){
     if (!fs.existsSync(f)) {
 	     console.log("missing ",f); 
@@ -276,7 +279,7 @@ gulp.task('mkdb',function() {
     process.chdir(name);
   }
   
-  if (!fs.existsSync("ksana.json")) {
+  if (!fs.existsSync("ksana.js")) {
     throw " must be a ksana_databases"
   }
   
@@ -302,8 +305,8 @@ gulp.task("initdb",function() {
   }
 
   if (fs.existsSync(name)) {
-    if (fs.existsSync(name+'/ksana.json')) {
-      throw "folder and ksana.json exist";
+    if (fs.existsSync(name+'/ksana.js')) {
+      throw "folder and ksana.js exist";
       return;
     }
   } else {

@@ -10,15 +10,20 @@ var touchpackagejson=function(filename) {
 }
 var deploy=function(from,to) {
 	
-	var ksana=(from+'/ksana.json').replace(/\\/g,"/");
+	var ksana=(from+'/ksana.js').replace(/\\/g,"/");
 	if (!fs.existsSync(ksana)) {
 		throw "missing "+ksana;
 		return;
 	}
-	var json=JSON.parse(fs.readFileSync(ksana,"utf8"));
-	
+	var content=fs.readFileSync(ksana,"utf8");
+  content=content.replace("})","}");
+  content=content.replace("jsonp_handler(","");
+	var json=JSON.parse(content);
 
 	mkdirp.sync(to);
+	if (json.files.indexOf("ksana.js")==-1) {
+		json.files.push("ksana.js");
+	}
 	json.files.map(function(f){
 		var fromfile=(from+'/'+f).replace(/\\/g,"/");
 		var tofile=(to+'/'+f).replace(/\\/g,"/");

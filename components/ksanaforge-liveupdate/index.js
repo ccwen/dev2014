@@ -19,17 +19,25 @@ var needToUpdate=function(fromjson,tojson) {
   for (var i=0;i<fromjson.length;i++) {
     var to=tojson[i];
     var from=fromjson[i];
-    var newfiles=[];
+    var newfiles=[],newfilesizes=[],removed=[];
     from.filedates.map(function(f,idx){
-      if (f<to.filedates[idx]) {
-        newfiles.push( from.files[idx] );
+      var newidx=to.files.indexOf( from.files[idx]);
+      if (newidx==-1) {
+        //file removed in new version
+        removed.push(from.files[idx]);
+      } else {
+        if (f<to.filedates[newidx]) {
+          newfiles.push( to.files[newidx] );
+          newfilesizes.push(to.filesizes[newidx]);
+        }        
       }
     });
     if (newfiles.length) {
-      to.newfiles=newfiles;
-      needUpdates.push( to );
+      from.newfiles=newfiles;
+      from.newfilesizes=newfilesizes;
+      from.removed=removed;
+      needUpdates.push(from);
     }
-
   }
   return needUpdates;
 }

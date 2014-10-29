@@ -89,18 +89,18 @@ var getUrls=function(ksanajs) {
 }
 var start=function(ksanajs,cb,context){
   var baseurl=ksanajs.baseurl|| "http://127.0.0.1:8080/"+ksanajs.dbid+"/";
-  var downloadid=ksanagap.startDownload(ksanajs.dbid,baseurl,ksanajs.newfiles.join("\uffff"));
-  cb.apply(context,[downloadid]);
+  var started=ksanagap.startDownload(ksanajs.dbid,baseurl,ksanajs.newfiles.join("\uffff"));
+  cb.apply(context,[started]);
 }
-var status=function(downloadid){
-  var nfile=ksanagap.downloadingFile(downloadid);
-  var downloadByte=ksanagap.downloadedByte(downloadid);
+var status=function(){
+  var nfile=ksanagap.downloadingFile();
+  var downloadByte=ksanagap.downloadedByte();
   var done=ksanagap.doneDownload();
   return {nfile:nfile,downloadByte:downloadByte, done:done};
 }
 
-var cancel=function(downloadid){
-  return ksanagap.cancelDownload(downloadid);
+var cancel=function(){
+  return ksanagap.cancelDownload();
 }
 
 var liveupdate={ humanFileSize: humanFileSize, 

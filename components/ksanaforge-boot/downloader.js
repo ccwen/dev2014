@@ -1,7 +1,7 @@
-var http=nodeRequire("http");
-var fs = nodeRequire("fs");
-var path = nodeRequire("path");
-var mkdirp=require("./mkdirp");
+var http   = nodeRequire("http");
+var fs     = nodeRequire("fs");
+var path   = nodeRequire("path");
+var mkdirp = require("./mkdirp");
 var downloadid=0;
 var userCancel=false;
 var files=[];
@@ -21,14 +21,13 @@ var startDownload=function(dbid,_baseurl,_files) { //return download id
 	baseurl=_baseurl;
 	targetPath=ksanagap.rootPath+dbid+'/';
 	tempPath=ksanagap.rootPath+".tmp/";
-	console.log("targetpath",targetPath);
-
 	return downloadid;
 }
 
 var nextFile=function() {
 	setTimeout(function(){
 		if (nfile==files.length) {
+			nfile++;
 			endDownload(downloadid);
 		} else {
 			downloadFile(nfile++);	
@@ -43,7 +42,6 @@ var downloadFile=function(nfile) {
 	mkdirp.sync(path.dirname(tmpfilename));
 	var writeStream = fs.createWriteStream(tmpfilename);
 	var datalength=0;
-	console.log("downloading",url);
 	var request = http.get(url, function(response) {
 		response.on('data',function(chunk){
 			writeStream.write(chunk);
@@ -51,12 +49,10 @@ var downloadFile=function(nfile) {
 			totalDownloadByte+=datalength;
 			if (userCancel) {
 				writeStream.end();
-				endDownload(downloadid);
 			}
 		});
 		response.on("end",function() {
 			setTimeout(function(){
-				console.log("rename",tmpfilename,targetfilename);
 				mkdirp.sync(path.dirname(targetfilename));
 				fs.renameSync(tmpfilename,targetfilename);
 				nextFile();
@@ -67,10 +63,13 @@ var downloadFile=function(nfile) {
 }
 
 var cancelDownload=function(_downloadid) {
-	if (downloadid==_downloadid) userCancel=true;
+	if (downloadid==_downloadid) {
+		userCancel=true;
+		endDownload(downloadid);
+	}
 }
 var endDownload=function(_downloadid) {
-
+	nfile=files.length+1;//stop
 }
 
 var downloadedByte=function(_downloadid) {
@@ -78,7 +77,7 @@ var downloadedByte=function(_downloadid) {
 	else return 0;
 }
 var doneDownload=function(_downloadid) {
-	if (downloadid==_downloadid) return (nfile>=files.length) ;
+	if (downloadid==_downloadid) return (nfile>files.length) ;
 	else return true;
 }
 var downloadingFile=function(_downloadid) {

@@ -4,15 +4,22 @@ var jsonp=function(url,dbid,callback,context) {
   if (script) {
     script.parentNode.removeChild(script);
   }
-  script=document.createElement('script');
-  script.setAttribute('id', "jsonp");
-  document.getElementsByTagName('head')[0].appendChild(script); 
 
   window.jsonp_handler=function(data) {
-    data.dbid=dbid;
-    callback.apply(context,[data]);
+    if (typeof data=="object") {
+      data.dbid=dbid;
+      callback.apply(context,[data]);      
+    } else {
+      callback.apply(context,[null]);
+    }
   }
+
+  script=document.createElement('script');
+  script.setAttribute('id', "jsonp");
+  script.setAttribute('onerror', jsonp_handler);
+
   script.setAttribute('src', url+'?"'+(new Date())+'"');
+  document.getElementsByTagName('head')[0].appendChild(script); 
 }
 
 var needToUpdate=function(fromjson,tojson) {
@@ -88,15 +95,16 @@ var getUrls=function(ksanajs) {
   return urls;
 }
 var start=function(ksanajs,cb,context){
+  var files=ksanajs.newfiles||ksanajs.files;
   var baseurl=ksanajs.baseurl|| "http://127.0.0.1:8080/"+ksanajs.dbid+"/";
-  var started=ksanagap.startDownload(ksanajs.dbid,baseurl,ksanajs.newfiles.join("\uffff"));
+  var started=ksanagap.startDownload(ksanajs.dbid,baseurl,files.join("\uffff"));
   cb.apply(context,[started]);
 }
 var status=function(){
   var nfile=ksanagap.downloadingFile();
-  var downloadByte=ksanagap.downloadedByte();
+  var downloadedByte=ksanagap.downloadedByte();
   var done=ksanagap.doneDownload();
-  return {nfile:nfile,downloadByte:downloadByte, done:done};
+  return {nfile:nfile,downloadedByte:downloadedByte, done:done};
 }
 
 var cancel=function(){

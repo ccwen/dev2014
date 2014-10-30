@@ -70,7 +70,7 @@ var htmlfs = React.createClass({
 		},0);
 	},
 	queryQuota:function() {
-		if (typeof ksanagap=="undefined") {
+		if (ksanagap.platform=="chrome") {
 			html5fs.queryQuota(function(usage,quota){
 				this.setState({usage:usage,quota:quota,initialized:true});
 			},this);			

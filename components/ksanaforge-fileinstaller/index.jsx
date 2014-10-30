@@ -158,7 +158,7 @@ var filemanager = React.createClass({
 		return parseInt(q) * times;
 	},
 	missingKdb:function() {
-		if (typeof ksanagap!="undefined") return [];
+		if (ksanagap.platform!="chrome") return [];
 		var missing=this.props.needed.filter(function(kdb){
 			for (var i in html5fs.files) {
 				if (html5fs.files[i][0]==kdb.filename) return false;
@@ -193,7 +193,7 @@ var filemanager = React.createClass({
 	  },this);
 	},
 	onQuoteOk:function(quota,usage) {
-		if (typeof ksanagap!="undefined") {
+		if (ksanagap.platform!="chrome") {
 			//console.log("onquoteok");
 			this.setState({noupdate:true,missing:[],files:[],autoclose:true
 				,quota:quota,remain:quota-usage,usage:usage});

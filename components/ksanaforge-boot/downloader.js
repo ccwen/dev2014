@@ -1,7 +1,9 @@
-var http   = nodeRequire("http");
-var fs     = nodeRequire("fs");
-var path   = nodeRequire("path");
-var mkdirp = require("./mkdirp");
+if (typeof nodeRequire!="undefined"){
+	var http   = nodeRequire("http");
+	var fs     = nodeRequire("fs");
+	var path   = nodeRequire("path");
+	var mkdirp = require("./mkdirp");	
+}
 var userCancel=false;
 var files=[];
 var totalDownloadByte=0;

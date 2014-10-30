@@ -2,9 +2,13 @@ var switchApp=function(path) {
   process.chdir("../"+path);
   document.location.href= "../"+path+"/index.html"; 
 }
-var downloader=require("./downloader");
-var rootPath=process.cwd()
-rootPath=nodeRequire("path").resolve(rootPath,"..").replace(/\\/g,"/")+'/';
+var downloader={};
+var rootPath="";
+if (typeof process!="undefined") {
+	downloader=require("./downloader");
+	rootPath=process.cwd();
+	rootPath=nodeRequire("path").resolve(rootPath,"..").replace(/\\/g,"/")+'/';
+}
 var ksanagap={
 	platform:"node-webkit",
 	startDownload:downloader.startDownload,

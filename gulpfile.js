@@ -146,13 +146,13 @@ gulp.task('newapp-nw',function(){ //rename from newapp
 });
 gulp.task('newapp',function(){  // make newapp5 default task
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['name'];
+  var name = argv['name'] || argv['n'];
   createapp(name,newapp5);
 });
 
 gulp.task('newkapp',function(){  // make newapp5 default task
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['name'];
+  var name = argv['name']  || argv['n'];
   createapp(name,newkapp);
 });
 
@@ -182,12 +182,17 @@ gulp.task("initdb",function() {
 
 gulp.task('qunit',function(){
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['js'],nodemode="";
+  var name = argv['js']||argv['j'],nodemode="";
   if (!name) {
     name = argv['nodejs'];   //forcing nodejs context, QUnit
     nodemode="!";
   }
-  
+
+  if (!name) {
+    console.log("please specify debuggee");
+    console.log("gulp qunit -j yourcode.js");
+    return ;
+  }
   var filename=name;
   var shellscript="qunit.cmd";
   if (process.platform=="darwin") shellscript="./qunit.sh";

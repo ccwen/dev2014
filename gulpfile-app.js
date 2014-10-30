@@ -40,12 +40,12 @@ var rename=require('gulp-rename');
 
 gulp.task('newcomponent',function(){
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['name'];
+  var name = argv['name'] || argv['n'];
   newcomponent(name);
 });
 gulp.task('newmodule',function(){
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['name'];
+  var name = argv['name'] || argv['n'];
   newmodule(name);
 });
 
@@ -238,11 +238,17 @@ var chdir_initcwd=function() {
 }
 gulp.task('qunit',function(){
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv['js'];
+  var name = argv['js'] || argv['j'];
   var nodemode="";
   if (!name) {
     name = argv['nodejs'];   //forcing nodejs context, QUnit
     nodemode="!";
+  }
+
+  if (!name) {
+    console.log("please specify debuggee");
+    console.log("gulp qunit -j yourcode.js");
+    return ;
   }
 
   var filename=name;
@@ -296,7 +302,7 @@ var newkdb=require("./node_scripts/newkdb");
 gulp.task("initdb",function() {
   chdir_initcwd();
   var argv = require('minimist')(process.argv.slice(2));
-  var name = argv["name"];
+  var name = argv["name"] || argv['n'];
   var template = argv["template"];
   var config = argv["config"];
   if (!name) {

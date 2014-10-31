@@ -379,14 +379,16 @@ gulp.task('nw',['run','watch']);
 var deployto=function() {
   var argv = require('minimist')(process.argv.slice(2));
   var outputpath = argv["o"] || argv["output"];
+  var baseurl = argv["baseurl"] || argv["b"];
   if (!outputpath) {
-    console.log("gulp deploy --output=/rootfolder  or -o /rootfolder");
+    console.log("gulp deploy --output=/rootfolder  or -o /rootfolder ");
+    console.log("--baseurl=url_of_remote_host -b url_of_remote_host")
     throw "missing output path";
   }
   chdir_initcwd();
 
   var deploy=require("./node_scripts/deploy");
-  deploy(process.cwd(), outputpath);
+  deploy(process.cwd(), outputpath, baseurl);
 }
 gulp.task('deploy',function(){
   deployto();

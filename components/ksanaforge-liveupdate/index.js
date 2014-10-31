@@ -4,31 +4,33 @@ var jsonp=function(url,dbid,callback,context) {
   if (script) {
     script.parentNode.removeChild(script);
   }
-
   window.jsonp_handler=function(data) {
     if (typeof data=="object") {
       data.dbid=dbid;
-      callback.apply(context,[data]);      
-    } else {
-      console.log("cannot reach host");
-      callback.apply(context,[null]);
-    }
+      callback.apply(context,[data]);    
+    }  
+  }
+
+  window.jsonp_error_handler=function() {
+    //console.error("url unreachable",url);
+    callback.apply(context,[null]);
   }
 
   script=document.createElement('script');
   script.setAttribute('id', "jsonp");
-  script.setAttribute('onerror', jsonp_handler);
+  script.setAttribute('onerror', "jsonp_error_handler()");
 
-  script.setAttribute('src', url+'?"'+(new Date())+'"');
+  script.setAttribute('src', url+'?"'+(new Date().getTime()));
   document.getElementsByTagName('head')[0].appendChild(script); 
 }
 
 var needToUpdate=function(fromjson,tojson) {
   var needUpdates=[];
-  for (var i=0;i<fromjson.length;i++) {
+  for (var i=0;i<fromjson.length;i++) { 
     var to=tojson[i];
     var from=fromjson[i];
     var newfiles=[],newfilesizes=[],removed=[];
+    if (!to) continue; //cannot reach host
     from.filedates.map(function(f,idx){
       var newidx=to.files.indexOf( from.files[idx]);
       if (newidx==-1) {
@@ -58,11 +60,11 @@ var getUpdatables=function(apps,cb,context) {
 }
 var getRemoteJson=function(apps,cb,context) {
   var taskqueue=[],output=[];
-  var makecb=function(path){
+  var makecb=function(app){
     return function(data){
         if (!(data && typeof data =='object' && data.__empty)) output.push(data);
-        var url=(path.url||"http://127.0.0.1:8080/"+path.dbid) +"/ksana.js";
-        jsonp( url ,path.dbid,taskqueue.shift(), context);
+        var url=(app.baseurl||"http://127.0.0.1:8080/"+app.dbid) +"/ksana.js";
+        jsonp( url ,app.dbid,taskqueue.shift(), context);
     };
   };
   apps.forEach(function(app){taskqueue.push(makecb(app))});
@@ -86,15 +88,6 @@ var humanFileSize=function(bytes, si) {
     return bytes.toFixed(1)+' '+units[u];
 };
 
-var getUrls=function(ksanajs) {
-  var baseurl=ksanajs.baseurl|| "http://127.0.0.1:8080/"+ksanajs.dbid+"/";
-  if (baseurl[baseurl.length-1]!="/") baseurl+="/";
-  var urls=[];
-  ksanajs.newsfiles.map(function(f){
-    urls.push(baseurl+f);
-  });
-  return urls;
-}
 var start=function(ksanajs,cb,context){
   var files=ksanajs.newfiles||ksanajs.files;
   var baseurl=ksanajs.baseurl|| "http://127.0.0.1:8080/"+ksanajs.dbid+"/";

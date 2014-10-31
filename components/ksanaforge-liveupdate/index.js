@@ -10,6 +10,7 @@ var jsonp=function(url,dbid,callback,context) {
       data.dbid=dbid;
       callback.apply(context,[data]);      
     } else {
+      console.log("cannot reach host");
       callback.apply(context,[null]);
     }
   }

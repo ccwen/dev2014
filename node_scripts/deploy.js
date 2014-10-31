@@ -8,7 +8,21 @@ var touchpackagejson=function(filename) {
 	json.window.toolbar=false;
 	fs.writeFileSync(filename,JSON.stringify(json,""," "),"utf8");
 }
-var deploy=function(from,to) {
+var touchksanajs=function(filename,baseurl) {
+	var content=fs.readFileSync(filename,"utf8");
+	content=content.replace("jsonp_handler(","");
+	content=content.replace("})","}");
+
+	var json=JSON.parse(content);
+
+	if (baseurl.indexOf("http")!=0) baseurl="http://"+baseurl;
+	if (baseurl[baseurl.length-1]!='/') baseurl+='/';
+	json.baseurl=baseurl;
+	
+	fs.writeFileSync(filename,
+		"jsonp_handler("+JSON.stringify(json,""," ")+")","utf8");	
+}
+var deploy=function(from,to,baseurl) {
 	
 	var ksana=(from+'/ksana.js').replace(/\\/g,"/");
 	if (!fs.existsSync(ksana)) {
@@ -38,11 +52,15 @@ var deploy=function(from,to) {
   		if (f=="package.json") {
   			setTimeout(function(){touchpackagejson(tofile)},100);
   		}
+  		if (f=="ksana.js" && baseurl) {
+  			setTimeout(function(){touchksanajs(tofile,baseurl)},100);	
+  		}
   		setTimeout(function() {
   			fs.utimesSync(tofile, fromstat.atime, fromstat.mtime);
   		},100);
 		}).pipe(fs.createWriteStream(tofile));
 	});
 	
+
 }
 module.exports=deploy;

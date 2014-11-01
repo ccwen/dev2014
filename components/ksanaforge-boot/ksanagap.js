@@ -1,6 +1,8 @@
 var switchApp=function(path) {
-  process.chdir("../"+path);
-  document.location.href= "../"+path+"/index.html"; 
+	var fs=nodeRequire("fs");
+	path="../"+path;
+	document.location.href= path+"/index.html"; 
+	process.chdir(path);
 }
 var downloader={};
 var rootPath="";

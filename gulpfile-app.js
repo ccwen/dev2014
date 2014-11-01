@@ -177,7 +177,10 @@ var appprocessexit=function() {
 }
 
 gulp.task('run',['rebuild'],function(){
-  var instance=spawn(nw.bin,['--remote-debugging-port=9222','.'])
+  chdir_initcwd();
+  console.log(nw.bin,process.cwd());
+  var instance=exec(nw.bin+' --remote-debugging-port=9222 .');
+  //var instance=spawn(nw.bin,['--remote-debugging-port=9222','.']); //don't know why it doesn't work
   instance.on('exit',function(){
     appprocessexit();
   })

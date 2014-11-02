@@ -23,7 +23,9 @@ var ksanagap={
 	doneDownload:downloader.doneDownload,
 	switchApp:switchApp,
 	rootPath:rootPath,
-	deleteApp: deleteApp
+	deleteApp: deleteApp,
+	username:"", //not support on PC
+	useremail:""
 }
 
 

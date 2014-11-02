@@ -12,6 +12,13 @@ if (typeof process !="undefined") {
 	window.ksanagap.platform="chrome";
 	window.kfs=require("./kfs_html5");
 	ksana.platform="chrome";
+} else {
+	if (typeof ksanagap!="undefined" ) {
+		ksana.platform=ksanagap.platform;
+		if (typeof ksanagap.android !="undefined") {
+			ksana.platform="android";
+		}
+	}
 }
 
 //if (typeof React=="undefined") window.React=require('../react');

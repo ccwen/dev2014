@@ -11,6 +11,9 @@ if (typeof process!="undefined") {
 	rootPath=process.cwd();
 	rootPath=nodeRequire("path").resolve(rootPath,"..").replace(/\\/g,"/")+'/';
 }
+var deleteApp=function(app) {
+	console.error("not allow on PC, do it in File Explorer/ Finder");
+}
 var ksanagap={
 	platform:"node-webkit",
 	startDownload:downloader.startDownload,
@@ -19,7 +22,8 @@ var ksanagap={
 	cancelDownload:downloader.cancelDownload,
 	doneDownload:downloader.doneDownload,
 	switchApp:switchApp,
-	rootPath:rootPath
+	rootPath:rootPath,
+	deleteApp: deleteApp
 }
 
 

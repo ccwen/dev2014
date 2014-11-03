@@ -21,6 +21,7 @@ var startDownload=function(dbid,_baseurl,_files) { //return download id
 	nextFile();
 	downloading=true;
 	baseurl=_baseurl;
+	if (baseurl[baseurl.length-1]!='/')baseurl+='/';
 	targetPath=ksanagap.rootPath+dbid+'/';
 	tempPath=ksanagap.rootPath+".tmp/";
 	result="";
@@ -48,8 +49,7 @@ var downloadFile=function(nfile) {
 	var request = http.get(url, function(response) {
 		response.on('data',function(chunk){
 			writeStream.write(chunk);
-			datalength+=chunk.length;
-			totalDownloadByte+=datalength;
+			totalDownloadByte+=chunk.length;
 			if (userCancel) {
 				writeStream.end();
 				setTimeout(function(){nextFile();},100);

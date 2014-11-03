@@ -37,7 +37,9 @@ var needToUpdate=function(fromjson,tojson) {
         //file removed in new version
         removed.push(from.files[idx]);
       } else {
-        if (f<to.filedates[newidx]) {
+        var fromdate=Date.parse(f);
+        var todate=Date.parse(to.filedates[newidx]);
+        if (fromdate<todate) {
           newfiles.push( to.files[newidx] );
           newfilesizes.push(to.filesizes[newidx]);
         }        

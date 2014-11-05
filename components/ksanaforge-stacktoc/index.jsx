@@ -18,12 +18,12 @@ var Ancestors=React.createClass({
     this.props.showExcerpt(n);
   }, 
   showHit:function(hit) {
-    if (hit)  return <span onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</span>
+    if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</a>
     else return <span></span>;
   },
   renderAncestor:function(n,idx) {
     var hit=this.props.toc[n].hit;
-    return <div key={"a"+n} className="node parent" data-n={n}>{idx+1}.<span className="text" onClick={this.goback} >{this.props.toc[n].text}</span>{this.showHit(hit)}</div>
+    return <div key={"a"+n} className="node parent" data-n={n}>{idx+1}.<a className="text" href="#" onClick={this.goback} >{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
@@ -36,7 +36,7 @@ var Children=React.createClass({
     if (typeof n!=="undefined") this.props.setCurrent(n);
   }, 
   showHit:function(hit) {
-    if (hit)  return <span onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</span>
+    if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</a>
     else return <span></span>;
   },
   showExcerpt:function(e) {
@@ -220,7 +220,7 @@ var stacktoc = React.createClass({
     this.hitClick(this.state.cur);
   },
   showHit:function(hit) {
-    if (hit)  return <span onClick={this.onHitClick} className="pull-right badge">{trimHit(hit)}</span>
+    if (hit)  return <a href="#" onClick={this.onHitClick} className="pull-right badge">{trimHit(hit)}</a>
     else return <span></span>;
   },
   showText:function(e) {
@@ -239,7 +239,7 @@ var stacktoc = React.createClass({
     return ( 
       <div className="stacktoc"> 
         <Ancestors showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
-        <div onClick={this.showText} className="node current" data-n={this.state.cur}><span>{depth}.</span><span className="text">{current.text}</span>{this.showHit(current.hit)}</div>
+        <div className="node current"><a href="#" onClick={this.showText} data-n={this.state.cur}><span>{depth}.</span><span className="text">{current.text}</span></a>{this.showHit(current.hit)}</div>
         <Children showText={this.props.showText} hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>
     ); 

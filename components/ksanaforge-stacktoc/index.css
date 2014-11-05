@@ -1,9 +1,9 @@
 .stacktoc {font-size:150%;}
-
+.stacktoc a {color:black;}
 div.parent{background:#FFFFCC; }
 div.parent:hover { background:#FFF380;}
 div.parent span.text:hover { text-decoration: underline; cursor:pointer;}
-div.current {color:black; background:#85BB65;border-bottom-right-radius:10px 10px;}
+div.current {color:black; background:#95CB85;border-bottom-right-radius:10px 10px;}
 div.current:hover {background:#59E817;}
 div.current span.text:hover{text-decoration:underline;cursor:pointer;}
 div.child span.text:hover {text-decoration:underline;cursor:pointer;color:#85BB65;}

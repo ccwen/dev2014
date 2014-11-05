@@ -14,6 +14,15 @@ if (typeof process!="undefined") {
 var deleteApp=function(app) {
 	console.error("not allow on PC, do it in File Explorer/ Finder");
 }
+var username=function() {
+	return "";
+}
+var useremail=function() {
+	return ""
+}
+var runtime_version=function() {
+	return "1.2";
+}
 var ksanagap={
 	platform:"node-webkit",
 	startDownload:downloader.startDownload,
@@ -24,8 +33,9 @@ var ksanagap={
 	switchApp:switchApp,
 	rootPath:rootPath,
 	deleteApp: deleteApp,
-	username:"", //not support on PC
-	useremail:""
+	username:username, //not support on PC
+	useremail:username,
+	runtime_version:runtime_version
 }
 
 

@@ -23,6 +23,12 @@ var jsonp=function(url,dbid,callback,context) {
   script.setAttribute('src', url+'?"'+(new Date().getTime()));
   document.getElementsByTagName('head')[0].appendChild(script); 
 }
+var runtime_version_ok=function(minruntime) {
+  if (!minruntime) return true;//not mentioned.
+  var min=parseFloat(minruntime);
+  var runtime=parseFloat( ksanagap.runtime_version()||"1.0");
+  if (min>runtime) return false;
+}
 
 var needToUpdate=function(fromjson,tojson) {
   var needUpdates=[];
@@ -30,7 +36,16 @@ var needToUpdate=function(fromjson,tojson) {
     var to=tojson[i];
     var from=fromjson[i];
     var newfiles=[],newfilesizes=[],removed=[];
+    
     if (!to) continue; //cannot reach host
+    if (!runtime_version_ok(to.minruntime)) {
+      console.warn("runtime too old, need "+to.minruntime);
+      continue; 
+    }
+    if (!from.filedates) {
+      console.warn("missing filedates in ksana.js of "+from.dbid);
+      continue;
+    }
     from.filedates.map(function(f,idx){
       var newidx=to.files.indexOf( from.files[idx]);
       if (newidx==-1) {

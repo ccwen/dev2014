@@ -127,6 +127,10 @@ gulp.task('touchksanajs',function(){
     ksana.files.push("ksana.js");
   }
   ksana.files.forEach(function(f){
+    var slash=f.lastIndexOf("/");
+    if (slash) {
+      f=f.substring(slash+1);
+    }
     if (!fs.existsSync(f)) {
 	     console.log("missing ",f); 
 	     return;

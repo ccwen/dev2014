@@ -57,8 +57,9 @@ var newkapp=function(appname){
   	'"build": 1,\n'+
   	'"title":"'+appname+'",\n'+
   	'"date":"'+new Date()+'",\n'+
+  	'"minruntime": "1.3",\n'+
   	'"description":"",\n'+
-  	'"files":["index.html","build.js","build.css","jquery.js","react-with-addons.js","'+appname+'.kdb"]\n'+
+  	'"files":["index.html","build.js","build.css","jquery.js","react-with-addons.js","ksana.js","'+appname+'.kdb"]\n'+
   	'})';
 
 	var indexhtml='<!DOCTYPE html>\n<html>\n'+

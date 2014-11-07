@@ -7,7 +7,7 @@ var trimHit=function(hit) {
 }
 var Ancestors=React.createClass({
   goback:function(e) {
-    var n=e.target.dataset["n"]; 
+    var n=e.target.dataset["n"];  
     if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];
     this.props.setCurrent(n); 
   },
@@ -18,7 +18,7 @@ var Ancestors=React.createClass({
     this.props.showExcerpt(n);
   }, 
   showHit:function(hit) {
-    if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</a>
+    if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge hitbadge">{trimHit(hit)}</a>
     else return <span></span>;
   },
   renderAncestor:function(n,idx) {
@@ -45,7 +45,7 @@ var Children=React.createClass({
     if (typeof n!=="undefined") this.props.setCurrent(parseInt(n));
   }, 
   showHit:function(hit) {
-    if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</a>
+    if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge hitbadge">{trimHit(hit)}</a>
     else return <span></span>;
   },
   showExcerpt:function(e) {
@@ -232,7 +232,7 @@ var stacktoc = React.createClass({
     this.hitClick(this.state.cur);
   },
   showHit:function(hit) {
-    if (hit)  return <a href="#" onClick={this.onHitClick} className="pull-right badge">{trimHit(hit)}</a>
+    if (hit)  return <a href="#" onClick={this.onHitClick} className="pull-right badge hitbadge">{trimHit(hit)}</a>
     else return <span></span>;
   },
   showText:function(e) {

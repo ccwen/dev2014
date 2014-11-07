@@ -31,6 +31,9 @@ var Ancestors=React.createClass({
   } 
 }); 
 var Children=React.createClass({
+  getInitialState:function() {
+    return {selected:0};
+  },
   shouldComponentUpdate:function(nextProps,nextState) {
     if (nextProps.data.join()!=this.props.data.join() ) {
       nextState.selected=parseInt(nextProps.data[0]);

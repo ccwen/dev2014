@@ -3,12 +3,12 @@
   maintain selection state of a surface
   context menu
 */
-var surface=require("docsurface"); 
+var Surface=require("docsurface"); 
 var bootstrap=require("bootstrap");
 var cssgen=require("./cssgen");
 var linkbymenu=Require("linkbymenu");
 var linktomenu=Require("linktomenu");//possible link to
-var docview = React.createClass({
+var Docview = React.createClass({
   componentWillMount:function() {
     if (this.props.page) this.offsets=this.props.template.tokenize(this.props.page.inscription).offsets;
     else this.offsets=[];
@@ -337,7 +337,7 @@ var docview = React.createClass({
       {this.contextMenu()}
       {this.linkByMenu()}
       {this.linkToMenu()}
-       <surface ref="surface" 
+       <Surface ref="surface" 
                 page={this.props.page}
                 user={this.props.user}
                 action={this.action}
@@ -352,12 +352,12 @@ var docview = React.createClass({
                 customfunc={this.props.customfunc}
                 hits={this.props.hits}
                 >  
-       </surface>   
+       </Surface>   
       </div>
     );
   }
 });
-module.exports=docview;
+module.exports=Docview;
 /*
       <div ref="linkto" className="btnlinkto-container">
         <span onClick={this.showlinktomenu} className="btnlinkto">{"\u21dd"}</span>

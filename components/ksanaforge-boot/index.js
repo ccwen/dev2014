@@ -29,7 +29,7 @@ var boot=function(appId,main,maindiv) {
 	main=main||"main";
 	maindiv=maindiv||"main";
 	ksana.appId=appId;
-	ksana.mainComponent=React.renderComponent(Require(main)(),document.getElementById(maindiv));
+	ksana.mainComponent=React.render(Require(main)(),document.getElementById(maindiv));
 }
 window.ksana=ksana;
 window.Require=Require;

@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 if (typeof $=="undefined") $=Require("jquery");
-var token = React.createClass({
+var Token = React.createClass({
   render:function() {
     var classname=this.props.cls?this.props.cls.trim():"";
     var opts={ 'data-n':this.props.n}
@@ -10,7 +10,7 @@ var token = React.createClass({
   } 
 });
 var caret=require("./caret");  
-var surface = React.createClass({
+var Surface = React.createClass({
   componentWillUpdate:function(nextProps,nextState) {
     if (nextProps.selstart!=this.props.selstart
       && nextProps.selstart!=this.props.selstart+this.props.sellength) {
@@ -348,7 +348,7 @@ var surface = React.createClass({
       var res=this.putSurfaceElement(viewonlys,offsets,i);
       if (res.length) xml.push(res);
     }     
-    xml.push(<token key={i} n={offsets[i]}/>);
+    xml.push(<Token key={i} n={offsets[i]}/>);
 
     if (this.props.onTagSet) {
       this.props.onTagSet(Object.keys(tagset).sort(),this.state.uuid);
@@ -414,4 +414,4 @@ var surface = React.createClass({
   }
 });
 
-module.exports=surface;
+module.exports=Surface;

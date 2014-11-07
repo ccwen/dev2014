@@ -2,11 +2,11 @@
 
 /* todo , optional kdb */
 
-var htmlfs=Require("htmlfs");    
-var checkbrowser=Require("checkbrowser");  
+var HtmlFS=Require("htmlfs");    
+var CheckBrowser=Require("checkbrowser");  
   
 var html5fs=Require("ksana-document").html5fs;
-var filelist = React.createClass({
+var FileList = React.createClass({
 	getInitialState:function() {
 		return {downloading:false,progress:0};
 	},
@@ -144,7 +144,7 @@ var filelist = React.createClass({
 	}
 });
 /*TODO kdb check version*/
-var filemanager = React.createClass({
+var Filemanager = React.createClass({
 	getInitialState:function() {
 		var quota=this.getQuota();
 		return {browserReady:false,noupdate:true,	requestQuota:quota,remain:0};
@@ -264,17 +264,17 @@ var filemanager = React.createClass({
 	},
 	render:function(){
     		if (!this.state.browserReady) {   
-      			return <checkbrowser feature="fs" onReady={this.onBrowserOk}/>
+      			return <CheckBrowser feature="fs" onReady={this.onBrowserOk}/>
     		} if (!this.state.quota || this.state.remain<this.state.requireSpace) {  
     			var quota=this.state.requestQuota;
     			if (this.state.usage+this.state.requireSpace>quota) {
     				quota=(this.state.usage+this.state.requireSpace)*1.5;
     			}
-      			return <htmlfs quota={quota} autoclose="true" onReady={this.onQuoteOk}/>
+      			return <HtmlFS quota={quota} autoclose="true" onReady={this.onQuoteOk}/>
       		} else {
 			if (!this.state.noupdate || this.missingKdb().length || !this.state.autoclose) {
 				var remain=Math.round((this.state.usage/this.state.quota)*100);				
-				return <filelist action={this.action} files={this.state.files} remainPercent={remain}/>
+				return <FileList action={this.action} files={this.state.files} remainPercent={remain}/>
 			} else {
 				setTimeout( this.dismiss ,0);
 				return <span>Success</span>;
@@ -295,4 +295,4 @@ var filemanager = React.createClass({
 	}
 });
 
-module.exports=filemanager;
+module.exports=Filemanager;

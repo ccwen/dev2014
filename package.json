@@ -10,7 +10,7 @@
     "gulp-concat": "~2.1.7",
     "gulp-filelog": "~0.2.0",
     "gulp-jshint": "*",
-    "gulp-react": "~1.0.2",
+    "gulp-react": "*",
     "gulp-rename": "~1.1.0",
     "gulp-tap": "*",
     "gulp-uglify": "~0.2.1",

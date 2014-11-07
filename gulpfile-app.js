@@ -53,8 +53,9 @@ var jsx2js_check=function(path) {
     return gulp.src(path).pipe(tap(function(file,f){
         var r=gulp.src(file.path).pipe(react()).on('error', 
          function(error) {
+         // console.log(error)
           console.log("Line:"+error.lineNumber+",Col:"+error.column+" of "+ file.path);
-          console.log(error.description);
+          console.log(error.message);
           throw ("jsx to jx error");
         }
     )}));

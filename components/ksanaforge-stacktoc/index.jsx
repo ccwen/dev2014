@@ -31,9 +31,15 @@ var Ancestors=React.createClass({
   } 
 }); 
 var Children=React.createClass({
+  shouldComponentUpdate:function(nextProps,nextState) {
+    if (nextProps.data.join()!=this.props.data.join() ) {
+      nextState.selected=parseInt(nextProps.data[0]);
+    }
+    return true;
+  },
   open:function(e) {
     var n=e.target.parentNode.dataset["n"];
-    if (typeof n!=="undefined") this.props.setCurrent(n);
+    if (typeof n!=="undefined") this.props.setCurrent(parseInt(n));
   }, 
   showHit:function(hit) {
     if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge">{trimHit(hit)}</a>
@@ -45,12 +51,14 @@ var Children=React.createClass({
     e.preventDefault();
     this.props.hitClick(n);
   }, 
-  openNode:function(haschild) {
-    if (haschild) {
-      return <button className="btn btn-xs btn-link" onClick={this.open}>＋</button>
+  nodeClicked:function(e) {
+    var n=parseInt(e.target.dataset.n);
+    if (n!=this.state.selected) {
+      this.setState({selected:n});
+      this.showText(e);
     } else {
-      return <button className="btn btn-xs btn-link disabled">－</button>
-    }    
+      this.open(e);
+    }
   },
   renderChild:function(n) {
     var child=this.props.toc[n];
@@ -59,10 +67,10 @@ var Children=React.createClass({
     //if (child.extra) extra="<extra>"+child.extra+"</extra>";
     if (!child.hasChild) classes+=" nochild";
     else haschild=true;
-     
-    return <div className={classes} data-n={n}> 
-    {this.openNode(haschild)}
-    <a className="tocitem text"  onClick={this.showText}>{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
+    var classes="btn btn-link"
+    if (n==this.state.selected && haschild) classes="btn btn-default";
+
+    return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
   },
   showText:function(e) {
     var n=e.target.dataset["n"];
@@ -132,6 +140,7 @@ var stacktoc = React.createClass({
       } else break;
       if (n) child=toc[n];else break;
     }
+
     return children;
   },
   rebuildToc:function() {

@@ -121,7 +121,7 @@ var newkapp=function(appname){
 }
 newkapp.touchComponent=function(name) {
 	var jsx='var require_kdb=[{ filename:"%%.kdb"  , url:"http://ya.ksana.tw/kdb/%%.kdb" , desc:""}];  \n'+
-					'var fileinstaller=Require("fileinstaller");\n'+
+					'var Fileinstaller=Require("fileinstaller");\n'+
 					'var kde=Require("ksana-document").kde;\n'+
 					'var kse=Require("ksana-document").kse;\n'+
 					'var bootstrap=Require("bootstrap");\n'+
@@ -139,7 +139,7 @@ newkapp.touchComponent=function(name) {
 					'    if (window.location.origin.indexOf("http://127.0.0.1")==0) {\n'+
 					'      require_kdb[0].url=window.location.origin+window.location.pathname+"%%.kdb";\n'+
 					'    }\n'+
-					'    return <fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} onReady={this.onReady}/>\n'+
+					'    return <Fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} onReady={this.onReady}/>\n'+
 					'  },\n'+
 					'  render: function() {\n'+
 					'    if (!this.state.quota) {\n'+

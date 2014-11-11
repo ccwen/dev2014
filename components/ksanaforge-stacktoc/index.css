@@ -8,5 +8,5 @@ div.current {color:black; background:#95CB85;border-bottom-right-radius:10px 10p
 div.current:hover {background:#59E817;}
 div.current span.text:hover{text-decoration:underline;cursor:pointer;}
 div.child span.text:hover {text-decoration:underline;cursor:pointer;color:#85BB65;}
-.tocitem {text-decoration: none;cursor:pointer;}
+.tocitem {text-decoration: none;cursor:pointer;font-size:100%;}
 .badge:hover {color:#59E817;cursor:pointer;}

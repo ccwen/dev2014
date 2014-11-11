@@ -161,6 +161,7 @@ var stacktoc = React.createClass({
   setCurrent:function(n) {
     n=parseInt(n);
     this.setState({cur:n});
+    this.props.showText(n);
   },
   findByVoff:function(voff) {
     for (var i=0;i<this.props.data.length;i++) {

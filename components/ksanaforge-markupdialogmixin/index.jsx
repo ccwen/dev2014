@@ -11,7 +11,7 @@ var markupdialogmixin = {
     var allow=this.allow?this.allow(opts) : true;
     if (!allow) return;
     if (this.state.immediate) { //immediate execution
-      this.execute.apply(this,arguments);
+      if (allow!="more") this.execute.apply(this,arguments);
     } else {
       this.setState({edit:false,markup:null});
       this.show();

@@ -76,9 +76,14 @@ var Children=React.createClass({
     return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
   },
   showText:function(e) {
-    var n=e.target.dataset["n"];
-    if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];
-    if (this.props.showText) this.props.showText(parseInt(n));
+    var target=e.target;
+    var n=e.target.dataset.n;
+    while (target && typeof target.dataset.n=="undefined") {
+      target=target.parentNode;
+    }
+    if (target && target.dataset.n && this.props.showText) {
+      this.props.showText(parseInt(target.dataset.n));
+    }
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
@@ -237,9 +242,14 @@ var stacktoc = React.createClass({
     else return <span></span>;
   },
   showText:function(e) {
-    var n=e.target.dataset["n"];
-    if (typeof n=="undefined") n=e.target.parentNode.dataset["n"];
-    this.props.showText(parseInt(n));
+    var target=e.target;
+    var n=e.target.dataset.n;
+    while (target && typeof target.dataset.n=="undefined") {
+      target=target.parentNode;
+    }
+    if (target && target.dataset.n && this.props.showText) {
+      this.props.showText(parseInt(target.dataset.n));
+    }
   },
 
   render: function() {

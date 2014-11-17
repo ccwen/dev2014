@@ -75,7 +75,7 @@ var Children=React.createClass({
 
     return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
   },
-  showText:function(e) {
+  showText:function(e) { 
     var target=e.target;
     var n=e.target.dataset.n;
     while (target && typeof target.dataset.n=="undefined") {

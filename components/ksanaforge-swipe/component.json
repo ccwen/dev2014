@@ -1,0 +1,12 @@
+{
+  "name": "swipe",
+  "repo": "ksanaforge/swipe",
+  "description": "hello world",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": ["index.js","swipe.js"]
+}

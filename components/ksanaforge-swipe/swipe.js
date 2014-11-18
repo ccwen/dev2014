@@ -34,6 +34,7 @@ module.exports = function Swipe(container, options) {
   var speed = options.speed || 300;
   options.continuous = options.continuous !== undefined ? options.continuous : true;
 
+  var target=null; //yap to keep the domnode fires the swipe
   function setup() {
 
     // cache slides
@@ -147,7 +148,7 @@ module.exports = function Swipe(container, options) {
     }
 
     index = to;
-    offloadFn(options.callback && options.callback(index, slides[index]));
+    offloadFn(options.callback && options.callback(index, slides[index], target));
   }
 
   function move(index, dist, speed) {
@@ -174,42 +175,26 @@ module.exports = function Swipe(container, options) {
     style.msTransform =
     style.MozTransform =
     style.OTransform = 'translateX(' + dist + 'px)';
-
   }
 
   function animate(from, to, speed) {
-
     // if not an animation, just reposition
     if (!speed) {
-
       element.style.left = to + 'px';
       return;
-
     }
-
     var start = +new Date;
-
     var timer = setInterval(function() {
-
       var timeElap = +new Date - start;
-
       if (timeElap > speed) {
-
         element.style.left = to + 'px';
-
         if (delay) begin();
-
-        options.transitionEnd && options.transitionEnd.call(event, index, slides[index]);
-
+        options.transitionEnd && options.transitionEnd.call(event, index, slides[index], target);
         clearInterval(timer);
         return;
-
       }
-
       element.style.left = (( (to - from) * (Math.floor((timeElap / speed) * 100) / 100) ) + from) + 'px';
-
     }, 4);
-
   }
 
   // setup auto slideshow
@@ -256,19 +241,15 @@ module.exports = function Swipe(container, options) {
 
     },
     start: function(event) {
-
+      target=event.target;//yap save the event target
       var touches = event.touches[0];
-
       // measure start values
       start = {
-
         // get initial touch coords
         x: touches.pageX,
         y: touches.pageY,
-
         // store time to determine touch duration
         time: +new Date
-
       };
 
       // used for testing first move event
@@ -296,15 +277,12 @@ module.exports = function Swipe(container, options) {
         x: touches.pageX - start.x,
         y: touches.pageY - start.y
       }
-
       // determine if scrolling test has run - one time test
       if ( typeof isScrolling == 'undefined') {
         isScrolling = !!( isScrolling || Math.abs(delta.x) < Math.abs(delta.y) );
       }
-
       // if user is not trying to scroll vertically
       if (!isScrolling) {
-
         // prevent native scrolling
         event.preventDefault();
 
@@ -334,9 +312,7 @@ module.exports = function Swipe(container, options) {
           translate(index, delta.x + slidePos[index], 0);
           translate(index+1, delta.x + slidePos[index+1], 0);
         }
-
       }
-
     },
     end: function(event) {
 
@@ -374,44 +350,31 @@ module.exports = function Swipe(container, options) {
             } else {
               move(index-1, -width, 0);
             }
-
             move(index, slidePos[index]-width, speed);
             move(circle(index+1), slidePos[circle(index+1)]-width, speed);
             index = circle(index+1);
-
           } else {
             if (options.continuous) { // we need to get the next in this direction in place
-
               move(circle(index+1), width, 0);
               move(circle(index-2), -width, 0);
-
             } else {
               move(index+1, width, 0);
             }
-
             move(index, slidePos[index]+width, speed);
             move(circle(index-1), slidePos[circle(index-1)]+width, speed);
             index = circle(index-1);
-
           }
-
-          options.callback && options.callback(index, slides[index]);
-
+          options.callback && options.callback(index, slides[index], target);
         } else {
-
           if (options.continuous) {
-
             move(circle(index-1), -width, speed);
             move(index, 0, speed);
             move(circle(index+1), width, speed);
-
           } else {
-
             move(index-1, -width, speed);
             move(index, 0, speed);
             move(index+1, width, speed);
           }
-
         }
 
       }
@@ -422,17 +385,11 @@ module.exports = function Swipe(container, options) {
 
     },
     transitionEnd: function(event) {
-
       if (parseInt(event.target.getAttribute('data-index'), 10) == index) {
-
         if (delay) begin();
-
-        options.transitionEnd && options.transitionEnd.call(event, index, slides[index]);
-
+        options.transitionEnd && options.transitionEnd.call(event, index, slides[index],target);
       }
-
     }
-
   }
 
   // trigger setup
@@ -440,7 +397,6 @@ module.exports = function Swipe(container, options) {
 
   // start auto slideshow if applicable
   if (delay) begin();
-
 
   // add event listeners
   if (browser.addEventListener) {
@@ -455,88 +411,61 @@ module.exports = function Swipe(container, options) {
       element.addEventListener('otransitionend', events, false);
       element.addEventListener('transitionend', events, false);
     }
-
     // set resize event on window
     window.addEventListener('resize', events, false);
-
   } else {
-
     window.onresize = function () { setup() }; // to play nice with old IE
-
   }
 
   // expose the Swipe API
   return {
     setup: function() {
-
       setup();
-
     },
     slide: function(to, speed) {
-
       // cancel slideshow
       stop();
-
       slide(to, speed);
-
     },
     prev: function() {
-
       // cancel slideshow
       stop();
-
       prev();
-
     },
     next: function() {
-
       // cancel slideshow
       stop();
-
       next();
-
     },
     stop: function() {
-
       // cancel slideshow
       stop();
-
     },
     getPos: function() {
-
       // return current index position
       return index;
-
     },
     getNumSlides: function() {
-
       // return total number of slides
       return length;
     },
     kill: function() {
-
       // cancel slideshow
       stop();
-
       // reset element
       element.style.width = '';
       element.style.left = '';
-
       // reset slides
       var pos = slides.length;
       while(pos--) {
-
         var slide = slides[pos];
         slide.style.width = '';
         slide.style.left = '';
-
         if (browser.transitions) translate(pos, 0, 0);
-
       }
 
       // removed event listeners
       if (browser.addEventListener) {
-
         // remove current event listeners
         element.removeEventListener('touchstart', events, false);
         element.removeEventListener('webkitTransitionEnd', events, false);
@@ -545,12 +474,9 @@ module.exports = function Swipe(container, options) {
         element.removeEventListener('otransitionend', events, false);
         element.removeEventListener('transitionend', events, false);
         window.removeEventListener('resize', events, false);
-
       }
       else {
-
         window.onresize = null;
-
       }
 
     }

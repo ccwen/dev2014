@@ -59,12 +59,21 @@ var Children=React.createClass({
     while (target && typeof target.dataset.n=="undefined")target=target.parentNode;
     if (!target) return;
     var n=parseInt(target.dataset.n);
-    if (n!=this.state.selected) {
-      this.setState({selected:n});
-      this.showText(e);
+    var child=this.props.toc[n];
+    if (this.props.showTextOnLeafNodeOnly) {
+      if (child.hasChild) {
+        this.open(e);
+      } else {
+        this.showText(e);
+      }
     } else {
-      this.open(e);
+      if (n!=this.state.selected) {
+        this.showText(e);
+      } else {
+        this.open(e);
+      }
     }
+    this.setState({selected:n});
   },
   renderChild:function(n) {
     var child=this.props.toc[n];
@@ -73,8 +82,13 @@ var Children=React.createClass({
     //if (child.extra) extra="<extra>"+child.extra+"</extra>";
     if (!child.hasChild) classes+=" nochild";
     else haschild=true;
-    var classes="btn btn-link"
-    if (n==this.state.selected && haschild) classes="btn btn-default";
+    var selected=this.state.selected;
+    if (this.props.showTextOnLeafNodeOnly) {
+      selected=n;
+    }
+
+    var classes="btn btn-link";
+    if (n==selected && haschild) classes="btn btn-default";
 
     return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
   },
@@ -169,7 +183,10 @@ var stacktoc = React.createClass({
   setCurrent:function(n) {
     n=parseInt(n);
     this.setState({cur:n});
-    this.props.showText(n);
+    var child=this.props.data[n];
+    if (!(child.hasChild && this.props.showTextOnLeafNodeOnly)) {
+      this.props.showText(n);
+    }
   },
   findByVoff:function(voff) {
     for (var i=0;i<this.props.data.length;i++) {
@@ -266,7 +283,8 @@ var stacktoc = React.createClass({
       <div className="stacktoc"> 
         <Ancestors showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
         <div className="node current"><a href="#" onClick={this.showText} data-n={this.state.cur}><span>{depth}.</span><span className="text">{current.text}</span></a>{this.showHit(current.hit)}</div>
-        <Children showText={this.props.showText} hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
+        <Children showTextOnLeafNodeOnly={this.props.showTextOnLeafNodeOnly}
+                  showText={this.props.showText} hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>
     ); 
   }

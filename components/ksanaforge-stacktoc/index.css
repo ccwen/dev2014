@@ -1,5 +1,5 @@
 .stacktoc {font-size:150%;}
-.stacktoc a {color:black;word-wrap: break-word;}
+.stacktoc a {color:black;word-wrap: break-word; white-space: normal;text-align:left;}
 .stacktoc a.hitbadge {color:white;}
 div.parent{background:#FFFFCC; }
 div.parent:hover { background:#FFF380;}

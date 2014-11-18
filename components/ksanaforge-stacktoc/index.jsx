@@ -55,7 +55,10 @@ var Children=React.createClass({
     this.props.hitClick(n);
   }, 
   nodeClicked:function(e) {
-    var n=parseInt(e.target.dataset.n);
+    var target=e.target;
+    while (target && typeof target.dataset.n=="undefined")target=target.parentNode;
+    if (!target) return;
+    var n=parseInt(target.dataset.n);
     if (n!=this.state.selected) {
       this.setState({selected:n});
       this.showText(e);

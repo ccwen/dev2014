@@ -219,7 +219,8 @@ var Filemanager = React.createClass({
 	dismiss:function() {
 		this.props.onReady(this.state.usage,this.state.quota);
 		setTimeout(function(){
-			$(".modal.in").modal('hide');
+			var modalin=$(".modal.in");
+			if (modalin.modal) modalin.modal('hide');
 		},500);
 	}, 
 	totalDownloadSize:function() {

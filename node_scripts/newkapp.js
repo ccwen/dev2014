@@ -79,6 +79,7 @@ var newkapp=function(appname){
 						'  "description": "New Ksana application",\n'+
 						'  "version": "0.0.1",\n'+
 						'  "main": "index.html",\n'+
+						'  "inject-js-start":"nodemain.js",\n'+
 						'  "single-instance":true,\n'+
 						'  "window": {\n'+
 						'    "toolbar": true,\n'+
@@ -117,6 +118,8 @@ var newkapp=function(appname){
 	fs.writeFileSync(appname+'/package.json',packagejson,'utf8');
 	fs.writeFileSync(appname+'/index.css',indexcss,'utf8');
 	fs.writeFileSync(appname+'/index.html',indexhtml,'utf8');
+	var nodemain=fs.readFileSync("nodemain.js","utf8");
+	fs.writeFileSync(appname+'/nodemain.js',nodemain,'utf8');
 	fs.mkdirSync(appname+'/components');
 }
 newkapp.touchComponent=function(name) {

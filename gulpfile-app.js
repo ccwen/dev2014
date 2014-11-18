@@ -15,6 +15,7 @@ var paths = {
 paths.buildscripts_all=[
 "components/**/*.jsx",
 "components/**/*.js",
+"components/**/*.css",
 "!components/**/index.js",
 "../components/**/*.jsx",
 "../components/**/*.js",

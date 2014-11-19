@@ -293,6 +293,8 @@ module.exports = function Swipe(container, options) {
           translate(index, delta.x + slidePos[index], 0);
           translate(index+1, delta.x + slidePos[index+1], 0);
         }
+      } else {
+        if (options.swipeEnd) options.swipeEnd(target);
       }
     },
     end: function(event) {

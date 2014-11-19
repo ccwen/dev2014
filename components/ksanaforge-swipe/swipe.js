@@ -202,18 +202,13 @@ module.exports = function Swipe(container, options) {
   var interval;
 
   function begin() {
-
     interval = setTimeout(next, delay);
-
   }
 
   function stop() {
-
     delay = 0;
     clearTimeout(interval);
-
   }
-
 
   // setup initial vars
   var start = {};
@@ -222,9 +217,7 @@ module.exports = function Swipe(container, options) {
 
   // setup event capturing
   var events = {
-
     handleEvent: function(event) {
-
       switch (event.type) {
         case 'touchstart': this.start(event); break;
         case 'touchmove': this.move(event); break;
@@ -236,9 +229,7 @@ module.exports = function Swipe(container, options) {
         case 'transitionend': offloadFn(this.transitionEnd(event)); break;
         case 'resize': offloadFn(setup); break;
       }
-
       if (options.stopPropagation) event.stopPropagation();
-
     },
     start: function(event) {
       target=event.target;//yap save the event target
@@ -251,27 +242,22 @@ module.exports = function Swipe(container, options) {
         // store time to determine touch duration
         time: +new Date
       };
-
       // used for testing first move event
       isScrolling = undefined;
-
       // reset delta and end measurements
       delta = {};
-
       // attach touchmove and touchend listeners
       element.addEventListener('touchmove', this, false);
       element.addEventListener('touchend', this, false);
+      if (options.swipeStart) options.swipeStart(target);
 
     },
     move: function(event) {
-
       // ensure swiping with one touch and not pinching
-      if ( event.touches.length > 1 || event.scale && event.scale !== 1) return
-
+      if ( event.touches.length > 1 || event.scale && event.scale !== 1) return;
       if (options.disableScroll) event.preventDefault();
 
       var touches = event.touches[0];
-
       // measure change in x and y
       delta = {
         x: touches.pageX - start.x,
@@ -285,19 +271,14 @@ module.exports = function Swipe(container, options) {
       if (!isScrolling) {
         // prevent native scrolling
         event.preventDefault();
-
         // stop slideshow
         stop();
-
         // increase resistance if first or last slide
         if (options.continuous) { // we don't add resistance at the end
-
           translate(circle(index-1), delta.x + slidePos[circle(index-1)], 0);
           translate(index, delta.x + slidePos[index], 0);
           translate(circle(index+1), delta.x + slidePos[circle(index+1)], 0);
-
         } else {
-
           delta.x =
             delta.x /
               ( (!index && delta.x > 0               // if first slide and sliding left
@@ -315,10 +296,8 @@ module.exports = function Swipe(container, options) {
       }
     },
     end: function(event) {
-
       // measure duration
       var duration = +new Date - start.time;
-
       // determine if slide attempt triggers next/prev slide
       var isValidSlide =
             Number(duration) < 250               // if slide duration is less than 250ms
@@ -331,22 +310,15 @@ module.exports = function Swipe(container, options) {
             || index == slides.length - 1 && delta.x < 0;    // or if last slide and slide amt is less than 0
 
       if (options.continuous) isPastBounds = false;
-
       // determine direction of swipe (true:right, false:left)
       var direction = delta.x < 0;
-
       // if not scrolling vertically
       if (!isScrolling) {
-
         if (isValidSlide && !isPastBounds) {
-
           if (direction) {
-
             if (options.continuous) { // we need to get the next in this direction in place
-
               move(circle(index-1), -width, 0);
               move(circle(index+2), width, 0);
-
             } else {
               move(index-1, -width, 0);
             }
@@ -376,13 +348,11 @@ module.exports = function Swipe(container, options) {
             move(index+1, width, speed);
           }
         }
-
       }
-
+      if (options.swipeEnd) options.swipeEnd(target);
       // kill touchmove and touchend event listeners until touchstart called again
       element.removeEventListener('touchmove', events, false)
       element.removeEventListener('touchend', events, false)
-
     },
     transitionEnd: function(event) {
       if (parseInt(event.target.getAttribute('data-index'), 10) == index) {
@@ -391,16 +361,12 @@ module.exports = function Swipe(container, options) {
       }
     }
   }
-
   // trigger setup
   setup();
-
   // start auto slideshow if applicable
   if (delay) begin();
-
   // add event listeners
   if (browser.addEventListener) {
-
     // set touchstart event on element
     if (browser.touch) element.addEventListener('touchstart', events, false);
 
@@ -416,7 +382,6 @@ module.exports = function Swipe(container, options) {
   } else {
     window.onresize = function () { setup() }; // to play nice with old IE
   }
-
   // expose the Swipe API
   return {
     setup: function() {
@@ -463,7 +428,6 @@ module.exports = function Swipe(container, options) {
         slide.style.left = '';
         if (browser.transitions) translate(pos, 0, 0);
       }
-
       // removed event listeners
       if (browser.addEventListener) {
         // remove current event listeners

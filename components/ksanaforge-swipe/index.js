@@ -28,7 +28,9 @@ module.exports = React.createClass({
     disableScroll   : React.PropTypes.bool,
     stopPropagation : React.PropTypes.bool,
     callback        : React.PropTypes.func,
-    transitionEnd   : React.PropTypes.func
+    transitionEnd   : React.PropTypes.func,
+    swipeStart      : React.PropTypes.func, //by yap
+    swipeEnd        : React.PropTypes.func
   },
   componentDidMount: function() {
     this.swipe = Swipe(this.getDOMNode(), this.props);

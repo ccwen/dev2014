@@ -23,7 +23,9 @@ var Ancestors=React.createClass({
   },
   renderAncestor:function(n,idx) {
     var hit=this.props.toc[n].hit;
-    return <div key={"a"+n} className="node parent" data-n={n}>{idx+1}.<a className="text" href="#" onClick={this.goback} >{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
+    var text=this.props.toc[n].text;
+    if (this.props.textConverter) text=this.props.textConverter(text);
+    return <div key={"a"+n} className="node parent" data-n={n}>{idx+1}.<a className="text" href="#" onClick={this.goback} >{text}</a>{this.showHit(hit)}</div>
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
@@ -89,8 +91,9 @@ var Children=React.createClass({
 
     var classes="btn btn-link";
     if (n==selected && haschild) classes="btn btn-default";
-
-    return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{this.props.toc[n].text}</a>{this.showHit(hit)}</div>
+    var text=this.props.toc[n].text;
+    if (this.props.textConverter) text=this.props.textConverter(text);
+    return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text}</a>{this.showHit(hit)}</div>
   },
   showText:function(e) { 
     var target=e.target;
@@ -279,11 +282,15 @@ var stacktoc = React.createClass({
     var children=this.enumChildren();
     var current=this.props.data[this.state.cur];
     if (this.props.hits && this.props.hits.length) this.fillHits(ancestors,children);
+
+    var text=current.text;
+    if (this.props.textConverter) text=this.props.textConverter(text);
+
     return ( 
       <div className="stacktoc"> 
-        <Ancestors showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
-        <div className="node current"><a href="#" onClick={this.showText} data-n={this.state.cur}><span>{depth}.</span><span className="text">{current.text}</span></a>{this.showHit(current.hit)}</div>
-        <Children showTextOnLeafNodeOnly={this.props.showTextOnLeafNodeOnly}
+        <Ancestors textConverter={this.props.textConverter} showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
+        <div className="node current"><a href="#" onClick={this.showText} data-n={this.state.cur}><span>{depth}.</span><span className="text">{text}</span></a>{this.showHit(current.hit)}</div>
+        <Children textConverter={this.props.textConverter}  showTextOnLeafNodeOnly={this.props.showTextOnLeafNodeOnly}
                   showText={this.props.showText} hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>
     ); 

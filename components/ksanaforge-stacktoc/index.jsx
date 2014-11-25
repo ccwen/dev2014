@@ -23,7 +23,7 @@ var Ancestors=React.createClass({
   },
   renderAncestor:function(n,idx) {
     var hit=this.props.toc[n].hit;
-    var text=this.props.toc[n].text;
+    var text=this.props.toc[n].text.trim();
     if (this.props.textConverter) text=this.props.textConverter(text);
     return <div key={"a"+n} className="node parent" data-n={n}>{idx+1}.<a className="text" href="#" onClick={this.goback} >{text}</a>{this.showHit(hit)}</div>
   },
@@ -91,7 +91,7 @@ var Children=React.createClass({
 
     var classes="btn btn-link";
     if (n==selected && haschild) classes="btn btn-default";
-    var text=this.props.toc[n].text;
+    var text=this.props.toc[n].text.trim();
     if (this.props.textConverter) text=this.props.textConverter(text);
     return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text}</a>{this.showHit(hit)}</div>
   },
@@ -283,7 +283,7 @@ var stacktoc = React.createClass({
     var current=this.props.data[this.state.cur];
     if (this.props.hits && this.props.hits.length) this.fillHits(ancestors,children);
 
-    var text=current.text;
+    var text=current.text.trim();
     if (this.props.textConverter) text=this.props.textConverter(text);
 
     return ( 

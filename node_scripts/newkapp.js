@@ -52,12 +52,22 @@ var newkapp=function(appname){
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
 
+	var getgitrawbaseurl=function() {
+		"https://github.com/ksanaforge/test2.git"
+		return gitrepo.replace("https:","http:")
+		.replace("github.com","rawgit.com")
+		.replace(".git","/master/");
+
+		/// "baseurl":"http://rawgit.com/ksanaforge/test2/master/",	
+	}
+	
 	var ksanajs='jsonp_handler({\n'+
   	'"version": "1",\n'+
   	'"build": 1,\n'+
   	'"title":"'+appname+'",\n'+
   	'"date":"'+new Date()+'",\n'+
   	'"minruntime": "1.3",\n'+
+  	'"baseurl":"'+getgitrawbaseurl()+'",\n'+
   	'"description":"",\n'+
   	'"files":["index.html","build.js","build.css","jquery.js","react-with-addons.js","ksana.js","'+appname+'.kdb"]\n'+
   	'})';

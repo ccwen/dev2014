@@ -95,10 +95,14 @@ var newkapp=function(appname){
 						'}';
 	
 
-
-
 	//default gulpfile to prevent from using parent gulpfile
 	var gulpfile="require('../gulpfile-app.js');";
+
+	var sourcelst="sample.xml";
+	var samplexml=fs.readFileSync("node_scripts/sample.xml","utf8");
+	var regex_appname=new RegExp("%%","g");
+	var mkdbjs=fs.readFileSync("node_scripts/mkdb.js","utf8");
+
 	//copy jquery and react
 	var copyFile=function(path) {
 		var fn=path.substr(path.lastIndexOf("/"));
@@ -118,6 +122,9 @@ var newkapp=function(appname){
 	fs.writeFileSync(appname+'/package.json',packagejson,'utf8');
 	fs.writeFileSync(appname+'/index.css',indexcss,'utf8');
 	fs.writeFileSync(appname+'/index.html',indexhtml,'utf8');
+	fs.writeFileSync(appname+'/mkdb.js',mkdbjs.replace(regex_appname,appname) ,'utf8');
+	fs.writeFileSync(appname+'/'+appname+'.lst',sourcelst,'utf8');
+	fs.writeFileSync(appname+'/sample.xml',samplexml,'utf8');
 	var nodemain=fs.readFileSync("nodemain.js","utf8");
 	fs.writeFileSync(appname+'/nodemain.js',nodemain,'utf8');
 	fs.mkdirSync(appname+'/components');
@@ -157,8 +164,9 @@ newkapp.touchComponent=function(name) {
 					'  }\n'+
 					'});\n'+
 					'module.exports=main;';
-	var regex=new RegExp("%%","g");
-	jsx=jsx.replace(regex,name);
+
+	var regex_appname=new RegExp("%%","g");	
+	jsx=jsx.replace(regex_appname,name);
 	var fs=require("fs")
 	fs.writeFileSync(name+"/components/"+name+"-main/index.jsx",jsx,"utf8");
 }

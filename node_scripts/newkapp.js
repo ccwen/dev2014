@@ -48,7 +48,7 @@ var newkapp=function(appname){
 '  "scripts": ["index.js"],\n'+
 '  "styles": ["index.css"]\n'+
 '}';
-	var gitignore="*.kdb\n*.kdbk\n*.pdf\nbuild.js\nbuild.css";
+	var gitignore="*.kdb\n*.kdbk\n*.pdf\n*.xml";
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
 
@@ -150,6 +150,7 @@ newkapp.touchComponent=function(name) {
 					'    } else { \n'+
 					'    return (\n'+
 					'      <div className="main">\n'+
+					'		{"Main of %%"}'+
 					'      </div>\n'+
 					'      );\n'+
 					'    }\n'+

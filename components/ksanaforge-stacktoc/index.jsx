@@ -72,7 +72,7 @@ var Children=React.createClass({
       if (n!=this.state.selected) {
         this.showText(e);
       } else {
-        this.open(e);
+        if (child.hasChild) this.open(e);
       }
     }
     this.setState({selected:n});

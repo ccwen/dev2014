@@ -4,16 +4,26 @@
   add offline.appcache
   add 
 */
+var fs=require('fs');
 
+var getgitrawbaseurl=function(gitrepo) {
+	//"https://github.com/ksanaforge/test2.git"
+	return gitrepo.replace("https:","http:")
+	.replace("github.com","rawgit.com")
+	.replace(".git","/master/");
+
+	/// "baseurl":"http://rawgit.com/ksanaforge/test2/master/",	
+}
+
+var getgiturl=function(appname) {
+	var url=fs.readFileSync(appname+'/.git/config','utf8');//.match(/url = (.*?)\n/);
+	url=url.substr(url.indexOf('url ='),100);
+	url=url.replace(/\r\n/g,'\n').substring(6,url.indexOf('\n'));
+	return url;
+}
 var newkapp=function(appname){
 	console.log(appname,process.cwd())
-	var fs=require('fs');
-	var getgiturl=function() {
-		var url=fs.readFileSync(appname+'/.git/config','utf8');//.match(/url = (.*?)\n/);
-		url=url.substr(url.indexOf('url ='),100);
-		url=url.replace(/\r\n/g,'\n').substring(6,url.indexOf('\n'));
-		return url;
-	}
+
 	var die=function() {
 		console.log.apply(this,arguments)
 		process.exit(1);
@@ -24,8 +34,7 @@ var newkapp=function(appname){
 	if (!fs.existsSync(appname)) die('folder not exists');
 	if (!fs.existsSync(appname+'/.git')) die('not a git repository');
 
-	
-	var gitrepo=getgiturl().trim()||"";
+	var gitrepo=getgiturl(appname).trim()||"";
 	var componentjson=
 '{\n'+
 '  "name": "'+appname+'",\n'+
@@ -52,14 +61,6 @@ var newkapp=function(appname){
 	var indexjs='var boot=require("boot");\nboot("'+appname+'","main","main");';
 	var indexcss='#main {}';
 
-	var getgitrawbaseurl=function() {
-		"https://github.com/ksanaforge/test2.git"
-		return gitrepo.replace("https:","http:")
-		.replace("github.com","rawgit.com")
-		.replace(".git","/master/");
-
-		/// "baseurl":"http://rawgit.com/ksanaforge/test2/master/",	
-	}
 	
 	var ksanajs='jsonp_handler({\n'+
   	'"version": "1",\n'+
@@ -67,7 +68,7 @@ var newkapp=function(appname){
   	'"title":"'+appname+'",\n'+
   	'"date":"'+new Date()+'",\n'+
   	'"minruntime": "1.3",\n'+
-  	'"baseurl":"'+getgitrawbaseurl()+'",\n'+
+  	'"baseurl":"'+getgitrawbaseurl(gitrepo)+'",\n'+
   	'"description":"",\n'+
   	'"files":["index.html","build.js","build.css","jquery.js","react-with-addons.js","ksana.js","'+appname+'.kdb"]\n'+
   	'})';
@@ -140,7 +141,8 @@ var newkapp=function(appname){
 	fs.mkdirSync(appname+'/components');
 }
 newkapp.touchComponent=function(name) {
-	var jsx='var require_kdb=[{ filename:"%%.kdb"  , url:"http://ya.ksana.tw/kdb/%%.kdb" , desc:""}];  \n'+
+	var gitrepo=getgiturl(name).trim()||"";
+	var jsx='var require_kdb=[{ filename:"%%.kdb"  , url:"'+getgitrawbaseurl(gitrepo)+'%%.kdb" , desc:""}];  \n'+
 					'var Fileinstaller=Require("fileinstaller");\n'+
 					'var kde=Require("ksana-document").kde;\n'+
 					'var kse=Require("ksana-document").kse;\n'+

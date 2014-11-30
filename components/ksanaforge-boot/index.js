@@ -1,4 +1,5 @@
 var ksana={"platform":"remote"};
+window.ksana=ksana;
 
 if (typeof process !="undefined") {
 	if (process.versions["node-webkit"]) {
@@ -13,7 +14,9 @@ if (typeof process !="undefined") {
 	window.kfs=require("./kfs_html5");
 	ksana.platform="chrome";
 } else {
-	if (typeof ksanagap!="undefined" ) {
+	if (typeof ksanagap!="undefined" ) {//mobile
+		var ksanajs=fs.readFileSync("ksana.js","utf8").trim(); //android extra \n at the end
+		ksana.js=JSON.parse(ksanajs.substring(14,ksanajs.length-1));
 		ksana.platform=ksanagap.platform;
 		if (typeof ksanagap.android !="undefined") {
 			ksana.platform="android";
@@ -25,12 +28,24 @@ if (typeof process !="undefined") {
 
 //require("../cortex");
 var Require=function(arg){return require("../"+arg)};
-var boot=function(appId,main,maindiv) {
-	main=main||"main";
-	maindiv=maindiv||"main";
-	ksana.appId=appId;
+var timer=null;
+var enterMainComponent=function() {
+	var main=main||"main";
+	var maindiv=maindiv||"main";
 	ksana.mainComponent=React.render(Require(main)(),document.getElementById(maindiv));
 }
-window.ksana=ksana;
+var boot=function(appId,main,maindiv) {
+	ksana.appId=appId;
+	if (ksanagap.platform=="chrome") { //need to wait for jsonp ksana.js
+		timer=setInterval(function(){
+			if (ksana.ready){
+				clearInterval(timer);
+				enterMainComponent();
+			}
+		},300);
+	} else {
+		enterMainComponent();
+	}
+}
 window.Require=Require;
 module.exports=boot;

@@ -46,8 +46,14 @@ var newkapp=function(appname){
 '    "ksanaforge/boot": "*"\n'+
 '    ,"brighthas/bootstrap": "*"\n'+
 '    ,"ksana/document": "*"\n'+
+'    ,"ksanaforge/stacktoc":"*"\n'+
 '    ,"ksanaforge/fileinstaller":"*"\n'+
 '    ,"ksanaforge/checkbrowser":"*"\n'+
+'    ,"ksanaforge/fileinstaller":"*"\n'+
+'    ,"ksanaforge/swipe":"*"\n'+
+'    ,"ksanaforge/defaultmain":"*"\n'+
+'    ,"ksanaforge/defaultresultlist":"*"\n'+
+'    ,"ksanaforge/defaultshowtext":"*"\n'+
 '    ,"ksanaforge/htmlfs":"*"\n'+
 '  },\n'+
 '  "development": {},\n'+
@@ -67,7 +73,7 @@ var newkapp=function(appname){
   	'"build": 1,\n'+
   	'"title":"'+appname+'",\n'+
   	'"date":"'+new Date()+'",\n'+
-  	'"minruntime": "1.3",\n'+
+  	'"minruntime": 4,\n'+
   	'"baseurl":"'+getgitrawbaseurl(gitrepo)+'",\n'+
   	'"description":"",\n'+
   	'"files":["index.html","build.js","build.css","jquery.js","react-with-addons.js","ksana.js","'+appname+'.kdb"]\n'+
@@ -142,40 +148,14 @@ var newkapp=function(appname){
 }
 newkapp.touchComponent=function(name) {
 	var gitrepo=getgiturl(name).trim()||"";
-	var jsx='var require_kdb=[{ filename:"%%.kdb"  , url:"'+getgitrawbaseurl(gitrepo)+'%%.kdb" , desc:""}];  \n'+
-					'var Fileinstaller=Require("fileinstaller");\n'+
-					'var kde=Require("ksana-document").kde;\n'+
-					'var kse=Require("ksana-document").kse;\n'+
-					'var bootstrap=Require("bootstrap");\n'+
-					'var main = React.createClass({\n'+
-					'  getInitialState:function(){\n'+
-					'    return {};\n'+
-					'  },\n'+
-					'  onReady:function(usage,quota) {\n'+
-					'    if (!this.state.db) kde.open("%%",function(db){\n'+
-					'        this.setState({db:db});  \n'+
-					'    },this);      \n'+
-					'    this.setState({quota:quota,usage:usage});\n'+
-					'  },\n'+
-					'  openFileinstaller:function(autoclose) {\n'+
-					'    if (window.location.origin.indexOf("http://127.0.0.1")==0) {\n'+
-					'      require_kdb[0].url=window.location.origin+window.location.pathname+"%%.kdb";\n'+
-					'    }\n'+
-					'    return <Fileinstaller quota="512M" autoclose={autoclose} needed={require_kdb} onReady={this.onReady}/>\n'+
-					'  },\n'+
-					'  render: function() {\n'+
-					'    if (!this.state.quota) {\n'+
-					'        return this.openFileinstaller(true);\n'+
-					'    } else { \n'+
-					'    return (\n'+
-					'      <div className="main">\n'+
-					'		{"Main of %%"}'+
-					'      </div>\n'+
-					'      );\n'+
-					'    }\n'+
-					'  }\n'+
-					'});\n'+
-					'module.exports=main;';
+	var jsx='var require_kdb=[{filename:"%%.kdb", url:"'+getgitrawbaseurl()+'%%.kdb" , desc:"%%"}];\n'+
+            'var Main = React.createClass({\n'+
+			'  mixins:[Require("defaultmain")],\n'+
+			'  dbid:"%%",\n'+
+			'  defaultTofind:"",\n'+
+			'  require_kdb:require_kdb,\n'+
+			'});\n'+
+			'module.exports=Main;'
 
 	var regex_appname=new RegExp("%%","g");	
 	jsx=jsx.replace(regex_appname,name);

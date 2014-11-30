@@ -93,7 +93,7 @@ var Children=React.createClass({
     if (n==selected && haschild) classes="btn btn-default";
     var text=this.props.toc[n].text.trim();
     if (this.props.textConverter) text=this.props.textConverter(text);
-    return <div data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text}</a>{this.showHit(hit)}</div>
+    return <div key={"child"+n} data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text}</a>{this.showHit(hit)}</div>
   },
   showText:function(e) { 
     var target=e.target;
@@ -116,7 +116,8 @@ var stacktoc = React.createClass({
   },
   buildtoc: function() {
       var toc=this.props.data;
-      if (!toc || !toc.length) return;      var depths=[];
+      if (!toc || !toc.length) return;  
+      var depths=[];
       var prev=0;
       for (var i=0;i<toc.length;i++) {
         var depth=toc[i].depth;

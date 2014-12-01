@@ -69,10 +69,11 @@ var Children=React.createClass({
         this.showText(e);
       }
     } else {
-      if (n!=this.state.selected) {
-        this.showText(e);
-      } else {
+      if (n==this.state.selected) {
         if (child.hasChild) this.open(e);
+        else this.showText(e);
+      } else {
+        this.showText(e);
       }
     }
     this.setState({selected:n});

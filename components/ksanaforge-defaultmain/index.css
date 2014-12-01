@@ -1,0 +1,12 @@
+.main {position:relative;}
+.hl {color:red;}
+hl {color:red;}
+.inputs {font-size:150%;}
+.resultitem  {font-size:125%;}
+.swipediv {border-width:1px;border-color:silver;border-radius: 10px;border-style:solid;}
+
+
+@media 
+(-webkit-min-device-pixel-ratio: 2) and (min-width: 1500px){ 
+	.resultitem{font-size:200%;}
+}

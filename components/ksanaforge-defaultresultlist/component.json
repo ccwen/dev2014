@@ -1,0 +1,12 @@
+{
+  "name": "defaultresultlist",
+  "repo": "ksanaforge/defaultresultlist",
+  "description": "hello world",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": ["index.js"]
+}

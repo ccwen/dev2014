@@ -29,6 +29,7 @@ var runtime_version_ok=function(minruntime) {
   var min=parseFloat(minruntime);
   var runtime=parseFloat( ksanagap.runtime_version()||"1.0");
   if (min>runtime) return false;
+  return true;
 }
 
 var needToUpdate=function(fromjson,tojson) {
@@ -81,8 +82,13 @@ var getRemoteJson=function(apps,cb,context) {
   var makecb=function(app){
     return function(data){
         if (!(data && typeof data =='object' && data.__empty)) output.push(data);
-        var url=(app.baseurl||"http://127.0.0.1:8080/"+app.dbid) +"/ksana.js";
-        jsonp( url ,app.dbid,taskqueue.shift(), context);
+        if (!app.baseurl) {
+          taskqueue.shift({__empty:true});
+        } else {
+          var url=app.baseurl+"/ksana.js";    
+          console.log(url);
+          jsonp( url ,app.dbid,taskqueue.shift(), context);           
+        }
     };
   };
   apps.forEach(function(app){taskqueue.push(makecb(app))});

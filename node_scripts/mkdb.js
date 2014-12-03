@@ -1,4 +1,6 @@
 var fs=require("fs");
+var tei=require("ksana-document").tei;
+
 var lst=fs.readFileSync(process.argv[2]||"%%.lst",'utf8')
 	      .replace(/\r\n/g,"\n").split("\n");
 

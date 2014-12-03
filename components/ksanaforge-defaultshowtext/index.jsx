@@ -27,9 +27,27 @@ var Controls = React.createClass({
 var addbr=function(t) {
   return t.split("\n").map(function(line){return line+" <br/>"}).join("\n");
 };
+var dictionary=Require("dictionary");
 var Showtext = React.createClass({
   getInitialState: function() {
     return {bar: "world"};
+  },
+  touchstart:function(e) {
+    this.touching=e.target;
+  },
+  touchend:function(e){
+    var touching=this.touching;
+    this.touching=null;
+    if (e.target!=touching) {
+      return;
+    }
+    this.checkUnderTap(e);
+  },
+  checkUnderTap:function(e) {
+    var span=e.target;
+    if (span.nodeName!="SPAN") return;
+    var possibles=dictionary.findPossible(span,this.props.dictionaries);
+    console.log(possibles);
   },
   render: function() {
     var pn=this.props.pagename;
@@ -39,7 +57,11 @@ var Showtext = React.createClass({
         prev={this.props.prevpage} setpage={this.props.setpage}
         syncToc={this.props.syncToc}/>
        
-        <div className="bodytext" dangerouslySetInnerHTML={{__html:addbr(this.props.text||"")}} />
+        <div onTouchStart={this.touchstart} 
+             onTouchEnd={this.touchend} 
+             onClick={this.checkUnderTap} 
+             className="bodytext" 
+             dangerouslySetInnerHTML={{__html:addbr(this.props.text||"")}} />
       </div>
     );
   }

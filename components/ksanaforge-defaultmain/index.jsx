@@ -54,8 +54,9 @@ var DefaultmainMixin = {
     return <ResultListComponent gotopage={this.gotopage} res={this.state.res}/>
   },
   genToc:function(texts,depths,voffs) {
+
     var out=[{depth:0,text:ksana.js.title}];
-    for (var i=0;i<texts.length;i++) {
+    if (texts) for (var i=0;i<texts.length;i++) {
       out.push({text:texts[i],depth:depths[i], voff:voffs[i]});
     }
     return out; 
@@ -244,6 +245,7 @@ var DefaultmainMixin = {
       ShowTextComponent=this.showTextComponent;
     }
     return <ShowTextComponent pagename={pagename} text={text}
+      dictionaries={this.dictionaries}
       nextpage={this.nextpage} setpage={this.setPage} prevpage={this.prevpage} syncToc={this.syncToc}/>
   },
   renderMobile:function(text,pagename) {

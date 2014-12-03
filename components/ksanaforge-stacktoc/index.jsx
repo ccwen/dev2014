@@ -154,8 +154,10 @@ var stacktoc = React.createClass({
   enumChildren : function() {
     var cur=this.state.cur;
     var toc=this.props.data;
+
     var children=[];
-    if (!toc || !toc.length) return children;
+    if (!toc || !toc.length || toc.length==1) return children;
+
     if (toc[cur+1].depth!= 1+toc[cur].depth) return children;  // no children node
     var n=cur+1;
     var child=toc[n];
@@ -211,6 +213,7 @@ var stacktoc = React.createClass({
     if (typeof nodeIds=="number") nodeIds=[nodeIds];
     var toc=this.props.data;
     var hits=this.props.hits;
+    if (toc.length<2) return;
     var getRange=function(n) {
       if (n+1>=toc.length) {
         console.error("exceed toc length",n);

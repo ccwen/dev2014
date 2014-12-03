@@ -1,3 +1,4 @@
+var Dictionary=Require("dictionary");
 var Controls = React.createClass({
   getInitialState: function() {
     return {pagename:this.props.pagename};
@@ -27,10 +28,10 @@ var Controls = React.createClass({
 var addbr=function(t) {
   return t.split("\n").map(function(line){return line+" <br/>"}).join("\n");
 };
-var dictionary=Require("dictionary");
+
 var Showtext = React.createClass({
   getInitialState: function() {
-    return {bar: "world"};
+    return {dicttofind:""};
   },
   touchstart:function(e) {
     this.touching=e.target;
@@ -46,8 +47,7 @@ var Showtext = React.createClass({
   checkUnderTap:function(e) {
     var span=e.target;
     if (span.nodeName!="SPAN") return;
-    var possibles=dictionary.findPossible(span,this.props.dictionaries);
-    console.log(possibles);
+    this.setState({dicttofind:span})
   },
   render: function() {
     var pn=this.props.pagename;
@@ -56,7 +56,8 @@ var Showtext = React.createClass({
         <Controls pagename={this.props.pagename} next={this.props.nextpage} 
         prev={this.props.prevpage} setpage={this.props.setpage}
         syncToc={this.props.syncToc}/>
-       
+        <Dictionary dictionaries={this.props.dictionaries}
+                    tofind={this.state.dicttofind}/>
         <div onTouchStart={this.touchstart} 
              onTouchEnd={this.touchend} 
              onClick={this.checkUnderTap} 

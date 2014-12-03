@@ -54,6 +54,7 @@ var newkapp=function(appname){
 '    ,"ksanaforge/defaultmain":"*"\n'+
 '    ,"ksanaforge/defaultresultlist":"*"\n'+
 '    ,"ksanaforge/defaultshowtext":"*"\n'+
+'    ,"ksanaforge/dictionary":"*"\n'+
 '    ,"ksanaforge/htmlfs":"*"\n'+
 '  },\n'+
 '  "development": {},\n'+
@@ -148,7 +149,7 @@ var newkapp=function(appname){
 }
 newkapp.touchComponent=function(name) {
 	var gitrepo=getgiturl(name).trim()||"";
-	var jsx='var require_kdb=[{filename:"%%.kdb", url:"'+getgitrawbaseurl()+'%%.kdb" , desc:"%%"}];\n'+
+	var jsx='var require_kdb=[{filename:"%%.kdb", url:"'+getgitrawbaseurl(gitrepo)+'%%.kdb" , desc:"%%"}];\n'+
             'var Main = React.createClass({\n'+
 			'  mixins:[Require("defaultmain")],\n'+
 			'  dbid:"%%",\n'+

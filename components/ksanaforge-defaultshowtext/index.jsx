@@ -33,8 +33,14 @@ var Showtext = React.createClass({
   getInitialState: function() {
     return {dicttofind:""};
   },
+  touchdistance:function(start,end) {
+    var dx=end[0]-start[0];
+    var dy=end[1]-start[1];
+    return Math.sqrt(dx*dx+dy*dy);
+  },
   touchstart:function(e) {
     this.touching=e.target;
+    this.touchpos=[e.targetTouches[0].pageX,e.targetTouches[0].pageY];
   },
   touchend:function(e){
     var touching=this.touching;
@@ -42,7 +48,9 @@ var Showtext = React.createClass({
     if (e.target!=touching) {
       return;
     }
-    this.checkUnderTap(e);
+    var touchpos=[e.changedTouches[0].pageX,e.changedTouches[0].pageY];
+    var dist=this.touchdistance(this.touchpos,touchpos);
+    if (dist<5) this.checkUnderTap(e);
   },
   checkUnderTap:function(e) {
     var span=e.target;

@@ -9,6 +9,7 @@ var DefaultmainMixin = {
   getInitialState: function() {
     return {res:{excerpt:[]},db:null , msg:"click GO button to search"};
   },
+  swipetargets:[],
   action:function() {
     var args=Array.prototype.slice.call(arguments);
     var type=args.shift();
@@ -187,9 +188,18 @@ var DefaultmainMixin = {
   },
   onSwipeStart:function(target) {
     if (target && this.swipable(target)) {
-      this.targetbg=target.style.background;
+      this.swipetargets.push([target,target.style.background]);
       target.style.background="yellow";
     }
+    if (this.swipetimer) clearTimeout(this.swipetimer);
+    var that=this;
+    this.swipetimer=setTimeout(function(){
+      if(!that.swipetargets.length) return;
+      that.swipetargets.map(function(t){
+        t[0].style.background=t[1];
+      });
+      that.swipetargets=[];
+    },3000);
   },
   swipable:function(target) {
     while (target && target.dataset && 
@@ -227,13 +237,12 @@ var DefaultmainMixin = {
     }
   },
   onSwipeEnd:function(target) {
-    if (target && this.targetbg!=null) {
-      target.style.background=this.targetbg;
-      this.targetbg=null;
-    }    
+    if (this.swipetargets.length) {
+      this.swipetargets[0][0].style.background=this.swipetargets[0][1];
+      this.swipetargets.shift();
+    }
   },
   onTransitionEnd:function(index,slide,target) {
-    console.log(index);
     if (!this.tryResultItem(index,target)) this.tryTocNode(index,target);
   },
   renderSlideButtons:function() {

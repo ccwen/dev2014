@@ -10,6 +10,7 @@ var Dictionary=React.createClass({
 		this.refs.dictdialog.getDOMNode().classList.remove("opened");
 	},
 	foundPossible:function(found) {
+		if (!found)return;
 		this.setState({open:true,content:found});
 		this.openDialog();
 	},

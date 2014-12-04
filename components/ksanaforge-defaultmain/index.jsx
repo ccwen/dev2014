@@ -9,12 +9,16 @@ var DefaultmainMixin = {
   getInitialState: function() {
     return {res:{excerpt:[]},db:null , msg:"click GO button to search"};
   },
-  dosearch:function(e) {
-    var start=arguments[2]||0; //event == arguments[0], react_id==arguments[1]
+  action:function() {
+    var args=Array.prototype.slice.call(arguments);
+    var type=args.shift();
+
+    if (!this.handlers) return;
+    if (!this.handlers[type]) return;
+    this.handlers[type].apply(this,args);
+  }, 
+  search:function(tofind,start) {
     var t=new Date();
-    var tofind=this.refs.tofind.getDOMNode().value;
-    if (e) tofind=e.target.innerHTML;
-    if (tofind=="GO") tofind=this.refs.tofind.getDOMNode().value;
     this.setState({q:tofind,msg:"Searching"});
     var that=this;
     setTimeout(function(){
@@ -23,6 +27,13 @@ var DefaultmainMixin = {
         //console.log(data) ; // watch the result from search engine
       });
     },0);
+  },
+  dosearch:function(e) {
+    var start=arguments[2]||0; //event == arguments[0], react_id==arguments[1]
+    var tofind=this.refs.tofind.getDOMNode().value;
+    if (e) tofind=e.target.innerHTML;
+    if (tofind=="GO") tofind=this.refs.tofind.getDOMNode().value;
+    this.search(tofind,start);
   },
   keypress:function(e) {
     if (e.key=="Enter") this.dosearch();
@@ -51,7 +62,8 @@ var DefaultmainMixin = {
     if (this.resultListComponent) {
       ResultListComponent=this.resultListComponent;
     }
-    return <ResultListComponent gotopage={this.gotopage} res={this.state.res}/>
+    return <ResultListComponent gotopage={this.gotopage} 
+    action={this.action} res={this.state.res}/>
   },
   genToc:function(texts,depths,voffs) {
 
@@ -236,6 +248,7 @@ var DefaultmainMixin = {
   renderStacktoc:function() {
     return  <Stacktoc showText={this.showText}  
             showExcerpt={this.showExcerpt} hits={this.state.res.rawresult} 
+            action={this.action}
             data={this.state.toc} goVoff={this.state.goVoff} 
             showTextOnLeafNodeOnly={true} />
   },
@@ -246,6 +259,7 @@ var DefaultmainMixin = {
     }
     return <ShowTextComponent pagename={pagename} text={text}
       dictionaries={this.dictionaries}
+      action={this.action}
       nextpage={this.nextpage} setpage={this.setPage} prevpage={this.prevpage} syncToc={this.syncToc}/>
   },
   renderMobile:function(text,pagename) {

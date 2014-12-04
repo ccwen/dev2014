@@ -47,7 +47,8 @@ var Showtext = React.createClass({
   checkUnderTap:function(e) {
     var span=e.target;
     if (span.nodeName!="SPAN") return;
-    this.setState({dicttofind:span})
+    this.setState({dicttofind:span});
+    this.props.action("showtext.ontap",e);
   },
   render: function() {
     var pn=this.props.pagename;

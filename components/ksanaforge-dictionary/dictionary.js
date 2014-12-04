@@ -54,7 +54,10 @@ var fetchDefinations=function(db,pages,cb,context) {
 var findPossibleByString=function(str,dictionaries,cb,context) {
     var res={},pages=[];
     //TODO accept multiple dictionary
-
+    if (!dictionaries || dictionaries.length==0) {
+        cb.apply(context,[null]);
+        return;
+    }
     kde.open(dictionaries[0],function(db){
         var entries=db.get("pageNames");
         if (!db.entries) {

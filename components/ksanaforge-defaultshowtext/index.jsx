@@ -18,10 +18,11 @@ var Controls = React.createClass({
   },
   render: function() {   
    return <div className="inputs">
-      <button onClick={this.props.prev}>←</button>
+      <button onClick={this.gotoToc}>TOC</button>
+      <span>___</span>
+      <button onClick={this.props.prev}>{" \u25c0 "}</button>
        <input size="8" type="text" ref="pagename" onKeyUp={this.updateValue}></input>
-      <button onClick={this.props.next}>→</button>
-      <button onClick={this.gotoToc}>Toc</button>
+      <button onClick={this.props.next}>{" \u25b6 "}</button>
       </div>
   }  
 });
@@ -54,9 +55,9 @@ var Showtext = React.createClass({
   },
   checkUnderTap:function(e) {
     var span=e.target;
-    if (span.nodeName!="SPAN") return;
-    this.setState({dicttofind:span});
     this.props.action("showtext.ontap",e);
+    if (span.nodeName!="SPAN" || span.parentElement.classList[0]!="bodytext") return;
+    this.setState({dicttofind:span});
   },
   render: function() {
     var pn=this.props.pagename;

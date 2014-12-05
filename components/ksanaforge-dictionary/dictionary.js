@@ -16,6 +16,7 @@ var exhaustiveFind=function(str,dictionary){
     for (var i=0;i<str.length;i++){
         for (var j=i;j<str.length;j++) {
             var substr=str.substr(i,j+1);
+            if (i>0 && j==i) continue;//do not check single char outside tap target
             var p=indexOfSorted(dictionary,substr);
             if (dictionary[p]==substr) {
                 if (res.indexOf(dictionary[p])==-1){
@@ -28,7 +29,7 @@ var exhaustiveFind=function(str,dictionary){
     return res;
 }
 
-var fetchDefinations=function(db,pages,cb,context) {
+var fetchDefinations=function(db,pages,tofind,cb,context) {
     var taskqueue=[],output=[];
 
     var makecb=function(pf){
@@ -40,13 +41,8 @@ var fetchDefinations=function(db,pages,cb,context) {
     pages.forEach(function(pf){taskqueue.push(makecb(pf))});
 
     taskqueue.push(function(data){
-        output.push(data);
-
-        var output2="";
-        output.map(function(o){
-            output2+= "<h4>"+o.pagename+"</h4>"+o.text.replace(/<.*?>/g,'')+"<br/>";
-        });
-        cb.apply(context,[output2]);
+        if (!(data && typeof data =='object' && data.__empty)) output.push(data);
+        cb.apply(context,[output,tofind]);
     });
 
     taskqueue.shift()({__empty:true}); //run the task
@@ -68,7 +64,7 @@ var findPossibleByString=function(str,dictionaries,cb,context) {
         for (var i=0;i<res.dic.length;i++) {
             pages.push(db.findPage(res.dic[i])[0]);
         }
-        fetchDefinations(db,pages,cb,context);
+        fetchDefinations(db,pages,str,cb,context);
     });
 }
 var validEntryChar=function(str) {

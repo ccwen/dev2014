@@ -57,7 +57,9 @@ var Showtext = React.createClass({
     var span=e.target;
     this.props.action("showtext.ontap",e);
     if (span.nodeName!="SPAN" || span.parentElement.classList[0]!="bodytext") return;
-    this.setState({dicttofind:span});
+    if (this.props.dictionaries && this.props.dictionaries.length) {
+      this.setState({dicttofind:span});
+    }
   },
   render: function() {
     var pn=this.props.pagename;

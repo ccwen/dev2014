@@ -1,7 +1,7 @@
 {
   "name": "dev2014",
   "description": "dev platform 2014",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "devDependencies": {
     "fstream": "~0.1.25",
     "gulp": "~3.8.7",

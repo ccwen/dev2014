@@ -286,7 +286,9 @@ var stacktoc = React.createClass({
     var ancestors=this.enumAncestors();
     var children=this.enumChildren();
     var current=this.props.data[this.state.cur];
-    if (this.props.hits && this.props.hits.length) this.fillHits(ancestors,children);
+    if (this.props.hits && this.props.hits.length) {
+      this.fillHits(ancestors,children);
+    }
 
     var text=current.text.trim();
     if (this.props.textConverter) text=this.props.textConverter(text);

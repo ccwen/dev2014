@@ -1,7 +1,7 @@
 {
   "name": "dev2014",
   "description": "dev platform 2014",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "devDependencies": {
     "fstream": "~0.1.25",
     "gulp": "~3.8.7",
@@ -19,9 +19,8 @@
     "unzip": "~0.1.9"
   },
   "dependencies": {
-    "sax":"*",
-    "glob":"*"
+    "sax": "*",
+    "glob": "*"
   },
-  "scripts": {
-  }
+  "scripts": {}
 }

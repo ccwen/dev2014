@@ -11,4 +11,5 @@ div.current span.text:hover{text-decoration:underline;cursor:pointer;}
 div.child span.text:hover {text-decoration:underline;cursor:pointer;color:#59E817;}
 .tocitem {text-decoration: none;cursor:pointer;font-size:100%}
 .tocitem:hover {background:#D8F6CE;}
+.link-selected {background:#C8F6BE;}
 .badge:hover {color:#59E817;cursor:pointer;}

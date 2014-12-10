@@ -19,14 +19,14 @@ var trimText=function(text,opts) {
     } 
     return text;
 }
-var renderDepth=function(depth,tocstyle,nodetype) {
+var renderDepth=function(depth,opts,nodetype) {
   var out=[];
-  if (tocstyle=="vertical_line") {
+  if (opts.tocstyle=="vertical_line") {
     for (var i=0;i<depth;i++) {
       if (i==depth-1) {
-        out.push(<img src="banner/bar_start.png"></img>);
+        out.push(<img src={opts.tocbar_start}></img>);
       } else {
-        out.push(<img src="banner/bar.png"></img>);  
+        out.push(<img src={opts.tocbar}></img>);  
       }
     }
     return out;    
@@ -58,7 +58,7 @@ var Ancestors=React.createClass({
     var text=this.props.toc[n].text.trim();
     text=trimText(text,this.props.opts);
     if (this.props.textConverter) text=this.props.textConverter(text);
-    return <div key={"a"+n} className="node parent" data-n={n} onClick={this.goback} >{renderDepth(idx,this.props.opts.tocstyle,"ancestor")}<a className="text" href="#" >{text}</a>{this.showHit(hit)}</div>
+    return <div key={"a"+n} className="node parent" data-n={n} onClick={this.goback} >{renderDepth(idx,this.props.opts,"ancestor")}<a className="text" href="#" >{text}</a>{this.showHit(hit)}</div>
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
@@ -125,12 +125,16 @@ var Children=React.createClass({
     }
 
     var classes="btn btn-link";
-    if (n==selected && haschild) classes="btn btn-default expandable";
+    if (n==selected) {
+      if (haschild) classes="btn btn-default expandable";
+      else classes="btn btn-link link-selected";
+    }
+
     var text=this.props.toc[n].text.trim();
     var depth=this.props.toc[n].depth;
     text=trimText(text,this.props.opts)
     if (this.props.textConverter) text=this.props.textConverter(text);
-    return <div key={"child"+n} data-n={n}>{renderDepth(depth,this.props.opts.tocstyle,"child")}<a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text+" "}</a>{this.showHit(hit)}</div>
+    return <div key={"child"+n} data-n={n}>{renderDepth(depth,this.props.opts,"child")}<a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text+" "}</a>{this.showHit(hit)}</div>
   },
   showText:function(e) { 
     var target=e.target;
@@ -334,7 +338,7 @@ var stacktoc = React.createClass({
     return ( 
       <div className="stacktoc"> 
         <Ancestors opts={opts} textConverter={this.props.textConverter} showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
-        <div className="node current">{renderDepth(depth-1,opts.tocstyle,"current")}<a href="#" onClick={this.showText} data-n={this.state.cur}><span className="text">{text}</span></a>{this.showHit(current.hit)}</div>
+        <div className="node current">{renderDepth(depth-1,opts,"current")}<a href="#" onClick={this.showText} data-n={this.state.cur}><span className="text">{text}</span></a>{this.showHit(current.hit)}</div>
         <Children opts={opts} textConverter={this.props.textConverter}  showTextOnLeafNodeOnly={this.props.showTextOnLeafNodeOnly}
                   showText={this.props.showText} hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>

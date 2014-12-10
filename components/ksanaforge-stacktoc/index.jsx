@@ -1,10 +1,42 @@
 /** @jsx React.DOM */
-  
 var trimHit=function(hit) {
   if (hit>999) { 
     return (Math.floor(hit/1000)).toString()+"K+";
   } else return hit.toString();
 }
+var trimText=function(text,opts) {
+    if (opts.maxitemlength && text.length>opts.maxitemlength) {
+      var stopAt=opts.stopAt||"";
+      if (stopAt) {
+        var at=opts.maxitemlength;
+        while (at>10) {
+          if (text.charAt(at)==stopAt) return text.substr(0,at)+"...";
+          at--;
+        }
+      } else {
+        return text.substr(0,opts.maxitemlength)+"...";
+      }
+    } 
+    return text;
+}
+var renderDepth=function(depth,tocstyle,nodetype) {
+  var out=[];
+  if (tocstyle=="vertical_line") {
+    for (var i=0;i<depth;i++) {
+      if (i==depth-1) {
+        out.push(<img src="banner/bar_start.png"></img>);
+      } else {
+        out.push(<img src="banner/bar.png"></img>);  
+      }
+    }
+    return out;    
+  } else {
+    if (depth) return <span>{depth}.</span>
+    else return null;
+  }
+  return null;
+};
+
 var Ancestors=React.createClass({
   goback:function(e) {
     var n=e.target.dataset["n"];  
@@ -24,8 +56,9 @@ var Ancestors=React.createClass({
   renderAncestor:function(n,idx) {
     var hit=this.props.toc[n].hit;
     var text=this.props.toc[n].text.trim();
+    text=trimText(text,this.props.opts);
     if (this.props.textConverter) text=this.props.textConverter(text);
-    return <div key={"a"+n} className="node parent" data-n={n}>{idx+1}.<a className="text" href="#" onClick={this.goback} >{text}</a>{this.showHit(hit)}</div>
+    return <div key={"a"+n} className="node parent" data-n={n} onClick={this.goback} >{renderDepth(idx,this.props.opts.tocstyle,"ancestor")}<a className="text" href="#" >{text}</a>{this.showHit(hit)}</div>
   },
   render:function() {
     if (!this.props.data || !this.props.data.length) return <div></div>;
@@ -47,7 +80,8 @@ var Children=React.createClass({
     if (typeof n!=="undefined") this.props.setCurrent(parseInt(n));
   }, 
   showHit:function(hit) {
-    if (hit)  return <a href="#" onClick={this.showExcerpt} className="pull-right badge hitbadge">{trimHit(hit)}</a>
+    if (hit)  return <a href="#" onClick={this.showExcerpt} 
+      className="pull-right badge hitbadge">{trimHit(hit)}</a>
     else return <span></span>;
   },
   showExcerpt:function(e) {
@@ -91,10 +125,12 @@ var Children=React.createClass({
     }
 
     var classes="btn btn-link";
-    if (n==selected && haschild) classes="btn btn-default";
+    if (n==selected && haschild) classes="btn btn-default expandable";
     var text=this.props.toc[n].text.trim();
+    var depth=this.props.toc[n].depth;
+    text=trimText(text,this.props.opts)
     if (this.props.textConverter) text=this.props.textConverter(text);
-    return <div key={"child"+n} data-n={n}><a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text}</a>{this.showHit(hit)}</div>
+    return <div key={"child"+n} data-n={n}>{renderDepth(depth,this.props.opts.tocstyle,"child")}<a data-n={n} className={classes +" tocitem text"}  onClick={this.nodeClicked}>{text+" "}</a>{this.showHit(hit)}</div>
   },
   showText:function(e) { 
     var target=e.target;
@@ -111,6 +147,7 @@ var Children=React.createClass({
     return <div>{this.props.data.map(this.renderChild)}</div>
   }
 }); 
+
 var stacktoc = React.createClass({
   getInitialState: function() {
     return {bar: "world",tocReady:false,cur:0};//403
@@ -285,19 +322,20 @@ var stacktoc = React.createClass({
     var depth=this.props.data[this.state.cur].depth+1;
     var ancestors=this.enumAncestors();
     var children=this.enumChildren();
+    var opts=this.props.opts||{};
     var current=this.props.data[this.state.cur];
     if (this.props.hits && this.props.hits.length) {
       this.fillHits(ancestors,children);
     }
 
     var text=current.text.trim();
+    text=trimText(text,opts);
     if (this.props.textConverter) text=this.props.textConverter(text);
-
     return ( 
       <div className="stacktoc"> 
-        <Ancestors textConverter={this.props.textConverter} showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
-        <div className="node current"><a href="#" onClick={this.showText} data-n={this.state.cur}><span>{depth}.</span><span className="text">{text}</span></a>{this.showHit(current.hit)}</div>
-        <Children textConverter={this.props.textConverter}  showTextOnLeafNodeOnly={this.props.showTextOnLeafNodeOnly}
+        <Ancestors opts={opts} textConverter={this.props.textConverter} showExcerpt={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={ancestors}/>
+        <div className="node current">{renderDepth(depth-1,opts.tocstyle,"current")}<a href="#" onClick={this.showText} data-n={this.state.cur}><span className="text">{text}</span></a>{this.showHit(current.hit)}</div>
+        <Children opts={opts} textConverter={this.props.textConverter}  showTextOnLeafNodeOnly={this.props.showTextOnLeafNodeOnly}
                   showText={this.props.showText} hitClick={this.hitClick} setCurrent={this.setCurrent} toc={this.props.data} data={children}/>
       </div>
     ); 

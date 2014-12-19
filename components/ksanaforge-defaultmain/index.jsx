@@ -18,29 +18,58 @@ var DefaultmainMixin = {
     if (!this.handlers[type]) return;
     this.handlers[type].apply(this,args);
   }, 
-  search:function(tofind,start) {
+  newTofind:function(tf) {
+    if (!localStorage) return;
+    var historytofind=JSON.parse(localStorage.getItem("historytofind")||"[]");
+    var i=historytofind.indexOf(tf);
+    if (i>-1) historytofind.splice(i,1);
+    historytofind.push(tf);
+    while(historytofind.length>5) {
+      historytofind.shift();
+    }
+    localStorage.setItem("historytofind",JSON.stringify(historytofind));
+    return historytofind;
+  },
+  search:function(tofind,start,end) {
     var t=new Date();
+    if (this.state.q!=tofind) {
+      this.newTofind(tofind);
+    }
     this.setState({q:tofind,msg:"Searching"});
     var that=this;
     setTimeout(function(){
-      kse.search(that.state.db,tofind,{range:{start:start,maxhit:20}},function(data){ //call search engine
+      kse.search(that.state.db,tofind,{range:{start:start,end:end,maxhit:25}},function(data){ //call search engine
         that.setState({res:data,msg:(new Date()-t)+"ms"});
         //console.log(data) ; // watch the result from search engine
       });
     },0);
   },
-  dosearch:function(e) {
-    var start=arguments[2]||0; //event == arguments[0], react_id==arguments[1]
+  dosearch:function(e,reactid,start_end) {
+    var start=start_end,tochit=0;
+    var end=this.state.db.get("meta").vsize;
+    if (typeof start_end=="undefined") {
+      start=0;
+    }else if (typeof start_end!="number" && typeof start_end[0]=="number") {
+      start=start_end[0];
+      end=start_end[1];
+      tochit=start_end[2];
+    }
     var tofind=this.refs.tofind.getDOMNode().value;
     if (e) tofind=e.target.innerHTML;
     if (tofind=="GO") tofind=this.refs.tofind.getDOMNode().value;
-    this.search(tofind,start);
+    this.search(tofind,start,end);
   },
   keypress:function(e) {
     if (e.key=="Enter") this.dosearch();
   },
   renderExtraInput:function() {
-    if (this.tofindExtra) return this.tofindExtra();
+    if (this.tofindExtra) {
+      var historytofind=[];
+      if (localStorage) {
+        historytofind=JSON.parse(localStorage.getItem("historytofind")||"[]");  
+      }
+      return this.tofindExtra(historytofind);
+    }
     else return null;
   },
   renderinputs:function() {  // input interface for search
@@ -165,7 +194,9 @@ var DefaultmainMixin = {
   }, 
   showExcerpt:function(n) {
     var voff=this.state.toc[n].voff;
-    this.dosearch(null,null,voff);
+    var end=this.state.toc[n].end;
+    var hit=this.state.toc[n].hit;
+    this.dosearch(null,null,[voff,end,hit]);
     this.slideSearch();
   },
   syncToc:function(voff) {

@@ -7,8 +7,10 @@ var jsonp=function(url,dbid,callback,context) {
   window.jsonp_handler=function(data) {
     //console.log("receive from ksana.js",data);
     if (typeof data=="object") {
-      data.dbid=dbid;
-      callback.apply(context,[data]);    
+      if (typeof data.dbid=="undefined") {
+        data.dbid=dbid;
+      }
+      callback.apply(context,[data]);
     }  
   }
 

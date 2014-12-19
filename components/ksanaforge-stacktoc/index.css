@@ -1,7 +1,7 @@
 .stacktoc {font-size:125%;}
 .stacktoc a {color:black;text-align:left;}
 .stacktoc a.hitbadge {color:white;}
-div.parent{background:#D8F6CE; }
+div.parent{} 
 div.parent:hover { background:#D8F6CE;}
 div.parent span.text:hover { text-decoration: underline; cursor:pointer;}
 div.current {color:black; background:#D8F6CE;border-bottom-right-radius:10px 10px;}

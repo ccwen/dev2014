@@ -32,7 +32,8 @@ var timer=null;
 var enterMainComponent=function() {
 	var main=main||"main";
 	var maindiv=maindiv||"main";
-	ksana.mainComponent=React.render(Require(main)(),document.getElementById(maindiv));
+	var Main=React.createElement(Require(main));
+	ksana.mainComponent=React.render(Main,document.getElementById(maindiv));
 }
 var boot=function(appId,main,maindiv) {
 	ksana.appId=appId;

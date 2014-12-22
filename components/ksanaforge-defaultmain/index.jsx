@@ -80,6 +80,7 @@ var DefaultmainMixin = {
         <button ref="btnsearch" onClick={this.dosearch}>GO</button>
         {this.renderExtraInput()}
         </div>
+        {this.state.db.searchtime?Math.floor(this.state.db.searchtime)+" ms":""}
         {this.renderResultList()}
         </div>
         )          
@@ -144,6 +145,7 @@ var DefaultmainMixin = {
     var head=this.tocTag||"head";
     if (!this.state.db) kde.open(this.dbid,function(db){
         this.setState({db:db});
+
         var preloadtags=[["fields",head],["fields",head+"_depth"],
           ["fields",head+"_voff"]];
         if (this.renderTags) {
